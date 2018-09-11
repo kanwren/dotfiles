@@ -31,7 +31,7 @@ endfunction
 autocmd FileType help wincmd L
 au VimEnter * RainbowParenthesesToggle
 au Syntax * RainbowParenthesesLoadRound
-"autocmd VimEnter * SyntasticToggleMode
+autocmd VimEnter * SyntasticToggleMode
 
 syntax on
 filetype on
@@ -51,14 +51,12 @@ set wildmenu                                   " better command-line completion
 set showcmd                                    " show partial commands on bottom
 set ruler laststatus=2                         " if airline isn't working
 set number relativenumber lines=51
+set foldmethod=manual
 set tw=0
 set showmatch                                  " matching brace/parens/etc.
 set incsearch hlsearch smartcase
 set nojoinspaces                               " never two spaces after sentence
 set list listchars=tab:>-,eol:¬,extends:>,precedes:<
-"TODO: try these out
-"set foldmethod=syntax
-"set foldcolumn=4
 set ve=block
 set noerrorbells
 set nospell spelllang=en_us
@@ -72,23 +70,29 @@ set tabstop=4                                  " treat tabs as 4 spaces wide
 set expandtab softtabstop=4 shiftwidth=4       " expand tabs to 4 spaces
 set smarttab
 
-" Highlight everything over 80 characters
-highlight ColorColumn ctermbg=8
-" This option to make a solid line after 80 chars
+" Highlighting
+" Highlight column for folding
+set foldcolumn=1
+highlight FoldColumn ctermbg=1
+highlight Folded ctermbg=1
+
+highlight ColorColumn ctermbg=1
 set colorcolumn=81
-" This option to only highlight things crossing 80 chars
-call matchadd('ColorColumn', '\%81v', 100)
-" Highlight trailing whitespace
-highlight ExtraWhitespace ctermbg=7
+call matchadd('ColorColumn', '\%81v\S', 100)
+
+highlight ExtraWhitespace ctermbg=4
 match ExtraWhitespace /\s\+$/
+
+highlight Todo ctermbg=4
 
 " Key rebindings
 " Display
 noremap <C-l> :noh<CR><C-l>
-" Easy clearing of trailing whitespace
+" Retab and delete whitespace
 nnoremap <BS> :retab<CR>mt:%s/\s\+$//ge<CR>`t
 " Clear search register to prevent highlighting
 noremap <C-n> :let @/=""<CR>
+nnoremap <CR> za
 
 " Fixes
 " Fix screen errors when using Ctrl+FBDU
@@ -135,19 +139,35 @@ nnoremap <Space> <nop>
 let mapleader=" "
 " Allow capital leader commands to work with shift held down
 nmap <S-Space> <Space>
-" Activate NerdTree window
-map <Leader>nt :NERDTreeToggle<CR>
-" Easily paste last yanked text
-noremap <Leader>p "0p
-noremap <Leader>P "0P
+
+" Plugin mappings
+" NERDTree
+map <F2> :NERDTreeToggle<CR>
+" Syntastic
+noremap <F9> :SyntasticCheck<CR>
+" EasyMotion
+map <Leader> <Plug>(easymotion-prefix)
+nmap <Leader>f <Plug>(easymotion-s)
+nmap <Leader>s <Plug>(easymotion-s2)
+map <Leader>l <Plug>(easymotion-bd-jk)
+nmap <Leader>l <Plug>(easymotion-overwin-line)
+" DragVisuals
+vmap <expr> <Left> DVB_Drag('left')
+vmap <expr> <Right> DVB_Drag('right')
+vmap <expr> <Down> DVB_Drag('down')
+vmap <expr> <Up> DVB_Drag('up')
+vmap <expr> D DVB_Duplicate()
+" Tabular
+" Prompt for regular expression to tabularize on
+noremap <expr> <Leader>a ":Tab /" . input("/") . "<CR>"
 
 " Vundle plugins
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin('~/.vim/bundle/')
 
 " TODO: try these out:
-" Bundle 'sjl/gundo.vim'
-" Bundle 'nathanaelkane/vim-indent-guides'
+" junegunn/fzf
+" itchyny/lightline
 
 Bundle 'gmarik/Vundle.vim'
 
@@ -157,9 +177,11 @@ Bundle 'vim-airline/vim-airline-themes'
 Bundle 'powerline/fonts'
 
 " Functionality
+" TODO: Replace CtrlP. Like, seriously.
+Bundle 'kien/ctrlp.vim'
+Bundle 'tpope/vim-eunuch'
 Bundle 'scrooloose/nerdtree'
 Bundle 'vim-syntastic/syntastic'
-Bundle 'kien/ctrlp.vim'
 Bundle 'tpope/vim-fugitive'
 Bundle 'kien/rainbow_parentheses.vim'
 
@@ -169,13 +191,15 @@ Bundle 'tpope/vim-repeat'
 Bundle 'tpope/vim-unimpaired'
 Bundle 'tpope/vim-abolish'
 
-Bundle 'vim-scripts/matchit.zip'
-Bundle 'vim-scripts/tComment'
-Bundle 'easymotion/vim-easymotion'
 Bundle 'godlygeek/tabular'
+Bundle 'vim-scripts/tComment'
+Bundle 'jiangmiao/auto-pairs'
+Bundle 'easymotion/vim-easymotion'
+Bundle 'shinokada/dragvisuals.vim'
+Bundle 'vim-scripts/matchit.zip'
+
 Bundle 'kana/vim-textobj-user'
 Bundle 'kana/vim-textobj-function'
-Bundle 'jiangmiao/auto-pairs'
 
 " Snippets
 Bundle 'tomtom/tlib_vim'
@@ -196,18 +220,14 @@ let g:syntastic_python_checkers = ['pylint', 'pyflakes', 'flake8']
 let g:syntastic_java_checkers = ['checkstyle']
 let g:syntastic_java_checkstyle_classpath = 'C:/users/nprin/bin/checkstyle/checkstyle-8.12-all.jar'
 let g:syntastic_java_checkstyle_conf_file = 'C:/Users/nprin/bin/checkstyle/cs1331-checkstyle.xml'
-map <Leader>SC :SyntasticCheck<CR>
 
 let g:ctrlp_show_hidden = 1
 let g:ctrlp_open_multiple_files = 't'
 
 let g:EasyMotion_use_upper = 0
 let g:EasyMotion_smartcase = 1
-map <Leader> <Plug>(easymotion-prefix)
-nmap <Leader>f <Plug>(easymotion-s)
-nmap <Leader>s <Plug>(easymotion-s2)
-map <Leader>l <Plug>(easymotion-bd-jk)
-nmap <Leader>l <Plug>(easymotion-overwin-line)
+
+let g:DVB_TrimWS = 1
 
 set encoding=utf-8
 let g:airline_powerline_fonts = 1

@@ -21,14 +21,34 @@ vanilla:
    complete rest of line from  suggestions
   :Explore to explore the current directory
   <M-x>, <M-,>, <M-=>, <M-;>, <M-+>, <M-:>
+  & repeats the last substitution again
+  g& repeats the last substitution globally
+  & can stand for \0 in the replacement field of :s
 
 my mappings:
   gx for delete-visual exchange
   gw for swapping a word with the next one
   C-left/right for pushing words left and right
+  Function keys - F2 for NERDTree, F9 for Syntastic Check
+  <Leader>a to prompt for a Tabularization regex
+
+eunuch:
+  you can actually :Rename and :Move and :Delete now!
+
+dragvisuals:
+  <Arrow> to drag selected text in visual mode (custom)
+  D to duplicate the text (custom)
+
+abolish:
+  cr<case abbreviation> to coerce a word to a case
+      Snake, Mixed, Camel, Upper, ., -, Title, <Space>
+  :Subvert
+      super duper useful!
+  :Abolish
 
 tComment:
   gcc to toggle line comment
+  gc<motion>
   <C-_> + _, p, space for configuration, b for block,
       a for language style
   All of that with <Leader>

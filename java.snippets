@@ -61,9 +61,9 @@ snippet /*
 ##
 ## Constants
 snippet co
-	static public final ${1:String} ${2:var} = ${3};
+	public static final ${1:String} ${2:var} = ${3};
 snippet cos
-	static public final String ${1:var} = "${2}";
+	public static final String ${1:var} = "${2}";
 ##
 ## Control Statements
 snippet case
@@ -251,12 +251,12 @@ snippet renx
 ##
 ## Setter and Getter Methods
 snippet set
-	${1:public} void set${2:}(${3:String} ${0:}) {
+	${0:public} void set${1:}(${2:String} ${3:}) {
 		this.${4:} = ${4:};
 	}
 snippet get
-	${1:public} ${2:String} get${3:}() {
-		return this.${0:};
+	${0:public} ${1:String} get${2:}() {
+		return this.${3:};
 	}
 ##
 ## Terminate Methods or Loops
