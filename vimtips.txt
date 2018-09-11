@@ -1,0 +1,66 @@
+Cool commands:
+Add a break after every case in a switch statement:
+    :g/case//case\|default/norm Obreak;
+
+
+Interesting things to get under my fingers:
+vanilla:
+  :<C-k><any key> tells you how to reference that key
+  g<C-g> gives information about the cursor position
+  ga gives information about the ASCII character under the cursor
+  :%!xxd and :%!xxd -r can edit hexadecimal
+  :%TOhtml creates an html rendering of the current file
+  :g and :v do a lot of really neat things, like v/./,/./-j deletes
+     redundant blanks
+     Remember the uses of t, put, p, copy, y, d, i,
+     and the meanings of 0, $, ., =, and how arguments to , can be empty
+  /re/- or /re/+ or /re/-n or /re/n to jump lines before/after in a search
+  `. to go to last edited position
+  '. to go to last edited line
+  gi reopen insert mode from the last place it was open
+   complete rest of line from  suggestions
+  :Explore to explore the current directory
+  <M-x>, <M-,>, <M-=>, <M-;>, <M-+>, <M-:>
+
+my mappings:
+  gx for delete-visual exchange
+  gw for swapping a word with the next one
+  C-left/right for pushing words left and right
+
+tComment:
+  gcc to toggle line comment
+  <C-_> + _, p, space for configuration, b for block,
+      a for language style
+  All of that with <Leader>
+
+autopairs:
+  Surround character + <M-e> wraps the next word quickly
+  <M-p> disable autopairs
+  <M-n> to jump to next closed pair
+
+surround:
+  ys<Space>(surrounding char) surrounds like ( this )
+
+easymotion:
+  literally everything I bound
+
+tabular:
+  :Tabularize
+
+unimpaired:
+  [<Space> ]<Space> insert blank before or after current line
+  [e  ]e        swap line with line above or below
+  [ow ]ow yow   'wrap'
+  [os ]os yos   'spell'
+  [ol ]ol yol   'list'
+  [oh ]oh yoh   'hlsearch'
+  [oi ]oi yoi   'ignorecase'
+
+  [y{motion}              C String encode.  Backslash escape control
+  [yy                     characters, quotation marks, and backslashes.
+  {Visual}[y
+
+  ]y{motion}              C String decode.
+  ]yy
+  {Visual}]y
+
