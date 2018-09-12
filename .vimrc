@@ -1,3 +1,5 @@
+set nocompatible
+
 set diffexpr=MyDiff()
 function! MyDiff()
   let opt = '-a --binary '
@@ -43,7 +45,6 @@ color default
 set encoding=utf-8
 scriptencoding utf-8
 
-set nocompatible
 set noswapfile nobackup autoread
 set noconfirm                                  " fail, don't ask to save
 set hidden                                     " allow working with buffers
@@ -80,7 +81,7 @@ highlight ColorColumn ctermbg=1
 set colorcolumn=81
 call matchadd('ColorColumn', '\%81v\S', 100)
 
-highlight ExtraWhitespace ctermbg=4
+highlight ExtraWhitespace ctermbg=3
 match ExtraWhitespace /\s\+$/
 
 highlight Todo ctermbg=4
@@ -139,6 +140,7 @@ nnoremap <Space> <nop>
 let mapleader=" "
 " Allow capital leader commands to work with shift held down
 nmap <S-Space> <Space>
+nmap <Leader>v :e ~/dotfiles/.vimrc<CR>
 
 " Plugin mappings
 " NERDTree
@@ -168,6 +170,7 @@ call vundle#begin('~/.vim/bundle/')
 " TODO: try these out:
 " junegunn/fzf
 " itchyny/lightline
+" Async alternative to Syntastic like Ale
 
 Bundle 'gmarik/Vundle.vim'
 
@@ -229,7 +232,7 @@ let g:EasyMotion_smartcase = 1
 
 let g:DVB_TrimWS = 1
 
-set encoding=utf-8
+let g:airline#extensions#tabline#enabled = 1
 let g:airline_powerline_fonts = 1
 let g:airline_left_alt_sep = '»'
 let g:airline_right_alt_sep = '«'

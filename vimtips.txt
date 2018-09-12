@@ -24,6 +24,8 @@ vanilla:
   & repeats the last substitution again
   g& repeats the last substitution globally
   & can stand for \0 in the replacement field of :s
+  <C-U> and <C-W> can be used in insert mode to backspace lines/words
+  <C-T> and <C-D> can indent/unindent in insert mode
 
 my mappings:
   gx for delete-visual exchange
