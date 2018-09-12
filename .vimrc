@@ -1,3 +1,6 @@
+" TODO: Add shortcut for opening scratch buffer
+" map <something> :e ~/buffer
+
 set nocompatible
 
 set diffexpr=MyDiff()
@@ -44,36 +47,57 @@ color default
 
 set encoding=utf-8
 scriptencoding utf-8
+let $LANG='en'
 
 set noswapfile nobackup autoread
-set noconfirm                                  " fail, don't ask to save
-set hidden                                     " allow working with buffers
-set wildmenu                                   " better command-line completion
-set showcmd                                    " show partial commands on bottom
-set ruler laststatus=2                         " if airline isn't working
-set number relativenumber lines=51
-set foldmethod=manual
-set tw=0
-set showmatch                                  " matching brace/parens/etc.
-set incsearch hlsearch smartcase
-set nojoinspaces                               " never two spaces after sentence
-set list listchars=tab:>-,eol:¬,extends:>,precedes:<
-set ve=block
+set noconfirm                         " fail, don't ask to save
+set hidden                            " allow working with buffers
+set history=50
+
+set cmdheight=1
+set ruler laststatus=2                " if airline isn't working
+set wildmenu                          " better command-line completion
+set wildmode=longest:list,full        " TODO: decide between this and longest:full,full
+set showcmd                           " show partial commands on bottom
+set showmode                          " TODO: keep despite Airline?
 set noerrorbells
+set novisualbell
+set number relativenumber lines=51
+set lazyredraw
+
+set showmatch                         " matching brace/parens/etc.
+set incsearch hlsearch smartcase
+
+set nojoinspaces                      " never two spaces after sentence
+set ve=block
 set nospell spelllang=en_us
+set splitbelow splitright             " directions for vs/sp
+
 set backspace=indent,eol,start
-set whichwrap+=<,>,h,l,[,]                     " direction key wrapping
-set splitbelow splitright                      " directions for vs/sp
+set whichwrap+=<,>,h,l,[,]            " direction key wrapping
+set nowrap
+
 set timeout timeoutlen=500
+
+set ttyfast
+set scrolloff=0                       " TODO: 5? 7?
+
+set list listchars=tab:>-,eol:¬,extends:>,precedes:<
+set modelines=0
+set foldmethod=manual
+set foldcolumn=1
+set textwidth=80
+set formatoptions=croql
+"set formatoptions+=n1
 
 set autoindent smartindent
 set tabstop=4                                  " treat tabs as 4 spaces wide
 set expandtab softtabstop=4 shiftwidth=4       " expand tabs to 4 spaces
 set smarttab
+set noshiftround
 
 " Highlighting
 " Highlight column for folding
-set foldcolumn=1
 highlight FoldColumn ctermbg=1
 highlight Folded ctermbg=1
 
@@ -84,7 +108,11 @@ call matchadd('ColorColumn', '\%81v\S', 100)
 highlight ExtraWhitespace ctermbg=3
 match ExtraWhitespace /\s\+$/
 
+"highlight LineNr ctermbg=0
+highlight CursorLineNr ctermbg=1
 highlight Todo ctermbg=4
+"highlight MatchParen ctermbg=3
+"highlight Search ctermbg=14
 
 " Key rebindings
 " Display
@@ -122,6 +150,12 @@ nnoremap <silent> "" :registers<CR>
 inoremap jk <ESC>
 inoremap kj <ESC>
 
+" TODO: Tentative
+map <Left> <C-w>h
+map <Down> <C-w>j
+map <Up> <C-w>k
+map <Right> <C-w>l
+
 " Editing
 nnoremap g; A;<Esc>
 " Exchange operation-delete, target highlight, exchange
@@ -141,6 +175,8 @@ let mapleader=" "
 " Allow capital leader commands to work with shift held down
 nmap <S-Space> <Space>
 nmap <Leader>v :e ~/dotfiles/.vimrc<CR>
+map <Leader>tn :tabnew<CR>
+map <Leader>tc :tabclose<CR>
 
 " Plugin mappings
 " NERDTree
@@ -163,6 +199,11 @@ vmap <expr> D DVB_Duplicate()
 " Prompt for regular expression to tabularize on
 noremap <expr> <Leader>a ":Tab /" . input("/") . "<CR>"
 
+" Abbreviations
+iab xdate <C-r>=strftime("%d/%m/%y")<CR>
+iab xtime <C-r>=strftime("%H:%M:%S")<CR>
+iab xdt <C-r>=strftime("%d/%m/%y %H:%M:%S")
+
 " Vundle plugins
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin('~/.vim/bundle/')
@@ -171,6 +212,11 @@ call vundle#begin('~/.vim/bundle/')
 " junegunn/fzf
 " itchyny/lightline
 " Async alternative to Syntastic like Ale
+" terryma/vim-expand-region
+" michaeljsmith/vim-indent-object
+" terryma/vim-multiple-cursors
+" maxbrunsfeld/vim-yankstack
+" amix/vim-zenroom2
 
 Bundle 'gmarik/Vundle.vim'
 
@@ -193,6 +239,7 @@ Bundle 'tpope/vim-surround'
 Bundle 'tpope/vim-repeat'
 Bundle 'tpope/vim-unimpaired'
 Bundle 'tpope/vim-abolish'
+Bundle 'tpope/vim-sleuth'
 
 Bundle 'godlygeek/tabular'
 Bundle 'vim-scripts/tComment'

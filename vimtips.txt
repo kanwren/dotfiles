@@ -33,6 +33,8 @@ my mappings:
   C-left/right for pushing words left and right
   Function keys - F2 for NERDTree, F9 for Syntastic Check
   <Leader>a to prompt for a Tabularization regex
+  Abbreviations xdate, xtime, and xdt to add timestamps
+      expand by pressing space or <C-]> for no extra character
 
 eunuch:
   you can actually :Rename and :Move and :Delete now!
