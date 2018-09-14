@@ -108,9 +108,9 @@ call matchadd('ColorColumn', '\%81v\S', 100)
 highlight ExtraWhitespace ctermbg=3
 match ExtraWhitespace /\s\+$/
 
-highlight CursorLineNr ctermbg=1 ctermfg=7
-" Try out :hi CursorLineNr ctermbg=12 ctermfg=7
-highlight Todo ctermbg=12 ctermfg=7
+"highlight LineNr ctermbg=0
+highlight CursorLineNr ctermbg=1
+highlight Todo ctermbg=4
 "highlight MatchParen ctermbg=3
 "highlight Search ctermbg=14
 
