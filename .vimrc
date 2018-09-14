@@ -142,19 +142,13 @@ noremap <silent> <expr> j (v:count == 0 ? 'gj' : 'j')
 noremap <silent> <expr> k (v:count == 0 ? 'gk' : 'k')
 " Makes temporary macros more tolerable
 nnoremap Q @q
-" Makes Y consistent with C and D, because I always use yy for Y anyway
+" Makes Y consistent with C and D, because I always use yy for the old meaning anyway
 nnoremap Y y$
 " Display registers
 nnoremap <silent> "" :registers<CR>
 " Provide easier alternative to escape-hit them at the same time
 inoremap jk <ESC>
 inoremap kj <ESC>
-
-" TODO: Tentative
-map <Left> <C-w>h
-map <Down> <C-w>j
-map <Up> <C-w>k
-map <Right> <C-w>l
 
 " Editing
 nnoremap g; A;<Esc>
@@ -166,14 +160,11 @@ nnoremap <silent> gw "_yiw:s/\(\%#\w\+\)\(\_W\+\)\(\w\+\)/\3\2\1/<CR><c-o><c-l>:
 nnoremap <silent> <C-Right> "_yiw:s/\(\%#\w\+\)\(\_W\+\)\(\w\+\)/\3\2\1/<CR><C-o>/\w\+\_W\+<CR><C-l>:noh<CR>
 nnoremap <silent> <C-Left> "_yiw?\w\+\_W\+\%#<CR>:s/\(\%#\w\+\)\(\_W\+\)\(\w\+\)/\3\2\1/<CR><C-o><C-l>:noh<CR>
 " Insertion of single characters before or after cursor
-"nnoremap <silent> <Space> :exec "normal i".nr2char(getchar())."\e"<CR>
-"nnoremap <silent> <S-Space> :exec "normal a".nr2char(getchar())."\e"<CR>
+nnoremap <silent> <Space> :exec "normal i".nr2char(getchar())."\e"<CR>
+nnoremap <silent> <S-Space> :exec "normal a".nr2char(getchar())."\e"<CR>
 
 " Leader stuff
-nnoremap <Space> <nop>
-let mapleader=" "
-" Allow capital leader commands to work with shift held down
-nmap <S-Space> <Space>
+let mapleader=","
 nmap <Leader>v :e ~/dotfiles/.vimrc<CR>
 map <Leader>tn :tabnew<CR>
 map <Leader>tc :tabclose<CR>
@@ -216,7 +207,6 @@ call vundle#begin('~/.vim/bundle/')
 " michaeljsmith/vim-indent-object
 " terryma/vim-multiple-cursors
 " maxbrunsfeld/vim-yankstack
-" amix/vim-zenroom2
 
 Bundle 'gmarik/Vundle.vim'
 
