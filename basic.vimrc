@@ -40,18 +40,28 @@ color default
 set noswapfile nobackup autoread
 set noconfirm
 set hidden
-set cmdheight=1
-set ruler laststatus=2
+set history=50
+
+set laststatus=2
+set statusline=buf\ %n:\ \"%F\"%<\ \ \ %m%y%h%w%r%=%(col\ %c%)\ \ \ \ \ \ %(%l\ /\ %L%)\ \ \ \ \ \ %p%%
+
 set wildmenu
 set wildmode=longest:list,full
+
+set cmdheight=1
 set showcmd
 set showmode
-set noerrorbells novisualbells
-set number relativenumber lines=51
+
+set noerrorbells novisualbell
+
+set number relativenumber
+set lines=51
+
 set lazyredraw
 
 set showmatch
-set incsearch hlsearch smartcase
+set incsearch hlsearch
+set smartcase
 
 set nojoinspaces
 set ve=block
@@ -75,11 +85,13 @@ set formatoptions=croql
 
 set autoindent smartindent
 set tabstop=4
+set cinoptions+=:0
 set expandtab softtabstop=4 shiftwidth=4
 set smarttab
 set noshiftround
 
 map <Space> \
+nmap <S-Space> <Space>
 
 highlight FoldColumn ctermbg=1
 highlight Folded ctermbg=1

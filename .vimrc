@@ -60,6 +60,7 @@ color default
 
 set encoding=utf-8
 scriptencoding utf-8
+set ffs=unix,dos,mac
 let $LANG='en'
 
 set noswapfile nobackup autoread
@@ -67,9 +68,8 @@ set noconfirm                        " fail, don't ask to save
 set hidden                           " allow working with buffers
 set history=50
 
-set laststatus=2               " For when Airline isn't available
-"set ruler
-set statusline=%n:\ %F\ \ \ %m%y%=%(%l,%cc\ /\ %LL%)\ \ \ \ \ %p%%
+set laststatus=2                     " For when Airline isn't available
+set statusline=buf\ %n:\ \"%F\"%<\ \ \ %m%y%h%w%r%=%(col\ %c%)\ \ \ \ \ \ %(%l\ /\ %L%)\ \ \ \ \ \ %p%%
 
 set wildmenu                         " better command-line completion
 set wildmode=longest:list,full       " TODO: decide between this and longest:full,full
@@ -193,8 +193,6 @@ nnoremap <silent> <C-Left> "_yiw?\w\+\_W\+\%#<CR>:s/\(\%#\w\+\)\(\_W\+\)\(\w\+\)
 " Leader mappings {{{
 map <Space> \
 nmap <S-Space> <Space>
-"nnoremap <Space> <nop>
-"let mapleader=" "
 nmap <Leader>v :e ~/dotfiles/.vimrc<CR>
 nmap <Leader>sv :sou $MYVIMRC<CR>
 map <Leader>tn :tabnew<CR>
