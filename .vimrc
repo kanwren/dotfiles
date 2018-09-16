@@ -195,7 +195,6 @@ inoremap kj <ESC>
 " }}}
 
 " Editing mappings {{{
-nnoremap g; A;<Esc>
 " Exchange operation-delete, target highlight, exchange
 vnoremap gx <Esc>`.``gvP``P
 " Swap word with the next full word, even across punctuation or newlines.
@@ -215,6 +214,8 @@ nmap <Leader>v :e ~/dotfiles/.vimrc<CR>
 nmap <Leader>sv :sou $MYVIMRC<CR>
 map <Leader>tn :tabnew<CR>
 map <Leader>tc :tabclose<CR>
+
+nnoremap <Leader>; mzA;<Esc>`z
 " }}}
 
 " Plugin mappings {{{
