@@ -30,6 +30,7 @@ function! MyDiff()
   endif
 endfunction
 
+autocmd FileType help wincmd L
 syntax on
 filetype on
 filetype indent on
@@ -37,7 +38,15 @@ filetype plugin on
 
 color default
 
-set noswapfile nobackup autoread
+set lazyredraw
+
+set swapfile
+set backup
+set writebackup
+set backupdir=~/.vim/backup
+set directory^=~/.vim/tmp
+
+set autoread
 set noconfirm
 set hidden
 set history=50
@@ -57,8 +66,6 @@ set noerrorbells novisualbell
 set number relativenumber
 set lines=51
 
-set lazyredraw
-
 set showmatch
 set incsearch hlsearch
 set smartcase
@@ -67,7 +74,7 @@ set nojoinspaces
 set ve=block
 set nospell spelllang=en_us
 set splitbelow splitright
-
+set nowrap
 set backspace=indent,eol,start
 set whichwrap+=<,>,h,l,[,]
 
@@ -81,7 +88,7 @@ set modelines=0
 set foldmethod=manual
 set foldcolumn=1
 set textwidth=80
-set formatoptions=croql
+set formatoptions=croqln1
 
 set autoindent smartindent
 set tabstop=4
@@ -90,6 +97,11 @@ set expandtab softtabstop=4 shiftwidth=4
 set smarttab
 set noshiftround
 
+nnoremap <Tab> :retab<CR>mz:%s/\s\+$//ge<CR>`z
+nnoremap Y y$
+inoremap jk <ESC>
+inoremap kj <ESC>
+nnoremap Q @q
 map <Space> \
 nmap <S-Space> <Space>
 

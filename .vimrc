@@ -60,7 +60,7 @@ filetype indent on
 filetype plugin on
 
 " Backups {{{
-"set noswapfile
+set swapfile
 set backup
 set writebackup
 set backupdir=~/.vim/backup
@@ -74,7 +74,9 @@ scriptencoding utf-8
 set ffs=unix,dos,mac
 let $LANG='en'
 
-set nobackup autoread
+set lazyredraw
+
+set autoread
 set noconfirm                        " fail, don't ask to save
 set hidden                           " allow working with buffers
 set history=50
@@ -94,8 +96,6 @@ set noerrorbells novisualbell
 set number relativenumber
 set lines=51
 
-set lazyredraw
-
 set showmatch                        " matching brace/parens/etc.
 set incsearch hlsearch
 set smartcase
@@ -104,7 +104,7 @@ set nojoinspaces                     " never two spaces after sentence
 set ve=block
 set nospell spelllang=en_us
 set splitbelow splitright            " directions for vs/sp
-
+set nowrap
 set backspace=indent,eol,start
 set whichwrap+=<,>,h,l,[,]           " direction key wrapping
 
@@ -118,13 +118,20 @@ set modelines=0
 set foldmethod=manual
 set foldcolumn=1
 set textwidth=80
-set formatoptions=croql
-"set formatoptions+=n1
+set formatoptions=croqln1
+" c=wrap comments
+" r=insert comment on enter
+" o=insert comment on o/O
+" q=allow formatting of comments with gq
+" l=don't break lines longer than textwidth before insert started
+" n=recognize numbered lists
+" 1=don't break a line after a one-letter word
 
 set autoindent smartindent
-set tabstop=4                            " treat tabs as 4 spaces wide
-set cinoptions+=:0                       " Makes 'case's align with 'switch's
-set expandtab softtabstop=4 shiftwidth=4 " expand tabs to 4 spaces
+set tabstop=4               " treat tabs as 4 spaces wide
+set cinoptions+=:0L0g0      " indent distance for case, jumps, scope declarations
+set expandtab softtabstop=4 " expand tabs to 4 spaces
+set shiftwidth=4            " use 4 spaces when using > or <
 set smarttab
 set noshiftround
 " }}}
