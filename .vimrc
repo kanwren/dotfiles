@@ -30,6 +30,7 @@ function! MyDiff()
     endif
 endfunction
 
+" Autocommands {{{
 autocmd FileType help wincmd L
 augroup plugin_group
     autocmd!
@@ -37,11 +38,19 @@ augroup plugin_group
     autocmd Syntax * RainbowParenthesesLoadRound
     autocmd VimEnter * SyntasticToggleMode
 augroup END
+augroup vimscript_options
+    autocmd!
+    autocmd FileType vim setlocal foldmethod=marker
+augroup END
 augroup java_options
     autocmd!
+    autocmd FileType *.java setlocal foldmethod=syntax
     autocmd BufWritePre *.java :normal mzgg=G`z
 augroup END
+autocmd VimEnter * :normal zR
+" }}}
 
+" Settings Configuration {{{
 syntax on
 filetype on
 filetype indent on
@@ -54,37 +63,44 @@ scriptencoding utf-8
 let $LANG='en'
 
 set noswapfile nobackup autoread
-set noconfirm                     " fail, don't ask to save
-set hidden                        " allow working with buffers
+set noconfirm                        " fail, don't ask to save
+set hidden                           " allow working with buffers
 set history=50
 
+set laststatus=2               " For when Airline isn't available
+"set ruler
+set statusline=%n:\ %F\ \ \ %m%y%=%(%l,%cc\ /\ %LL%)\ \ \ \ \ %p%%
+
+set wildmenu                         " better command-line completion
+set wildmode=longest:list,full       " TODO: decide between this and longest:full,full
+
 set cmdheight=1
-set ruler laststatus=2         " if airline isn't working
-set wildmenu                   " better command-line completion
-set wildmode=longest:list,full " TODO: decide between this and longest:full,full
-set showcmd                    " show partial commands on bottom
+set showcmd                          " show partial commands on bottom
 set showmode
+
 set noerrorbells novisualbell
+
 set number relativenumber
 set lines=51
+
 set lazyredraw
 
-set showmatch           " matching brace/parens/etc.
+set showmatch                        " matching brace/parens/etc.
 set incsearch hlsearch
 set smartcase
 
-set nojoinspaces             " never two spaces after sentence
+set nojoinspaces                     " never two spaces after sentence
 set ve=block
 set nospell spelllang=en_us
-set splitbelow splitright    " directions for vs/sp
+set splitbelow splitright            " directions for vs/sp
 
 set backspace=indent,eol,start
-set whichwrap+=<,>,h,l,[,]     " direction key wrapping
+set whichwrap+=<,>,h,l,[,]           " direction key wrapping
 
 set timeout timeoutlen=500
 
 set ttyfast
-set scrolloff=0                   " TODO: 5? 7?
+set scrolloff=0                      " TODO: 5? 7?
 
 set list listchars=tab:>-,eol:¬,extends:>,precedes:<
 set modelines=0
@@ -100,8 +116,9 @@ set cinoptions+=:0                       " Makes 'case's align with 'switch's
 set expandtab softtabstop=4 shiftwidth=4 " expand tabs to 4 spaces
 set smarttab
 set noshiftround
+" }}}
 
-" Highlighting
+" Highlighting {{{
 " Highlight column for folding
 highlight FoldColumn ctermbg=1
 highlight Folded ctermbg=1
@@ -119,16 +136,18 @@ highlight CursorLineNr ctermbg=1 ctermfg=7
 highlight Todo ctermbg=12 ctermfg=7
 "highlight MatchParen ctermbg=3
 "highlight Search ctermbg=14
+"}}}
 
-" Key rebindings
-" Display
+" Mappings {{{
+" Display mappings {{{
 noremap <C-l> :noh<CR><C-l>
 " Retab and delete whitespace
 nnoremap <Tab> :retab<CR>mz:%s/\s\+$//ge<CR>`z
 " Clear search register to prevent highlighting
 noremap <C-n> :let @/=""<CR>
+" }}}
 
-" Fixes
+" Fixing mappings {{{
 " Fix screen errors when using Ctrl+FBDU
 nmap <C-f> <C-f><C-l>
 nmap <C-b> <C-b><C-l>
@@ -136,8 +155,9 @@ nmap <C-d> <C-d><C-l>
 nmap <C-u> <C-u><C-l>
 " Fix auto unindent of lines starting with # in Python, etc.
 inoremap # X#
+" }}}
 
-" Convenience mappings that change default behavior
+" Convenience mappings {{{
 " Familiar saving
 nnoremap <C-s> :w<CR>
 inoremap <C-s> <Esc>:w<CR>gi
@@ -154,8 +174,9 @@ nnoremap <silent> "" :registers<CR>
 " Provide easier alternative to escape-hit them at the same time
 inoremap jk <ESC>
 inoremap kj <ESC>
+" }}}
 
-" Editing
+" Editing mappings {{{
 nnoremap g; A;<Esc>
 " Exchange operation-delete, target highlight, exchange
 vnoremap gx <Esc>`.``gvP``P
@@ -167,8 +188,9 @@ nnoremap <silent> <C-Left> "_yiw?\w\+\_W\+\%#<CR>:s/\(\%#\w\+\)\(\_W\+\)\(\w\+\)
 " Insertion of single characters before or after cursor
 "nnoremap <silent> <Space> :exec "normal i".nr2char(getchar())."\e"<CR>
 "nnoremap <silent> <S-Space> :exec "normal a".nr2char(getchar())."\e"<CR>
+" }}}
 
-" Leader stuff
+" Leader mappings {{{
 map <Space> \
 nmap <S-Space> <Space>
 "nnoremap <Space> <nop>
@@ -177,8 +199,9 @@ nmap <Leader>v :e ~/dotfiles/.vimrc<CR>
 nmap <Leader>sv :sou $MYVIMRC<CR>
 map <Leader>tn :tabnew<CR>
 map <Leader>tc :tabclose<CR>
+" }}}
 
-" Plugin mappings
+" Plugin mappings {{{
 " NERDTree
 map <F2> :NERDTreeToggle<CR>
 " Syntastic
@@ -198,8 +221,10 @@ vmap <expr> D DVB_Duplicate()
 " Tabular
 " Prompt for regular expression to tabularize on
 noremap <expr> <Leader>a ":Tab /" . input("/") . "<CR>"
+"}}}
+"}}}
 
-" Abbreviations
+" Abbreviations {{{
 iab xdmy <C-r>=strftime("%d/%m/%y")<CR>
 iab xmdy <C-r>=strftime("%m/%d/%y")<CR>
 iab xymd <C-r>=strftime("%Y-%m-%d")<CR>
@@ -224,8 +249,9 @@ iab xdatetime <C-r>=strftime("%a %d %b %Y %I:%M %p")<CR>
 iab xdt <C-r>=strftime("%Y-%m-%d %H:%M")<CR>
 " 2018-09-15T23:31:54
 iab xiso <C-r>=strftime("%Y-%m-%dT%H:%M:%S")<CR>
+" }}}
 
-" Vundle plugins
+" Vundle plugins {{{
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin('~/.vim/bundle/')
 
@@ -282,7 +308,9 @@ Bundle 'honza/vim-snippets'
 Bundle 'bps/vim-textobj-python'
 Bundle 'vim-ruby/vim-ruby'
 call vundle#end()
+" }}}
 
+" Plugin settings {{{
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
@@ -319,3 +347,4 @@ let g:rbpt_colorpairs = [
             \ ['green',     'SeaGreen3'],
             \ ['red',       'firebrick3'],
             \ ]
+" }}}

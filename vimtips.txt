@@ -6,7 +6,11 @@ Add a break after every case in a switch statement:
 Interesting things to get under my fingers:
 vanilla:
   :<C-k><any key> tells you how to reference that key
+  <C-g> gives you information about the current file
+  1<C-g> gives information about the current file with the entire filename
+  2<C-g> gives information about the current buffer
   g<C-g> gives information about the cursor position
+  {visual}g<C-g> gives information about the selection
   ga gives information about the ASCII character under the cursor
   :%!xxd and :%!xxd -r can edit hexadecimal
   :%TOhtml creates an html rendering of the current file
