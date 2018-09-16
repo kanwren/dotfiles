@@ -6,7 +6,9 @@ Add a break after every case in a switch statement:
 Interesting things to get under my fingers:
 vanilla:
   gm moves to the middle of a visual line in vim
-  zh, zl, zH, zL
+  Horizontal scrolling: zh, zl, zH, zL, zs, ze
+  Folding: zf, zd, zo, zc, za, zO, zC, zA, zR, zM
+  Fold navigation: zj, zk, [z, ]z
   z<Enter>, z., z- (don't really use these, just good to know)
   :<C-u> deletes the range that Vim automatically inserts in visual mode
   :<C-k><any key> tells you how to reference that key
