@@ -47,7 +47,7 @@ augroup vimscript_options
 augroup END
 augroup java_options
     autocmd!
-    autocmd FileType *.java setlocal foldmethod=syntax
+    autocmd FileType java setlocal foldmethod=syntax
     autocmd BufWritePre *.java :normal mzgg=G`z
 augroup END
 autocmd VimEnter * :normal zR
