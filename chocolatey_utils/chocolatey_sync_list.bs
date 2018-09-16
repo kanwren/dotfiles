@@ -1,0 +1,1 @@
+choco list -l | head -n -1 | cut -d ' ' -f 1 > choco_list.txt
