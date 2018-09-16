@@ -1,42 +1,46 @@
-" TODO: Add shortcut for opening scratch buffer
-" map <something> :e ~/buffer
-
 set nocompatible
 
 set diffexpr=MyDiff()
 function! MyDiff()
-  let opt = '-a --binary '
-  if &diffopt =~ 'icase'  | let opt = opt . '-i ' | endif
-  if &diffopt =~ 'iwhite' | let opt = opt . '-b ' | endif
-  let arg1 = v:fname_in
-  if arg1 =~ ' ' | let arg1 = '"' . arg1 . '"' | endif
-  let arg2 = v:fname_new
-  if arg2 =~ ' ' | let arg2 = '"' . arg2 . '"' | endif
-  let arg3 = v:fname_out
-  if arg3 =~ ' ' | let arg3 = '"' . arg3 . '"' | endif
-  if $VIMRUNTIME =~ ' '
-    if &sh =~ '\<cmd'
-      if empty(&shellxquote)
-        let l:shxq_sav = ''
-        set shellxquote&
-      endif
-      let cmd = '"' . $VIMRUNTIME . '\diff"'
+    let opt = '-a --binary '
+    if &diffopt =~ 'icase'  | let opt = opt . '-i ' | endif
+    if &diffopt =~ 'iwhite' | let opt = opt . '-b ' | endif
+    let arg1 = v:fname_in
+    if arg1 =~ ' ' | let arg1 = '"' . arg1 . '"' | endif
+    let arg2 = v:fname_new
+    if arg2 =~ ' ' | let arg2 = '"' . arg2 . '"' | endif
+    let arg3 = v:fname_out
+    if arg3 =~ ' ' | let arg3 = '"' . arg3 . '"' | endif
+    if $VIMRUNTIME =~ ' '
+        if &sh =~ '\<cmd'
+            if empty(&shellxquote)
+                let l:shxq_sav = ''
+                set shellxquote&
+            endif
+            let cmd = '"' . $VIMRUNTIME . '\diff"'
+        else
+            let cmd = substitute($VIMRUNTIME, ' ', '" ', '') . '\diff"'
+        endif
     else
-      let cmd = substitute($VIMRUNTIME, ' ', '" ', '') . '\diff"'
+        let cmd = $VIMRUNTIME . '\diff'
     endif
-  else
-    let cmd = $VIMRUNTIME . '\diff'
-  endif
-  silent execute '!' . cmd . ' ' . opt . arg1 . ' ' . arg2 . ' > ' . arg3
-  if exists('l:shxq_sav')
-    let &shellxquote=l:shxq_sav
-  endif
+    silent execute '!' . cmd . ' ' . opt . arg1 . ' ' . arg2 . ' > ' . arg3
+    if exists('l:shxq_sav')
+        let &shellxquote=l:shxq_sav
+    endif
 endfunction
 
 autocmd FileType help wincmd L
-au VimEnter * RainbowParenthesesToggle
-au Syntax * RainbowParenthesesLoadRound
-autocmd VimEnter * SyntasticToggleMode
+augroup plugin_group
+    autocmd!
+    autocmd VimEnter * RainbowParenthesesToggle
+    autocmd Syntax * RainbowParenthesesLoadRound
+    autocmd VimEnter * SyntasticToggleMode
+augroup END
+augroup java_options
+    autocmd!
+    autocmd BufWritePre *.java :normal mzgg=G`z
+augroup END
 
 syntax on
 filetype on
@@ -50,37 +54,37 @@ scriptencoding utf-8
 let $LANG='en'
 
 set noswapfile nobackup autoread
-set noconfirm                         " fail, don't ask to save
-set hidden                            " allow working with buffers
+set noconfirm                     " fail, don't ask to save
+set hidden                        " allow working with buffers
 set history=50
 
 set cmdheight=1
-set ruler laststatus=2                " if airline isn't working
-set wildmenu                          " better command-line completion
-set wildmode=longest:list,full        " TODO: decide between this and longest:full,full
-set showcmd                           " show partial commands on bottom
-set showmode                          " TODO: keep despite Airline?
-set noerrorbells
-set novisualbell
-set number relativenumber lines=51
+set ruler laststatus=2         " if airline isn't working
+set wildmenu                   " better command-line completion
+set wildmode=longest:list,full " TODO: decide between this and longest:full,full
+set showcmd                    " show partial commands on bottom
+set showmode
+set noerrorbells novisualbell
+set number relativenumber
+set lines=51
 set lazyredraw
 
-set showmatch                         " matching brace/parens/etc.
-set incsearch hlsearch smartcase
+set showmatch           " matching brace/parens/etc.
+set incsearch hlsearch
+set smartcase
 
-set nojoinspaces                      " never two spaces after sentence
+set nojoinspaces             " never two spaces after sentence
 set ve=block
 set nospell spelllang=en_us
-set splitbelow splitright             " directions for vs/sp
+set splitbelow splitright    " directions for vs/sp
 
 set backspace=indent,eol,start
-set whichwrap+=<,>,h,l,[,]            " direction key wrapping
-set nowrap
+set whichwrap+=<,>,h,l,[,]     " direction key wrapping
 
 set timeout timeoutlen=500
 
 set ttyfast
-set scrolloff=0                       " TODO: 5? 7?
+set scrolloff=0                   " TODO: 5? 7?
 
 set list listchars=tab:>-,eol:¬,extends:>,precedes:<
 set modelines=0
@@ -91,8 +95,9 @@ set formatoptions=croql
 "set formatoptions+=n1
 
 set autoindent smartindent
-set tabstop=4                                  " treat tabs as 4 spaces wide
-set expandtab softtabstop=4 shiftwidth=4       " expand tabs to 4 spaces
+set tabstop=4                            " treat tabs as 4 spaces wide
+set cinoptions+=:0                       " Makes 'case's align with 'switch's
+set expandtab softtabstop=4 shiftwidth=4 " expand tabs to 4 spaces
 set smarttab
 set noshiftround
 
@@ -119,10 +124,9 @@ highlight Todo ctermbg=12 ctermfg=7
 " Display
 noremap <C-l> :noh<CR><C-l>
 " Retab and delete whitespace
-nnoremap <BS> :retab<CR>mt:%s/\s\+$//ge<CR>`t
+nnoremap <Tab> :retab<CR>mz:%s/\s\+$//ge<CR>`z
 " Clear search register to prevent highlighting
 noremap <C-n> :let @/=""<CR>
-nnoremap <CR> za
 
 " Fixes
 " Fix screen errors when using Ctrl+FBDU
@@ -151,12 +155,6 @@ nnoremap <silent> "" :registers<CR>
 inoremap jk <ESC>
 inoremap kj <ESC>
 
-" TODO: Tentative
-map <Left> <C-w>h
-map <Down> <C-w>j
-map <Up> <C-w>k
-map <Right> <C-w>l
-
 " Editing
 nnoremap g; A;<Esc>
 " Exchange operation-delete, target highlight, exchange
@@ -171,11 +169,12 @@ nnoremap <silent> <C-Left> "_yiw?\w\+\_W\+\%#<CR>:s/\(\%#\w\+\)\(\_W\+\)\(\w\+\)
 "nnoremap <silent> <S-Space> :exec "normal a".nr2char(getchar())."\e"<CR>
 
 " Leader stuff
-nnoremap <Space> <nop>
-let mapleader=" "
-" Allow capital leader commands to work with shift held down
+map <Space> \
 nmap <S-Space> <Space>
+"nnoremap <Space> <nop>
+"let mapleader=" "
 nmap <Leader>v :e ~/dotfiles/.vimrc<CR>
+nmap <Leader>sv :sou $MYVIMRC<CR>
 map <Leader>tn :tabnew<CR>
 map <Leader>tc :tabclose<CR>
 
@@ -201,9 +200,30 @@ vmap <expr> D DVB_Duplicate()
 noremap <expr> <Leader>a ":Tab /" . input("/") . "<CR>"
 
 " Abbreviations
-iab xdate <C-r>=strftime("%d/%m/%y")<CR>
-iab xtime <C-r>=strftime("%H:%M:%S")<CR>
-iab xdt <C-r>=strftime("%d/%m/%y %H:%M:%S")
+iab xdmy <C-r>=strftime("%d/%m/%y")<CR>
+iab xmdy <C-r>=strftime("%m/%d/%y")<CR>
+iab xymd <C-r>=strftime("%Y-%m-%d")<CR>
+
+" 15 Sep 2018
+iab xsdate <C-r>=strftime("%d %b %Y")<CR>
+" September 15, 2018
+iab xldate <C-r>=strftime("%B %d, %Y")<CR>
+" Sat 15 Sep 2018
+iab xswdate <C-r>=strftime("%a %d %b %Y")<CR>
+" Saturday, September 15, 2018
+iab xlwdate <C-r>=strftime("%A, %B %d, %Y")<CR>
+
+" 11:31 PM
+iab xtime <C-r>=strftime("%I:%M %p")<CR>
+" 23:31
+iab xmtime <C-r>=strftime("%H:%M")<CR>
+
+" Sat 15 Sep 2018 11:31 PM
+iab xdatetime <C-r>=strftime("%a %d %b %Y %I:%M %p")<CR>
+" 2018-09-15 23:31
+iab xdt <C-r>=strftime("%Y-%m-%d %H:%M")<CR>
+" 2018-09-15T23:31:54
+iab xiso <C-r>=strftime("%Y-%m-%dT%H:%M:%S")<CR>
 
 " Vundle plugins
 set rtp+=~/.vim/bundle/Vundle.vim
@@ -295,7 +315,7 @@ let g:airline_symbols.spell = 'S'
 let g:rbpt_max = 15
 let g:rbpt_loadcmd_toggle = 0
 let g:rbpt_colorpairs = [
-    \ ['blue',      'RoyalBlue3'],
-    \ ['green',     'SeaGreen3'],
-    \ ['red',       'firebrick3'],
-    \ ]
+            \ ['blue',      'RoyalBlue3'],
+            \ ['green',     'SeaGreen3'],
+            \ ['red',       'firebrick3'],
+            \ ]

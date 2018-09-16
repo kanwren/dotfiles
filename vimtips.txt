@@ -88,3 +88,5 @@ unimpaired:
   ]yy
   {Visual}]y
 
+ctrlp:
+  Can mark files for opening with <C-z> and open them with <C-o>
