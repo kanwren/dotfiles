@@ -160,7 +160,7 @@ highlight Todo ctermbg=12 ctermfg=7
 " Display mappings {{{
 noremap <C-l> :noh<CR><C-l>
 " Retab and delete whitespace
-nnoremap <Tab> :retab<CR>mz:%s/\s\+$//ge<CR>`z
+nnoremap <Tab> mz:%s/\s\+$//ge<CR>`z:retab<CR>
 " Clear search register to prevent highlighting
 noremap <C-n> :let @/=""<CR>
 " }}}
