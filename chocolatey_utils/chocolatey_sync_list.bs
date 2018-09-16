@@ -1,1 +1,2 @@
 choco list -l | sed '/^\([0-9]\+\|Did\|$\)/d' | cut -d ' ' -f 1 > choco_list.txt
+cat choco_list.txt

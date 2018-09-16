@@ -1,16 +1,17 @@
 Chocolatey
-android-sdk
-AndroidStudio
+androidstudio
 audacity
 ccleaner
 chocolatey
 chocolatey-core.extension
+chocolatey-windowsupdate.extension
 clisp
 cmake
 cmake.install
 cmder
 curl
 discord
+discord.install
 dotnet4.7.1
 dropbox
 eclipse
@@ -23,6 +24,7 @@ googledrive
 jdk10
 jdk8
 jdk9
+KB2670838
 KB2919355
 KB2919442
 lame
