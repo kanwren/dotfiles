@@ -56,6 +56,14 @@ filetype on
 filetype indent on
 filetype plugin on
 
+" Backups {{{
+"set noswapfile
+set backup
+set writebackup
+set backupdir=~/.vim/backup
+set directory^=~/.vim/tmp
+" }}}
+
 color default
 
 set encoding=utf-8
@@ -63,7 +71,7 @@ scriptencoding utf-8
 set ffs=unix,dos,mac
 let $LANG='en'
 
-set noswapfile nobackup autoread
+set nobackup autoread
 set noconfirm                        " fail, don't ask to save
 set hidden                           " allow working with buffers
 set history=50
