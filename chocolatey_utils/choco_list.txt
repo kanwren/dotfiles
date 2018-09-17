@@ -21,6 +21,7 @@ gimp
 git
 git.install
 googledrive
+InkScape
 jdk10
 jdk8
 jdk9
