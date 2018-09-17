@@ -185,6 +185,9 @@ noremap <silent> <expr> j (v:count == 0 ? 'gj' : 'j')
 noremap <silent> <expr> k (v:count == 0 ? 'gk' : 'k')
 " Makes temporary macros more tolerable
 nnoremap Q @q
+" Repeat commands across visual selections
+vnoremap . :norm .<CR>
+vnoremap Q :norm @q<CR>
 " Makes Y consistent with C and D, because I always use yy for Y anyway
 nnoremap Y y$
 " Display registers
