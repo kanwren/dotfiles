@@ -41,11 +41,11 @@ augroup plugin_group
     autocmd StdinReadPre * let s:std_in=1
     autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 augroup END
-augroup vimscript_options
+augroup vimscript_group
     autocmd!
     autocmd FileType vim setlocal foldmethod=marker
 augroup END
-augroup java_options
+augroup java_group
     autocmd!
     autocmd FileType java setlocal foldmethod=syntax
     autocmd BufWritePre *.java :normal mzgg=G`z
