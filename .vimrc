@@ -50,7 +50,7 @@ augroup java_group
     autocmd FileType java setlocal foldmethod=syntax
     autocmd BufWritePre *.java :normal mzgg=G`z
 augroup END
-autocmd VimEnter * :normal zR
+autocmd VimEnter,BufEnter * :normal zR
 " }}}
 
 " Settings Configuration {{{
@@ -74,12 +74,14 @@ scriptencoding utf-8
 set ffs=unix,dos,mac
 let $LANG='en'
 
-set lazyredraw
-
 set autoread
 set noconfirm                        " fail, don't ask to save
 set hidden                           " allow working with buffers
 set history=50
+
+set tags=tags;/
+
+set lazyredraw
 
 set laststatus=2                     " For when Airline isn't available
 set statusline=buf\ %n:\ \"%F\"%<\ \ \ %m%y%h%w%r%=%(col\ %c%)\ \ \ \ \ \ %(%l\ /\ %L%)\ \ \ \ \ \ %p%%
