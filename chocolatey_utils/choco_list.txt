@@ -9,6 +9,7 @@ clisp
 cmake
 cmake.install
 cmder
+ctags
 curl
 discord
 discord.install
