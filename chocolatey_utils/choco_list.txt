@@ -36,7 +36,6 @@ musescore
 notepadplusplus
 notepadplusplus.install
 paint.net
-PyCharm-community
 python
 python3
 ruby
