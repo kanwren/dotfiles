@@ -9,6 +9,7 @@ clisp
 cmake
 cmake.install
 cmder
+ctags
 curl
 discord
 discord.install
@@ -35,7 +36,6 @@ musescore
 notepadplusplus
 notepadplusplus.install
 paint.net
-PyCharm-community
 python
 python3
 ruby
