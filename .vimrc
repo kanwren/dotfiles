@@ -37,9 +37,9 @@ augroup plugin_group
     autocmd VimEnter * RainbowParenthesesToggle
     autocmd Syntax * RainbowParenthesesLoadRound
     autocmd VimEnter * SyntasticToggleMode
-    autocmd BufEnter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
+    "autocmd BufEnter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
     autocmd StdinReadPre * let s:std_in=1
-    autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+    "autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 augroup END
 augroup vimscript_group
     autocmd!
@@ -166,7 +166,7 @@ highlight Todo ctermbg=12 ctermfg=7
 " Display mappings {{{
 noremap <C-l> :noh<CR><C-l>
 " Retab and delete whitespace
-nnoremap <Tab> mz:%s/\s\+$//ge<CR>`z:retab<CR>
+"nnoremap <Tab> mz:%s/\s\+$//ge<CR>`z:retab<CR>
 " Clear search register to prevent highlighting
 noremap <C-n> :let @/=""<CR>
 " }}}
@@ -290,8 +290,11 @@ call vundle#begin('~/.vim/bundle/')
 " terryma/vim-multiple-cursors
 " maxbrunsfeld/vim-yankstack
 " amix/vim-zenroom2
+" xolox/vim-notes
 
 Bundle 'gmarik/Vundle.vim'
+
+Bundle 'vimwiki/vimwiki'
 
 " Interface
 Bundle 'vim-airline/vim-airline'
@@ -335,6 +338,8 @@ Bundle 'bps/vim-textobj-python'
 Bundle 'vim-ruby/vim-ruby'
 call vundle#end()
 " }}}
+
+let g:vimwiki_list = [{'path': '~/wiki'}]
 
 " Plugin settings {{{
 let g:syntastic_always_populate_loc_list = 1
