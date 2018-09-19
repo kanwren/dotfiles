@@ -50,6 +50,10 @@ augroup java_group
     autocmd FileType java setlocal foldmethod=syntax
     autocmd BufWritePre *.java :normal mzgg=G`z
 augroup END
+augroup notes_group
+    autocmd!
+    autocmd BufEnter *.notes setlocal tabstop=2 softtabstop=2 shiftwidth=2
+augroup END
 autocmd VimEnter,BufEnter * :normal zR
 " }}}
 
@@ -71,7 +75,7 @@ color default
 
 set encoding=utf-8
 scriptencoding utf-8
-set ffs=unix,dos,mac
+set ffs=dos,unix,mac
 let $LANG='en'
 
 set autoread
@@ -180,7 +184,7 @@ inoremap # X#
 " Convenience mappings {{{
 " Familiar saving
 nnoremap <C-s> :w<CR>
-inoremap <C-s> <Esc>:w<CR>gi
+inoremap <C-s> <C-o>:w<CR>
 vnoremap <C-s> <Esc>:w<CR>gv
 " Work by visual line without a count, but normal when used with one
 noremap <silent> <expr> j (v:count == 0 ? 'gj' : 'j')
