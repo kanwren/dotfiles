@@ -214,8 +214,9 @@ nnoremap <silent> <C-Left> "_yiw?\w\+\_W\+\%#<CR>:s/\(\%#\w\+\)\(\_W\+\)\(\w\+\)
 " }}}
 
 " Leader mappings {{{
-map <Space> \
+map <Space> <nop>
 nmap <S-Space> <Space>
+let mapleader=" "
 nmap <Leader>v :e ~/dotfiles/.vimrc<CR>
 nmap <Leader>sv :sou $MYVIMRC<CR>
 map <Leader>tn :tabnew<CR>
