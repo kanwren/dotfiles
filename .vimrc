@@ -50,6 +50,9 @@ augroup java_group
     autocmd FileType java setlocal foldmethod=syntax
     autocmd BufWritePre *.java :normal mzgg=G`z
 augroup END
+augroup wiki_group
+    autocmd FileTYpe vimwiki map <F10> :VimwikiAll2HTML<CR>
+augroup END
 autocmd VimEnter,BufEnter * :normal zR
 " }}}
 
@@ -140,20 +143,20 @@ set noshiftround
 
 " Highlighting {{{
 " Highlight column for folding
-highlight FoldColumn ctermbg=1
-highlight Folded ctermbg=1
+highlight FoldColumn ctermbg=darkblue
+highlight Folded ctermbg=darkblue
 
-highlight ColorColumn ctermbg=1
+highlight ColorColumn ctermbg=darkblue
 set colorcolumn=81
 call matchadd('ColorColumn', '\%81v\S', 100)
 
-highlight ExtraWhitespace ctermbg=3
+highlight ExtraWhitespace ctermbg=darkcyan
 match ExtraWhitespace /\s\+$/
 
 "highlight LineNr ctermbg=0
-highlight CursorLineNr ctermbg=1 ctermfg=7
+highlight CursorLineNr ctermbg=darkblue ctermfg=gray
 " Try out :hi CursorLineNr ctermbg=12 ctermfg=7
-highlight Todo ctermbg=12 ctermfg=7
+highlight Todo ctermbg=red ctermfg=gray
 "highlight MatchParen ctermbg=3
 "highlight Search ctermbg=14
 "}}}
@@ -229,8 +232,7 @@ map <F2> :NERDTreeToggle<CR>
 " Syntastic
 noremap <F9> :SyntasticCheck<CR>
 " EasyMotion
-map <Leader> <Plug>(easymotion-prefix)
-nmap <Leader>f <Plug>(easymotion-s)
+map <Leader><Leader> <Plug>(easymotion-prefix)
 nmap <Leader>s <Plug>(easymotion-s2)
 map <Leader>l <Plug>(easymotion-bd-jk)
 nmap <Leader>l <Plug>(easymotion-overwin-line)
@@ -286,7 +288,6 @@ call vundle#begin('~/.vim/bundle/')
 " terryma/vim-multiple-cursors
 " maxbrunsfeld/vim-yankstack
 " amix/vim-zenroom2
-" xolox/vim-notes
 
 Bundle 'gmarik/Vundle.vim'
 
@@ -335,13 +336,16 @@ Bundle 'vim-ruby/vim-ruby'
 call vundle#end()
 " }}}
 
-highlight VimwikiLink ctermbg=0 ctermfg=18
-highlight VimwikiBold ctermfg=13
-highlight VimwikiItalic ctermfg=9
-highlight VimwikiBoldItalic ctermfg=14
-let g:vimwiki_list = [{'path': '~/wiki'}]
-
 " Plugin settings {{{
+highlight VimwikiLink ctermbg=black ctermfg=2
+highlight VimwikiBold ctermfg=magenta
+highlight VimwikiItalic ctermfg=yellow
+highlight VimwikiBoldItalic ctermfg=darkyellow
+highlight VimwikiHeader1 ctermfg=magenta
+highlight VimwikiHeader2 ctermfg=blue
+highlight VimwikiHeader3 ctermfg=green
+let g:vimwiki_list = [{'path': '~/Dropbox/wiki'}]
+
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
