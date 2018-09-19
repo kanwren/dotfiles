@@ -50,10 +50,6 @@ augroup java_group
     autocmd FileType java setlocal foldmethod=syntax
     autocmd BufWritePre *.java :normal mzgg=G`z
 augroup END
-augroup notes_group
-    autocmd!
-    autocmd BufEnter *.notes setlocal tabstop=2 softtabstop=2 shiftwidth=2
-augroup END
 autocmd VimEnter,BufEnter * :normal zR
 " }}}
 
@@ -165,8 +161,6 @@ highlight Todo ctermbg=12 ctermfg=7
 " Mappings {{{
 " Display mappings {{{
 noremap <C-l> :noh<CR><C-l>
-" Retab and delete whitespace
-"nnoremap <Tab> mz:%s/\s\+$//ge<CR>`z:retab<CR>
 " Clear search register to prevent highlighting
 noremap <C-n> :let @/=""<CR>
 " }}}
@@ -224,7 +218,9 @@ nmap <Leader>sv :sou $MYVIMRC<CR>
 map <Leader>tn :tabnew<CR>
 map <Leader>tc :tabclose<CR>
 
+" Retab and delete whitespace
 nnoremap <Leader>; mzA;<Esc>`z
+nnoremap <Leader><Tab> mz:%s/\s\+$//ge<CR>`z:retab<CR>
 " }}}
 
 " Plugin mappings {{{
@@ -339,6 +335,10 @@ Bundle 'vim-ruby/vim-ruby'
 call vundle#end()
 " }}}
 
+highlight VimwikiLink ctermbg=0 ctermfg=18
+highlight VimwikiBold ctermfg=13
+highlight VimwikiItalic ctermfg=9
+highlight VimwikiBoldItalic ctermfg=14
 let g:vimwiki_list = [{'path': '~/wiki'}]
 
 " Plugin settings {{{
