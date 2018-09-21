@@ -1,1 +1,3 @@
-for /F "tokens=*" %%A in ("choco_list.txt") do choco upgrade -y %%A
+FOR /F "tokens=*" %%A IN ("choco_list.txt") DO (
+ choco upgrade -y %%A
+)
