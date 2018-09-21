@@ -51,7 +51,9 @@ augroup java_group
     autocmd BufWritePre *.java :normal mzgg=G`z
 augroup END
 augroup wiki_group
-    autocmd FileTYpe vimwiki map <F10> :VimwikiAll2HTML<CR>
+    autocmd!
+    autocmd FileType vimwiki map <F10> :VimwikiAll2HTML<CR>
+    autocmd FileType vimwiki setlocal formatoptions=tcroqnl1
 augroup END
 autocmd VimEnter,BufEnter * :normal zR
 " }}}
