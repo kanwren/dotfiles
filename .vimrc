@@ -30,32 +30,49 @@ function! MyDiff()
     endif
 endfunction
 
+function! ClearRegisters()
+    let regs='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/-*"'
+    let i = 0
+    while (i < strlen(regs))
+        exec 'let @' . regs[i] . '=""'
+        let i += 1
+    endwhile
+    unlet regs
+endfunction
+
+function! ClearAllMarks()
+    delmarks!
+    delmarks A-Z0-9
+endfunction
+
 " Autocommands {{{
-autocmd FileType help wincmd L
-augroup plugin_group
-    autocmd!
-    autocmd VimEnter * RainbowParenthesesToggle
-    autocmd Syntax * RainbowParenthesesLoadRound
-    autocmd VimEnter * SyntasticToggleMode
-    "autocmd BufEnter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
-    autocmd StdinReadPre * let s:std_in=1
-    "autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
-augroup END
-augroup vimscript_group
-    autocmd!
-    autocmd FileType vim setlocal foldmethod=marker
-augroup END
-augroup java_group
-    autocmd!
-    autocmd FileType java setlocal foldmethod=syntax
-    autocmd BufWritePre *.java :normal mzgg=G`z
-augroup END
-augroup wiki_group
-    autocmd!
-    autocmd FileType vimwiki map <F10> :VimwikiAll2HTML<CR>
-    autocmd FileType vimwiki setlocal formatoptions=tcroqnl1
-augroup END
-autocmd VimEnter,BufEnter * :normal zR
+if has('autocmd')
+    autocmd FileType help wincmd L
+    augroup plugin_group
+        autocmd!
+        autocmd VimEnter * RainbowParenthesesToggle
+        autocmd Syntax * RainbowParenthesesLoadRound
+        autocmd VimEnter * SyntasticToggleMode
+        "autocmd BufEnter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
+        autocmd StdinReadPre * let s:std_in=1
+        "autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+    augroup END
+    augroup vimscript_group
+        autocmd!
+        autocmd FileType vim setlocal foldmethod=marker
+    augroup END
+    augroup java_group
+        autocmd!
+        autocmd FileType java setlocal foldmethod=syntax
+        "autocmd BufWritePre *.java :normal mzgg=G`z
+    augroup END
+    augroup wiki_group
+        autocmd!
+        autocmd FileType vimwiki map <F10> :VimwikiAll2HTML<CR>
+        autocmd FileType vimwiki setlocal formatoptions+=t
+    augroup END
+    autocmd VimEnter,BufEnter * :normal zR
+endif
 " }}}
 
 " Settings Configuration {{{
@@ -82,7 +99,9 @@ let $LANG='en'
 set autoread
 set noconfirm                        " fail, don't ask to save
 set hidden                           " allow working with buffers
-set history=50
+
+set history=1000
+set undolevels=1000
 
 set tags=tags;/
 
@@ -105,6 +124,7 @@ set lines=51
 
 set showmatch                        " matching brace/parens/etc.
 set incsearch hlsearch
+set ignorecase
 set smartcase
 
 set nojoinspaces                     " never two spaces after sentence
@@ -125,14 +145,13 @@ set modelines=0
 set foldmethod=manual
 set foldcolumn=1
 set textwidth=80
-set formatoptions=croqln1
+set formatoptions=croqln
 " c=wrap comments
 " r=insert comment on enter
 " o=insert comment on o/O
 " q=allow formatting of comments with gq
 " l=don't break lines longer than textwidth before insert started
 " n=recognize numbered lists
-" 1=don't break a line after a one-letter word
 
 set autoindent smartindent
 set tabstop=4               " treat tabs as 4 spaces wide
@@ -191,7 +210,7 @@ noremap <silent> <expr> k (v:count == 0 ? 'gk' : 'k')
 " Makes temporary macros more tolerable
 nnoremap Q @q
 " Repeat commands across visual selections
-vnoremap . :norm .<CR>
+noremap . :norm .<CR>
 vnoremap Q :norm @q<CR>
 " Makes Y consistent with C and D, because I always use yy for Y anyway
 nnoremap Y y$
@@ -219,8 +238,8 @@ nnoremap <silent> <C-Left> "_yiw?\w\+\_W\+\%#<CR>:s/\(\%#\w\+\)\(\_W\+\)\(\w\+\)
 map <Space> <nop>
 nmap <S-Space> <Space>
 let mapleader=" "
-nmap <Leader>v :e ~/dotfiles/.vimrc<CR>
-nmap <Leader>sv :sou $MYVIMRC<CR>
+nmap <Leader>rev :e ~/dotfiles/.vimrc<CR>
+nmap <Leader>rsv :sou $MYVIMRC<CR>
 map <Leader>tn :tabnew<CR>
 map <Leader>tc :tabclose<CR>
 
@@ -248,6 +267,9 @@ vmap <expr> D DVB_Duplicate()
 " Tabular
 " Prompt for regular expression to tabularize on
 noremap <expr> <Leader>a ":Tab /" . input("/") . "<CR>"
+" Vimwiki
+nmap glo :VimwikiChangeSymbolTo *<CR>
+nmap gLo :VimwikiChangeSymbolInListTo *<CR>
 "}}}
 "}}}
 
@@ -347,7 +369,12 @@ highlight VimwikiBoldItalic ctermfg=darkyellow
 highlight VimwikiHeader1 ctermfg=magenta
 highlight VimwikiHeader2 ctermfg=blue
 highlight VimwikiHeader3 ctermfg=green
-let g:vimwiki_list = [{'path': '~/Dropbox/wiki'}]
+let wiki = {}
+let wiki.path = '~/Dropbox/wiki'
+let wiki.nested_syntaxes = {'python': 'python', 'c++': 'cpp', 'java': 'java'}
+let g:vimwiki_list = [wiki]
+let g:vimwiki_listsyms = ' .○●✓'
+let g:vimwiki_listsym_rejected = '✗'
 
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
