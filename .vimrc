@@ -240,6 +240,8 @@ nmap <S-Space> <Space>
 let mapleader=" "
 nmap <Leader>rev :e ~/dotfiles/.vimrc<CR>
 nmap <Leader>rsv :sou $MYVIMRC<CR>
+" Add header row to tables in Vimwiki
+nmap <Leader>rwh yyp:s/[^\|]/-/g<CR><C-l>
 map <Leader>tn :tabnew<CR>
 map <Leader>tc :tabclose<CR>
 
