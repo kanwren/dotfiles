@@ -24,6 +24,7 @@ git.install
 googledrive
 InkScape
 jdk10
+jdk11
 jdk8
 jdk9
 KB2670838
