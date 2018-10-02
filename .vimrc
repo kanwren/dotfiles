@@ -339,7 +339,6 @@ Bundle 'tpope/vim-surround'
 Bundle 'tpope/vim-repeat'
 Bundle 'tpope/vim-unimpaired'
 Bundle 'tpope/vim-abolish'
-Bundle 'tpope/vim-sleuth'
 
 Bundle 'godlygeek/tabular'
 Bundle 'vim-scripts/tComment'
@@ -373,10 +372,12 @@ highlight VimwikiHeader2 ctermfg=blue
 highlight VimwikiHeader3 ctermfg=green
 let wiki = {}
 let wiki.path = '~/Dropbox/wiki'
-let wiki.nested_syntaxes = {'python': 'python', 'c++': 'cpp', 'java': 'java'}
+let wiki.nested_syntaxes = {'python': 'python', 'c++': 'cpp', 'java': 'java', 'haskell': 'haskell'}
 let g:vimwiki_list = [wiki]
 let g:vimwiki_listsyms = ' .○●✓'
 let g:vimwiki_listsym_rejected = '✗'
+let g:vimwiki_auto_chdir = 1
+let g:vimwiki_dir_link = 'index'
 
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
