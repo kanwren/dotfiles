@@ -52,10 +52,7 @@ if has('autocmd')
         autocmd!
         autocmd VimEnter * RainbowParenthesesToggle
         autocmd Syntax * RainbowParenthesesLoadRound
-        autocmd VimEnter * SyntasticToggleMode
-        "autocmd BufEnter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
         autocmd StdinReadPre * let s:std_in=1
-        "autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
     augroup END
     augroup vimscript_group
         autocmd!
@@ -191,31 +188,29 @@ noremap <C-n> :let @/=""<CR>
 
 " Fixing mappings {{{
 " Fix screen errors when using Ctrl+FBDU
-nmap <C-f> <C-f><C-l>
-nmap <C-b> <C-b><C-l>
-nmap <C-d> <C-d><C-l>
-nmap <C-u> <C-u><C-l>
+map <C-f> <C-f><C-l>
+map <C-b> <C-b><C-l>
+map <C-d> <C-d><C-l>
+map <C-u> <C-u><C-l>
 " Fix auto unindent of lines starting with # in Python, etc.
-inoremap # X#
+"inoremap # X#
 " }}}
 
 " Convenience mappings {{{
-" Familiar saving
-nnoremap <C-s> :w<CR>
+" Familiar saving from insert mode
 inoremap <C-s> <C-o>:w<CR>
-vnoremap <C-s> <Esc>:w<CR>gv
 " Work by visual line without a count, but normal when used with one
 noremap <silent> <expr> j (v:count == 0 ? 'gj' : 'j')
 noremap <silent> <expr> k (v:count == 0 ? 'gk' : 'k')
 " Makes temporary macros more tolerable
 nnoremap Q @q
 " Repeat commands across visual selections
-noremap . :norm .<CR>
+vnoremap . :norm .<CR>
 vnoremap Q :norm @q<CR>
 " Makes Y consistent with C and D, because I always use yy for Y anyway
 nnoremap Y y$
 " Display registers
-nnoremap <silent> "" :registers<CR>
+noremap <silent> "" :registers<CR>
 " Provide easier alternative to escape-hit them at the same time
 inoremap jk <ESC>
 inoremap kj <ESC>
@@ -225,7 +220,7 @@ inoremap kj <ESC>
 " Exchange operation-delete, target highlight, exchange
 vnoremap gx <Esc>`.``gvP``P
 " Swap word with the next full word, even across punctuation or newlines.
-nnoremap <silent> gw "_yiw:s/\(\%#\w\+\)\(\_W\+\)\(\w\+\)/\3\2\1/<CR><c-o><c-l>:noh<CR>
+"nnoremap <silent> gw "_yiw:s/\(\%#\w\+\)\(\_W\+\)\(\w\+\)/\3\2\1/<CR><c-o><c-l>:noh<CR>
 " Push words 'right' or 'left', keeping cursor position constant
 nnoremap <silent> <C-Right> "_yiw:s/\(\%#\w\+\)\(\_W\+\)\(\w\+\)/\3\2\1/<CR><C-o>/\w\+\_W\+<CR><C-l>:noh<CR>
 nnoremap <silent> <C-Left> "_yiw?\w\+\_W\+\%#<CR>:s/\(\%#\w\+\)\(\_W\+\)\(\w\+\)/\3\2\1/<CR><C-o><C-l>:noh<CR>
@@ -236,25 +231,28 @@ nnoremap <silent> <C-Left> "_yiw?\w\+\_W\+\%#<CR>:s/\(\%#\w\+\)\(\_W\+\)\(\w\+\)
 
 " Leader mappings {{{
 map <Space> <nop>
-nmap <S-Space> <Space>
+map <S-Space> <Space>
 let mapleader=" "
-nmap <Leader>rev :e ~/dotfiles/.vimrc<CR>
-nmap <Leader>rsv :sou $MYVIMRC<CR>
+noremap <Leader>rev :e ~/dotfiles/.vimrc<CR>
+noremap <Leader>rsv :sou $MYVIMRC<CR>
+" Change working directory to directory of current file
+noremap <Leader>rcd :cd <C-r>=expand('%:p:h:r')<CR><CR>
+noremap <Leader>rcr :call ClearRegisters()<CR>
 " Add header row to tables in Vimwiki
-nmap <Leader>rwh yyp:s/[^\|]/-/g<CR><C-l>
+nnoremap <Leader>rwh yyp:s/[^\|]/-/g<CR><C-l>
+
 map <Leader>tn :tabnew<CR>
 map <Leader>tc :tabclose<CR>
 
+" Add semicolon at end of line without moving cursor
+nnoremap <Leader>; m`A;<Esc>``
 " Retab and delete whitespace
-nnoremap <Leader>; mzA;<Esc>`z
-nnoremap <Leader><Tab> mz:%s/\s\+$//ge<CR>`z:retab<CR>
+noremap <Leader><Tab> m`:%s/\s\+$//ge<CR>``:retab<CR>
 " }}}
 
 " Plugin mappings {{{
 " NERDTree
 map <F2> :NERDTreeToggle<CR>
-" Syntastic
-noremap <F9> :SyntasticCheck<CR>
 " EasyMotion
 map <Leader><Leader> <Plug>(easymotion-prefix)
 nmap <Leader>s <Plug>(easymotion-s2)
@@ -276,30 +274,36 @@ nmap gLo :VimwikiChangeSymbolInListTo *<CR>
 "}}}
 
 " Abbreviations {{{
-iab xdmy <C-r>=strftime("%d/%m/%y")<CR>
-iab xmdy <C-r>=strftime("%m/%d/%y")<CR>
-iab xymd <C-r>=strftime("%Y-%m-%d")<CR>
+iabbrev xdmy <C-r>=strftime("%d/%m/%y")<CR>
+iabbrev xmdy <C-r>=strftime("%m/%d/%y")<CR>
+iabbrev xymd <C-r>=strftime("%Y-%m-%d")<CR>
 
 " 15 Sep 2018
-iab xsdate <C-r>=strftime("%d %b %Y")<CR>
+iabbrev xsdate <C-r>=strftime("%d %b %Y")<CR>
 " September 15, 2018
-iab xldate <C-r>=strftime("%B %d, %Y")<CR>
+iabbrev xldate <C-r>=strftime("%B %d, %Y")<CR>
 " Sat 15 Sep 2018
-iab xswdate <C-r>=strftime("%a %d %b %Y")<CR>
+iabbrev xswdate <C-r>=strftime("%a %d %b %Y")<CR>
 " Saturday, September 15, 2018
-iab xlwdate <C-r>=strftime("%A, %B %d, %Y")<CR>
+iabbrev xlwdate <C-r>=strftime("%A, %B %d, %Y")<CR>
 
 " 11:31 PM
-iab xtime <C-r>=strftime("%I:%M %p")<CR>
+iabbrev xtime <C-r>=strftime("%I:%M %p")<CR>
 " 23:31
-iab xmtime <C-r>=strftime("%H:%M")<CR>
+iabbrev xmtime <C-r>=strftime("%H:%M")<CR>
 
 " Sat 15 Sep 2018 11:31 PM
-iab xdatetime <C-r>=strftime("%a %d %b %Y %I:%M %p")<CR>
+iabbrev xdatetime <C-r>=strftime("%a %d %b %Y %I:%M %p")<CR>
 " 2018-09-15 23:31
-iab xdt <C-r>=strftime("%Y-%m-%d %H:%M")<CR>
+iabbrev xdt <C-r>=strftime("%Y-%m-%d %H:%M")<CR>
 " 2018-09-15T23:31:54
-iab xiso <C-r>=strftime("%Y-%m-%dT%H:%M:%S")<CR>
+iabbrev xiso <C-r>=strftime("%Y-%m-%dT%H:%M:%S")<CR>
+
+" Wiki date header with YMD date annotation and presentable date in italics
+iabbrev xheader %date <C-r>=strftime("%Y-%m-%d")<CR><CR><C-r>=strftime("%a %d %b %Y")<CR><Esc>yss_o
+
+" Diary header with navigation and date header
+iabbrev xdiary <C-r>=expand('%:t:r')<CR><Esc><C-x>+f]i\|< prev<Esc>odiary<Esc>+f]i\|index<Esc>o<C-r>=expand('%:t:r')<CR><Esc><C-a>+f]i\|next ><Esc>o<CR>%date <C-r>=strftime("%Y-%m-%d")<CR><CR><C-r>=strftime("%a %d %b %Y")<CR><Esc>yss_o<CR>
 " }}}
 
 " Vundle plugins {{{
@@ -330,7 +334,8 @@ Bundle 'powerline/fonts'
 Bundle 'kien/ctrlp.vim'
 Bundle 'tpope/vim-eunuch'
 Bundle 'scrooloose/nerdtree'
-Bundle 'vim-syntastic/syntastic'
+"Bundle 'vim-syntastic/syntastic'
+Bundle 'w0rp/ale'
 Bundle 'tpope/vim-fugitive'
 Bundle 'kien/rainbow_parentheses.vim'
 
@@ -339,6 +344,7 @@ Bundle 'tpope/vim-surround'
 Bundle 'tpope/vim-repeat'
 Bundle 'tpope/vim-unimpaired'
 Bundle 'tpope/vim-abolish'
+Bundle 'tpope/vim-speeddating'
 
 Bundle 'godlygeek/tabular'
 Bundle 'vim-scripts/tComment'
@@ -376,17 +382,26 @@ let wiki.nested_syntaxes = {'python': 'python', 'c++': 'cpp', 'java': 'java', 'h
 let g:vimwiki_list = [wiki]
 let g:vimwiki_listsyms = ' .○●✓'
 let g:vimwiki_listsym_rejected = '✗'
-let g:vimwiki_auto_chdir = 1
+"let g:vimwiki_auto_chdir = 1
 let g:vimwiki_dir_link = 'index'
 
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
-let g:syntastic_python_checkers = ['pylint', 'pyflakes', 'flake8']
-let g:syntastic_java_checkers = ['checkstyle']
-let g:syntastic_java_checkstyle_classpath = 'C:/users/nprin/bin/checkstyle/checkstyle-8.12-all.jar'
-let g:syntastic_java_checkstyle_conf_file = 'C:/Users/nprin/bin/checkstyle/cs1331-checkstyle.xml'
+"let g:syntastic_always_populate_loc_list = 1
+"let g:syntastic_auto_loc_list = 1
+"let g:syntastic_check_on_open = 1
+"let g:syntastic_check_on_wq = 0
+"let g:syntastic_python_checkers = ['pylint', 'pyflakes', 'flake8']
+"let g:syntastic_java_checkers = ['checkstyle']
+"let g:syntastic_java_checkstyle_classpath = 'C:/tools/checkstyle/checkstyle-8.12-all.jar'
+"let g:syntastic_java_checkstyle_conf_file = 'C:/tools/checkstyle/cs1331-checkstyle.xml'
+
+let g:ale_lint_on_save = 1
+let g:ale_lint_on_enter = 0
+let g:ale_set_signs = 1
+let g:ale_linters = {
+            \ 'python': ['pylint', 'pyflakes', 'flake8'],
+            \ 'java': ['checkstyle', 'javac'],
+            \ }
+let g:ale_java_checkstyle_options = '-c C:/tools/checkstyle/cs1331-checkstyle.xml'
 
 let g:ctrlp_show_hidden = 1
 let g:ctrlp_open_multiple_files = 't'
