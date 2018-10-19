@@ -22,6 +22,7 @@ gimp
 git
 git.install
 googledrive
+gradle
 InkScape
 jdk10
 jdk11
@@ -33,6 +34,8 @@ lame
 make
 mingw
 musescore
+nodejs
+nodejs.install
 notepadplusplus
 notepadplusplus.install
 paint.net
