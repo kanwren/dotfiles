@@ -30,6 +30,9 @@ jdk8
 KB2670838
 KB2919355
 KB2919442
+KB2999226
+KB3033929
+KB3035131
 lame
 make
 mingw
@@ -41,9 +44,12 @@ notepadplusplus.install
 paint.net
 python
 python3
+qutebrowser
+qutebrowser.install
 ruby
 skype
 strawberryperl
+vcredist140
 vcredist2010
 vim
 wget

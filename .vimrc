@@ -40,7 +40,7 @@ function! ClearRegisters()
     unlet regs
 endfunction
 
-function! ClearAllMarks()
+function! DelAllMarks()
     delmarks!
     delmarks A-Z0-9
 endfunction
@@ -61,7 +61,10 @@ if has('autocmd')
     augroup java_group
         autocmd!
         autocmd FileType java setlocal foldmethod=syntax
-        "autocmd BufWritePre *.java :normal mzgg=G`z
+    augroup END
+    augroup python_group
+        autocmd!
+        autocmd FileType python setlocal nosmartindent
     augroup END
     augroup wiki_group
         autocmd!
@@ -183,7 +186,7 @@ highlight Todo ctermbg=red ctermfg=gray
 " Display mappings {{{
 noremap <C-l> :noh<CR><C-l>
 " Clear search register to prevent highlighting
-noremap <C-n> :let @/=""<CR>
+"noremap <C-n> :let @/=""<CR>
 " }}}
 
 " Fixing mappings {{{
@@ -192,13 +195,11 @@ map <C-f> <C-f><C-l>
 map <C-b> <C-b><C-l>
 map <C-d> <C-d><C-l>
 map <C-u> <C-u><C-l>
-" Fix auto unindent of lines starting with # in Python, etc.
-"inoremap # X#
 " }}}
 
 " Convenience mappings {{{
 " Familiar saving from insert mode
-inoremap <C-s> <C-o>:w<CR>
+"inoremap <C-s> <C-o>:w<CR>
 " Work by visual line without a count, but normal when used with one
 noremap <silent> <expr> j (v:count == 0 ? 'gj' : 'j')
 noremap <silent> <expr> k (v:count == 0 ? 'gk' : 'k')
@@ -212,8 +213,10 @@ nnoremap Y y$
 " Display registers
 noremap <silent> "" :registers<CR>
 " Provide easier alternative to escape-hit them at the same time
-inoremap jk <ESC>
-inoremap kj <ESC>
+inoremap jk <Esc>
+inoremap kj <Esc>
+inoremap JK <Esc>
+inoremap KJ <Esc>
 " }}}
 
 " Editing mappings {{{
@@ -233,16 +236,13 @@ nnoremap <silent> <C-Left> "_yiw?\w\+\_W\+\%#<CR>:s/\(\%#\w\+\)\(\_W\+\)\(\w\+\)
 map <Space> <nop>
 map <S-Space> <Space>
 let mapleader=" "
+noremap <Leader>res :e ~/scratch<CR>
 noremap <Leader>rev :e ~/dotfiles/.vimrc<CR>
 noremap <Leader>rsv :sou $MYVIMRC<CR>
 " Change working directory to directory of current file
 noremap <Leader>rcd :cd <C-r>=expand('%:p:h:r')<CR><CR>
-noremap <Leader>rcr :call ClearRegisters()<CR>
 " Add header row to tables in Vimwiki
 nnoremap <Leader>rwh yyp:s/[^\|]/-/g<CR><C-l>
-
-map <Leader>tn :tabnew<CR>
-map <Leader>tc :tabclose<CR>
 
 " Add semicolon at end of line without moving cursor
 nnoremap <Leader>; m`A;<Esc>``
@@ -300,10 +300,13 @@ iabbrev xdt <C-r>=strftime("%Y-%m-%d %H:%M")<CR>
 iabbrev xiso <C-r>=strftime("%Y-%m-%dT%H:%M:%S")<CR>
 
 " Wiki date header with YMD date annotation and presentable date in italics
-iabbrev xheader %date <C-r>=strftime("%Y-%m-%d")<CR><CR><C-r>=strftime("%a %d %b %Y")<CR><Esc>yss_o
+iabbrev xheader %date <C-r>=strftime("%Y-%m-%d")<CR><CR>_<C-r>=strftime("%a %d %b %Y")<CR>_
 
 " Diary header with navigation and date header
 iabbrev xdiary <C-r>=expand('%:t:r')<CR><Esc><C-x>+f]i\|< prev<Esc>odiary<Esc>+f]i\|index<Esc>o<C-r>=expand('%:t:r')<CR><Esc><C-a>+f]i\|next ><Esc>o<CR>%date <C-r>=strftime("%Y-%m-%d")<CR><CR><C-r>=strftime("%a %d %b %Y")<CR><Esc>yss_o<CR>
+
+" Lecture header with navigation and date header
+iabbrev xlecture %date <C-r>=strftime("%Y-%m-%d")<CR><CR>_<C-r>=strftime("%a %d %b %Y")<CR>_<CR><CR><C-r>=expand('%:t:r')<CR><Esc><C-x>V<CR>0f]i\|< prev<Esc>oindex<Esc>V<CR>o<C-r>=expand('%:t:r')<CR><Esc><C-a>V<CR>0f]i\|next ><Esc>o
 " }}}
 
 " Vundle plugins {{{
@@ -394,12 +397,15 @@ let g:vimwiki_dir_link = 'index'
 "let g:syntastic_java_checkstyle_classpath = 'C:/tools/checkstyle/checkstyle-8.12-all.jar'
 "let g:syntastic_java_checkstyle_conf_file = 'C:/tools/checkstyle/cs1331-checkstyle.xml'
 
-let g:ale_lint_on_save = 1
 let g:ale_lint_on_enter = 0
+let g:ale_lint_on_filetype_changed = 1
+let g:ale_lint_on_insert_leave = 1
+let g:ale_lint_on_save = 1
+let g:ale_lint_on_text_changed = 1
 let g:ale_set_signs = 1
 let g:ale_linters = {
-            \ 'python': ['pylint', 'pyflakes', 'flake8'],
-            \ 'java': ['checkstyle', 'javac'],
+            \ 'python': ['pylint', 'flake8'],
+            \ 'java': ['javac', 'checkstyle']
             \ }
 let g:ale_java_checkstyle_options = '-c C:/tools/checkstyle/cs1331-checkstyle.xml'
 
