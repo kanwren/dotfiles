@@ -1,33 +1,10 @@
 set nocompatible
 
-set diffexpr=MyDiff()
-function! MyDiff()
-  let opt = '-a --binary '
-  if &diffopt =~ 'icase'  | let opt = opt . '-i ' | endif
-  if &diffopt =~ 'iwhite' | let opt = opt . '-b ' | endif
-  let arg1 = v:fname_in
-  if arg1 =~ ' ' | let arg1 = '"' . arg1 . '"' | endif
-  let arg2 = v:fname_new
-  if arg2 =~ ' ' | let arg2 = '"' . arg2 . '"' | endif
-  let arg3 = v:fname_out
-  if arg3 =~ ' ' | let arg3 = '"' . arg3 . '"' | endif
-  if $VIMRUNTIME =~ ' '
-    if &sh =~ '\<cmd'
-      if empty(&shellxquote)
-        let l:shxq_sav = ''
-        set shellxquote&
-      endif
-      let cmd = '"' . $VIMRUNTIME . '\diff"'
-    else
-      let cmd = substitute($VIMRUNTIME, ' ', '" ', '') . '\diff"'
-    endif
-  else
-    let cmd = $VIMRUNTIME . '\diff'
-  endif
-  silent execute '!' . cmd . ' ' . opt . arg1 . ' ' . arg2 . ' > ' . arg3
-  if exists('l:shxq_sav')
-    let &shellxquote=l:shxq_sav
-  endif
+function! SetIndents()
+    let i=input("ts=sts=sw=", "")
+    exec "setlocal tabstop=" . i
+    exec "setlocal softtabstop=" . i
+    exec "setlocal shiftwidth=" . i
 endfunction
 
 autocmd FileType help wincmd L
@@ -38,13 +15,14 @@ filetype plugin on
 
 color default
 
+set encoding=utf-8
+scriptencoding utf-8
+let $LANG='en'
+
 set lazyredraw
 
-set swapfile
-set backup
-set writebackup
-set backupdir=~/.vim/backup
-set directory^=~/.vim/tmp
+set noswapfile
+set nobackup
 
 set autoread
 set noconfirm
@@ -64,7 +42,6 @@ set showmode
 set noerrorbells novisualbell
 
 set number relativenumber
-set lines=51
 
 set showmatch
 set incsearch hlsearch
@@ -85,31 +62,58 @@ set scrolloff=0
 
 set list listchars=tab:>-,eol:~,extends:>,precedes:<
 set modelines=0
-set foldmethod=manual
-set foldcolumn=1
 set textwidth=80
 set formatoptions=croqln1
 
 set autoindent smartindent
 set tabstop=4
-set cinoptions+=:0
-set expandtab softtabstop=4 shiftwidth=4
+set cinoptions+=:0L0g0
+set expandtab softtabstop=4
+set shiftwidth=4
 set smarttab
 set noshiftround
 
-nnoremap <Tab> :retab<CR>mz:%s/\s\+$//ge<CR>`z
-nnoremap Y y$
-inoremap jk <ESC>
-inoremap kj <ESC>
-nnoremap Q @q
-map <Space> \
-nmap <S-Space> <Space>
-
-highlight FoldColumn ctermbg=1
-highlight Folded ctermbg=1
 highlight ColorColumn ctermbg=1
 set colorcolumn=81
 call matchadd('ColorColumn', '\%81v\S', 100)
 highlight ExtraWhitespace ctermbg=3
 match ExtraWhitespace /\s\+$/
-highlight CursorLineNr ctermbg=1 ctermfg=7
+
+nnoremap Y y$
+inoremap jk <ESC>
+inoremap kj <ESC>
+nnoremap Q @q
+vnoremap Q :norm @q<CR>
+vnoremap . :norm .<CR>
+vnoremap gx <Esc>`.``gvP``P
+map <Space> <nop>
+map <S-Space> <Space>
+let mapleader=" "
+noremap <Leader>rcd :cd <C-r>=expand('%:p:h:r')<CR><CR>
+nnoremap <Leader>ric :call SetIndents()<CR>
+noremap <Leader><Tab> m`:%s/\s\+$//ge<CR>``:retab<CR>
+
+iabbrev xymd <C-r>=strftime("%Y-%m-%d")<CR>
+iabbrev xswdate <C-r>=strftime("%a %d %b %Y")<CR>
+
+" Vundle quick installation:
+" git clone https://github.com/VundleVim/Vundle.vim ~/.vim/bundle/Vundle.vim
+" Uncomment the two calls and the set below to enable Vundle
+" Uncomment the Bundle calls that you want to install
+" Run PluginInstall
+
+"set rtp+=~/.vim/bundle/Vundle.vim
+"call vundle#begin('~/.vim/bundle/')
+" Automatically update
+"Bundle 'gmarik/Vundle.vim'
+" Mappings for inserting/changing/deleting surrounding characters/elements
+"Bundle 'tpope/vim-surround'
+" Automatic pairing
+"Bundle 'jiangmiao/auto-pairs'
+" Tabularize
+"Bundle 'godlygeek/tabular'
+" Quickfix/location list/buffer navigation, paired editor commands, etc.
+"Bundle 'tpope/vim-unimpaired'
+" Subvert and coercion
+"Bundle 'tpope/vim-abolish'
+"call vundle#end()

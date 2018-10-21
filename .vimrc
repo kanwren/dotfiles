@@ -45,6 +45,13 @@ function! DelAllMarks()
     delmarks A-Z0-9
 endfunction
 
+function! SetIndents()
+    let i=input("ts=sts=sw=", "")
+    exec "setlocal tabstop=" . i
+    exec "setlocal softtabstop=" . i
+    exec "setlocal shiftwidth=" . i
+endfunction
+
 " Autocommands {{{
 if has('autocmd')
     autocmd FileType help wincmd L
@@ -65,6 +72,14 @@ if has('autocmd')
     augroup python_group
         autocmd!
         autocmd FileType python setlocal nosmartindent
+    augroup END
+    augroup javascript_group
+        autocmd!
+        autocmd FileType javascript setlocal shiftwidth=2 tabstop=2 softtabstop=2
+    augroup END
+    augroup pug_group
+        autocmd!
+        autocmd FileType pug setlocal shiftwidth=2 tabstop=2 softtabstop=2
     augroup END
     augroup wiki_group
         autocmd!
@@ -215,8 +230,6 @@ noremap <silent> "" :registers<CR>
 " Provide easier alternative to escape-hit them at the same time
 inoremap jk <Esc>
 inoremap kj <Esc>
-inoremap JK <Esc>
-inoremap KJ <Esc>
 " }}}
 
 " Editing mappings {{{
@@ -241,6 +254,8 @@ noremap <Leader>rev :e ~/dotfiles/.vimrc<CR>
 noremap <Leader>rsv :sou $MYVIMRC<CR>
 " Change working directory to directory of current file
 noremap <Leader>rcd :cd <C-r>=expand('%:p:h:r')<CR><CR>
+" Modify indent level on the fly
+nnoremap <Leader>ric :call SetIndents()<CR>
 " Add header row to tables in Vimwiki
 nnoremap <Leader>rwh yyp:s/[^\|]/-/g<CR><C-l>
 
@@ -316,7 +331,6 @@ call vundle#begin('~/.vim/bundle/')
 " TODO: try these out:
 " junegunn/fzf
 " itchyny/lightline
-" Async alternative to Syntastic like Ale
 " terryma/vim-expand-region
 " michaeljsmith/vim-indent-object
 " terryma/vim-multiple-cursors
@@ -333,7 +347,7 @@ Bundle 'vim-airline/vim-airline-themes'
 Bundle 'powerline/fonts'
 
 " Functionality
-" TODO: Replace CtrlP. Like, seriously.
+" TODO: Replace CtrlP with fzf
 Bundle 'kien/ctrlp.vim'
 Bundle 'tpope/vim-eunuch'
 Bundle 'scrooloose/nerdtree'
@@ -381,7 +395,7 @@ highlight VimwikiHeader2 ctermfg=blue
 highlight VimwikiHeader3 ctermfg=green
 let wiki = {}
 let wiki.path = '~/Dropbox/wiki'
-let wiki.nested_syntaxes = {'python': 'python', 'c++': 'cpp', 'java': 'java', 'haskell': 'haskell'}
+let wiki.nested_syntaxes = {'python': 'python', 'c++': 'cpp', 'java': 'java', 'haskell': 'haskell', 'js': 'javascript'}
 let g:vimwiki_list = [wiki]
 let g:vimwiki_listsyms = ' .○●✓'
 let g:vimwiki_listsym_rejected = '✗'
@@ -408,6 +422,7 @@ let g:ale_linters = {
             \ 'java': ['javac', 'checkstyle']
             \ }
 let g:ale_java_checkstyle_options = '-c C:/tools/checkstyle/cs1331-checkstyle.xml'
+let g:ale_python_pylint_options = '--disable=C0103,C0111,W0621,R0902'
 
 let g:ctrlp_show_hidden = 1
 let g:ctrlp_open_multiple_files = 't'
