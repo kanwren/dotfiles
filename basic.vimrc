@@ -104,16 +104,27 @@ iabbrev xswdate <C-r>=strftime("%a %d %b %Y")<CR>
 
 "set rtp+=~/.vim/bundle/Vundle.vim
 "call vundle#begin('~/.vim/bundle/')
-" Automatically update
+"
+" Automatically update Vundle
 "Bundle 'gmarik/Vundle.vim'
+"
 " Mappings for inserting/changing/deleting surrounding characters/elements
 "Bundle 'tpope/vim-surround'
-" Automatic pairing
-"Bundle 'jiangmiao/auto-pairs'
-" Tabularize
-"Bundle 'godlygeek/tabular'
+" File operations
+"Bundle 'tpope/vim-eunuch'
+" Git integration
+"Bundle 'tpope/vim-fugitive'
 " Quickfix/location list/buffer navigation, paired editor commands, etc.
 "Bundle 'tpope/vim-unimpaired'
 " Subvert and coercion
 "Bundle 'tpope/vim-abolish'
+"
+" Easy commenting
+"Bundle 'vim-scripts/tComment'
+"
+" Automatic pair insertion/deletion
+"Bundle 'jiangmiao/auto-pairs'
+" Tabularize
+"Bundle 'godlygeek/tabular'
+"
 "call vundle#end()

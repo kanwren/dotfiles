@@ -179,10 +179,10 @@ set noshiftround
 
 " Highlighting {{{
 " Highlight column for folding
-highlight FoldColumn ctermbg=darkblue
+"highlight FoldColumn ctermbg=black
 highlight Folded ctermbg=darkblue
 
-highlight ColorColumn ctermbg=darkblue
+highlight ColorColumn ctermbg=darkgray
 set colorcolumn=81
 call matchadd('ColorColumn', '\%81v\S', 100)
 
@@ -190,7 +190,7 @@ highlight ExtraWhitespace ctermbg=darkcyan
 match ExtraWhitespace /\s\+$/
 
 "highlight LineNr ctermbg=0
-highlight CursorLineNr ctermbg=darkblue ctermfg=gray
+highlight CursorLineNr ctermbg=darkblue ctermfg=white
 " Try out :hi CursorLineNr ctermbg=12 ctermfg=7
 highlight Todo ctermbg=red ctermfg=gray
 "highlight MatchParen ctermbg=3
