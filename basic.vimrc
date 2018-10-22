@@ -27,7 +27,9 @@ set nobackup
 set autoread
 set noconfirm
 set hidden
-set history=50
+
+set history=100
+set undolevels=100
 
 set laststatus=2
 set statusline=buf\ %n:\ \"%F\"%<\ \ \ %m%y%h%w%r%=%(col\ %c%)\ \ \ \ \ \ %(%l\ /\ %L%)\ \ \ \ \ \ %p%%
