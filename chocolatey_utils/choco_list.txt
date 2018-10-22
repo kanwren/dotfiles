@@ -5,6 +5,7 @@ ccleaner
 chocolatey
 chocolatey-core.extension
 chocolatey-windowsupdate.extension
+clipgrab
 clisp
 cmake
 cmake.install
@@ -42,6 +43,7 @@ nodejs.install
 notepadplusplus
 notepadplusplus.install
 paint.net
+pandoc
 python
 python3
 qutebrowser
