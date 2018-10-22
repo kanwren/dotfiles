@@ -135,7 +135,6 @@ set showmode
 set noerrorbells novisualbell
 
 set number relativenumber
-set lines=51
 
 set showmatch                        " matching brace/parens/etc.
 set incsearch hlsearch
@@ -179,7 +178,7 @@ set noshiftround
 
 " Highlighting {{{
 " Highlight column for folding
-"highlight FoldColumn ctermbg=black
+highlight FoldColumn ctermbg=black
 highlight Folded ctermbg=darkblue
 
 highlight ColorColumn ctermbg=darkgray
