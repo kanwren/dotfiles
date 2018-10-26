@@ -425,9 +425,6 @@ let g:ale_linters = {
 let g:ale_java_checkstyle_options = '-c C:/tools/checkstyle/cs1331-checkstyle.xml'
 let g:ale_python_pylint_options = '--disable=C0103,C0111,W0621,R0902'
 
-let g:ctrlp_show_hidden = 1
-let g:ctrlp_open_multiple_files = 't'
-
 let g:DVB_TrimWS = 1
 
 let g:airline#extensions#tabline#enabled = 1
@@ -468,4 +465,8 @@ let g:rbpt_colorpairs = [
 "let g:syntastic_java_checkers = ['checkstyle']
 "let g:syntastic_java_checkstyle_classpath = 'C:/tools/checkstyle/checkstyle-8.12-all.jar'
 "let g:syntastic_java_checkstyle_conf_file = 'C:/tools/checkstyle/cs1331-checkstyle.xml'
+
+" Old CtrlP settings
+"let g:ctrlp_show_hidden = 1
+"let g:ctrlp_open_multiple_files = 't'
 
