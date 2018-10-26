@@ -19,6 +19,7 @@ dropbox
 eclipse
 evernote
 filezilla
+fzf
 gimp
 git
 git.install
