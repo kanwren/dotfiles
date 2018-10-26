@@ -46,7 +46,10 @@ function! DelAllMarks()
 endfunction
 
 function! SetIndents()
-    let i=input("ts=sts=sw=", "")
+    let i = input("ts=sts=sw=", "")
+    if !i
+        let i = &softtabstop
+    endif
     exec "setlocal tabstop=" . i
     exec "setlocal softtabstop=" . i
     exec "setlocal shiftwidth=" . i
@@ -134,6 +137,8 @@ set showmode
 
 set noerrorbells novisualbell
 
+set mouse-=a
+
 set number relativenumber
 
 set showmatch                        " matching brace/parens/etc.
@@ -183,7 +188,7 @@ highlight Folded ctermbg=darkblue
 
 highlight ColorColumn ctermbg=darkgray
 set colorcolumn=81
-call matchadd('ColorColumn', '\%81v\S', 100)
+"call matchadd('ColorColumn', '\%81v\S', 100)
 
 highlight ExtraWhitespace ctermbg=darkcyan
 match ExtraWhitespace /\s\+$/
@@ -198,9 +203,7 @@ highlight Todo ctermbg=red ctermfg=gray
 
 " Mappings {{{
 " Display mappings {{{
-noremap <C-l> :noh<CR><C-l>
-" Clear search register to prevent highlighting
-"noremap <C-n> :let @/=""<CR>
+noremap <C-l> :nohlsearch<CR><C-l>
 " }}}
 
 " Fixing mappings {{{
@@ -235,10 +238,10 @@ inoremap kj <Esc>
 " Exchange operation-delete, target highlight, exchange
 vnoremap gx <Esc>`.``gvP``P
 " Swap word with the next full word, even across punctuation or newlines.
-"nnoremap <silent> gw "_yiw:s/\(\%#\w\+\)\(\_W\+\)\(\w\+\)/\3\2\1/<CR><c-o><c-l>:noh<CR>
+"nnoremap <silent> gw "_yiw:s/\(\%#\w\+\)\(\_W\+\)\(\w\+\)/\3\2\1/<CR><c-o><c-l>:nohlsearch<CR>
 " Push words 'right' or 'left', keeping cursor position constant
-nnoremap <silent> <C-Right> "_yiw:s/\(\%#\w\+\)\(\_W\+\)\(\w\+\)/\3\2\1/<CR><C-o>/\w\+\_W\+<CR><C-l>:noh<CR>
-nnoremap <silent> <C-Left> "_yiw?\w\+\_W\+\%#<CR>:s/\(\%#\w\+\)\(\_W\+\)\(\w\+\)/\3\2\1/<CR><C-o><C-l>:noh<CR>
+nnoremap <silent> <C-Right> "_yiw:s/\(\%#\w\+\)\(\_W\+\)\(\w\+\)/\3\2\1/<CR><C-o>/\w\+\_W\+<CR><C-l>:nohlsearch<CR>
+nnoremap <silent> <C-Left> "_yiw?\w\+\_W\+\%#<CR>:s/\(\%#\w\+\)\(\_W\+\)\(\w\+\)/\3\2\1/<CR><C-o><C-l>:nohlsearch<CR>
 " Insertion of single characters before or after cursor
 "nnoremap <silent> <Space> :exec "normal i".nr2char(getchar())."\e"<CR>
 "nnoremap <silent> <S-Space> :exec "normal a".nr2char(getchar())."\e"<CR>
@@ -248,30 +251,35 @@ nnoremap <silent> <C-Left> "_yiw?\w\+\_W\+\%#<CR>:s/\(\%#\w\+\)\(\_W\+\)\(\w\+\)
 map <Space> <nop>
 map <S-Space> <Space>
 let mapleader=" "
-noremap <Leader>res :e ~/scratch<CR>
-noremap <Leader>rev :e ~/dotfiles/.vimrc<CR>
-noremap <Leader>rsv :sou $MYVIMRC<CR>
+
+" Abbreviated commands (prefixed with second <Leader>)
+noremap <Leader><Leader>es :e ~/scratch<CR>
+noremap <Leader><Leader>ev :e ~/dotfiles/.vimrc<CR>
+noremap <Leader><Leader>sv :sou $MYVIMRC<CR>
 " Change working directory to directory of current file
-noremap <Leader>rcd :cd <C-r>=expand('%:p:h:r')<CR><CR>
+noremap <Leader><Leader>cd :cd <C-r>=expand('%:p:h:r')<CR><CR>
 " Modify indent level on the fly
-nnoremap <Leader>ric :call SetIndents()<CR>
+noremap <Leader><Leader>ic :call SetIndents()<CR>
+
+" Saved macros for editing (prefixed with 'e')
+" Add newlines around current line or selection
+nnoremap <Leader>en m`O<Esc>jo<Esc>``
+vnoremap <Leader>en <Esc>`<O<Esc>`>o<Esc>'>
 " Add header row to tables in Vimwiki
-nnoremap <Leader>rwh yyp:s/[^\|]/-/g<CR><C-l>
+nnoremap <Leader>ewh yyp:s/[^\|]/-/g<CR>:nohlsearch<CR>
 
 " Add semicolon at end of line without moving cursor
 nnoremap <Leader>; m`A;<Esc>``
 " Retab and delete whitespace
 noremap <Leader><Tab> m`:%s/\s\+$//ge<CR>``:retab<CR>
+" Make a new blank line and navigate to it
+nnoremap <Leader><CR> o<Esc>
+nnoremap <Leader><S-CR> O<Esc>
 " }}}
 
 " Plugin mappings {{{
 " NERDTree
 map <F2> :NERDTreeToggle<CR>
-" EasyMotion
-map <Leader><Leader> <Plug>(easymotion-prefix)
-nmap <Leader>s <Plug>(easymotion-s2)
-map <Leader>l <Plug>(easymotion-bd-jk)
-nmap <Leader>l <Plug>(easymotion-overwin-line)
 " DragVisuals
 vmap <expr> <Left> DVB_Drag('left')
 vmap <expr> <Right> DVB_Drag('right')
@@ -321,6 +329,11 @@ iabbrev xdiary <C-r>=expand('%:t:r')<CR><Esc><C-x>+f]i\|< prev<Esc>odiary<Esc>+f
 
 " Lecture header with navigation and date header
 iabbrev xlecture %date <C-r>=strftime("%Y-%m-%d")<CR><CR>_<C-r>=strftime("%a %d %b %Y")<CR>_<CR><CR><C-r>=expand('%:t:r')<CR><Esc><C-x>V<CR>0f]i\|< prev<Esc>oindex<Esc>V<CR>o<C-r>=expand('%:t:r')<CR><Esc><C-a>V<CR>0f]i\|next ><Esc>o
+
+" Abbreviations for inserting common sequences
+iabbrev xalpha abcdefghijklmnopqrstuvwxyz
+iabbrev xAlpha ABCDEFGHIJKLMNOPQRSTUVWXYZ
+iabbrev xdigits 0123456789
 " }}}
 
 " Vundle plugins {{{
@@ -328,10 +341,9 @@ set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin('~/.vim/bundle/')
 
 " TODO: try these out:
-" junegunn/fzf
 " itchyny/lightline
-" terryma/vim-expand-region
 " michaeljsmith/vim-indent-object
+" terryma/vim-expand-region
 " terryma/vim-multiple-cursors
 " maxbrunsfeld/vim-yankstack
 " amix/vim-zenroom2
@@ -347,10 +359,10 @@ Bundle 'powerline/fonts'
 
 " Functionality
 " TODO: Replace CtrlP with fzf
-Bundle 'kien/ctrlp.vim'
+"Bundle 'kien/ctrlp.vim'
+Bundle 'junegunn/fzf.vim'
 Bundle 'tpope/vim-eunuch'
 Bundle 'scrooloose/nerdtree'
-"Bundle 'vim-syntastic/syntastic'
 Bundle 'w0rp/ale'
 Bundle 'tpope/vim-fugitive'
 Bundle 'kien/rainbow_parentheses.vim'
@@ -365,7 +377,7 @@ Bundle 'tpope/vim-speeddating'
 Bundle 'godlygeek/tabular'
 Bundle 'vim-scripts/tComment'
 Bundle 'jiangmiao/auto-pairs'
-Bundle 'easymotion/vim-easymotion'
+"Bundle 'easymotion/vim-easymotion'
 Bundle 'shinokada/dragvisuals.vim'
 Bundle 'vim-scripts/matchit.zip'
 
@@ -398,17 +410,7 @@ let wiki.nested_syntaxes = {'python': 'python', 'c++': 'cpp', 'java': 'java', 'h
 let g:vimwiki_list = [wiki]
 let g:vimwiki_listsyms = ' .○●✓'
 let g:vimwiki_listsym_rejected = '✗'
-"let g:vimwiki_auto_chdir = 1
 let g:vimwiki_dir_link = 'index'
-
-"let g:syntastic_always_populate_loc_list = 1
-"let g:syntastic_auto_loc_list = 1
-"let g:syntastic_check_on_open = 1
-"let g:syntastic_check_on_wq = 0
-"let g:syntastic_python_checkers = ['pylint', 'pyflakes', 'flake8']
-"let g:syntastic_java_checkers = ['checkstyle']
-"let g:syntastic_java_checkstyle_classpath = 'C:/tools/checkstyle/checkstyle-8.12-all.jar'
-"let g:syntastic_java_checkstyle_conf_file = 'C:/tools/checkstyle/cs1331-checkstyle.xml'
 
 let g:ale_lint_on_enter = 0
 let g:ale_lint_on_filetype_changed = 1
@@ -425,9 +427,6 @@ let g:ale_python_pylint_options = '--disable=C0103,C0111,W0621,R0902'
 
 let g:ctrlp_show_hidden = 1
 let g:ctrlp_open_multiple_files = 't'
-
-let g:EasyMotion_use_upper = 0
-let g:EasyMotion_smartcase = 1
 
 let g:DVB_TrimWS = 1
 
@@ -451,3 +450,22 @@ let g:rbpt_colorpairs = [
             \ ['red',       'firebrick3'],
             \ ]
 " }}}
+
+" Old EasyMotion settings
+"map <Leader><Leader> <Plug>(easymotion-prefix)
+"nmap <Leader>s <Plug>(easymotion-s2)
+"map <Leader>l <Plug>(easymotion-bd-jk)
+"nmap <Leader>l <Plug>(easymotion-overwin-line)
+"let g:EasyMotion_use_upper = 0
+"let g:EasyMotion_smartcase = 1
+
+" Old Syntastic settings
+"let g:syntastic_always_populate_loc_list = 1
+"let g:syntastic_auto_loc_list = 1
+"let g:syntastic_check_on_open = 1
+"let g:syntastic_check_on_wq = 0
+"let g:syntastic_python_checkers = ['pylint', 'pyflakes', 'flake8']
+"let g:syntastic_java_checkers = ['checkstyle']
+"let g:syntastic_java_checkstyle_classpath = 'C:/tools/checkstyle/checkstyle-8.12-all.jar'
+"let g:syntastic_java_checkstyle_conf_file = 'C:/tools/checkstyle/cs1331-checkstyle.xml'
+
