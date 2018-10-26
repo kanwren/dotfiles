@@ -1,7 +1,10 @@
 set nocompatible
 
 function! SetIndents()
-    let i=input("ts=sts=sw=", "")
+    let i = input("ts=sts=sw=", "")
+    if !i
+        let i = &softtabstop
+    endif
     exec "setlocal tabstop=" . i
     exec "setlocal softtabstop=" . i
     exec "setlocal shiftwidth=" . i
@@ -43,10 +46,13 @@ set showmode
 
 set noerrorbells novisualbell
 
+set mouse-=a
+
 set number relativenumber
 
 set showmatch
 set incsearch hlsearch
+set ignorecase
 set smartcase
 
 set nojoinspaces
@@ -81,22 +87,31 @@ call matchadd('ColorColumn', '\%81v\S', 100)
 highlight ExtraWhitespace ctermbg=3
 match ExtraWhitespace /\s\+$/
 
-nnoremap Y y$
 inoremap jk <ESC>
 inoremap kj <ESC>
 nnoremap Q @q
 vnoremap Q :norm @q<CR>
 vnoremap . :norm .<CR>
+nnoremap Y y$
 vnoremap gx <Esc>`.``gvP``P
 map <Space> <nop>
 map <S-Space> <Space>
 let mapleader=" "
-noremap <Leader>rcd :cd <C-r>=expand('%:p:h:r')<CR><CR>
-nnoremap <Leader>ric :call SetIndents()<CR>
+noremap <Leader><Leader>es :e ~/scratch<CR>
+noremap <Leader><Leader>ev :e ~/dotfiles/.vimrc<CR>
+noremap <Leader><Leader>sv :sou $MYVIMRC<CR>
+noremap <Leader><Leader>cd :cd <C-r>=expand('%:p:h:r')<CR><CR>
+noremap <Leader><Leader>ic :call SetIndents()<CR>
+nnoremap <Leader>en m`O<Esc>jo<Esc>``
+vnoremap <Leader>en <Esc>`<O<Esc>`>o<Esc>'>
 noremap <Leader><Tab> m`:%s/\s\+$//ge<CR>``:retab<CR>
 
 iabbrev xymd <C-r>=strftime("%Y-%m-%d")<CR>
 iabbrev xswdate <C-r>=strftime("%a %d %b %Y")<CR>
+iabbrev xdatetime <C-r>=strftime("%a %d %b %Y %I:%M %p")<CR>
+iabbrev xalpha abcdefghijklmnopqrstuvwxyz
+iabbrev xAlpha ABCDEFGHIJKLMNOPQRSTUVWXYZ
+iabbrev xdigits 0123456789
 
 " Vundle quick installation:
 " git clone https://github.com/VundleVim/Vundle.vim ~/.vim/bundle/Vundle.vim
@@ -107,26 +122,34 @@ iabbrev xswdate <C-r>=strftime("%a %d %b %Y")<CR>
 "set rtp+=~/.vim/bundle/Vundle.vim
 "call vundle#begin('~/.vim/bundle/')
 "
-" Automatically update Vundle
+" - Automatically update Vundle
 "Bundle 'gmarik/Vundle.vim'
 "
-" Mappings for inserting/changing/deleting surrounding characters/elements
+" - Repeating more actions with .
+"Bundle 'tpope/vim-repeat'
+" - Mappings for inserting/changing/deleting surrounding characters/elements
 "Bundle 'tpope/vim-surround'
-" File operations
+" - File operations
 "Bundle 'tpope/vim-eunuch'
-" Git integration
+" - Git integration
 "Bundle 'tpope/vim-fugitive'
-" Quickfix/location list/buffer navigation, paired editor commands, etc.
+" - Quickfix/location list/buffer navigation, paired editor commands, etc.
 "Bundle 'tpope/vim-unimpaired'
-" Subvert and coercion
+" - Subvert and coercion
 "Bundle 'tpope/vim-abolish'
 "
-" Easy commenting
+" - Easy commenting
 "Bundle 'vim-scripts/tComment'
 "
-" Automatic pair insertion/deletion
+" - Automatic pair insertion/deletion
 "Bundle 'jiangmiao/auto-pairs'
 " Tabularize
 "Bundle 'godlygeek/tabular'
+"
+" - High level plugins
+"Bundle 'junegunn/fzf.vim'
+"Bundle 'itchyny/lightline'
+"Bundle 'scrooloose/nerdtree'
+"Bundle 'w0rp/ale'
 "
 "call vundle#end()

@@ -193,12 +193,8 @@ set colorcolumn=81
 highlight ExtraWhitespace ctermbg=darkcyan
 match ExtraWhitespace /\s\+$/
 
-"highlight LineNr ctermbg=0
 highlight CursorLineNr ctermbg=darkblue ctermfg=white
-" Try out :hi CursorLineNr ctermbg=12 ctermfg=7
 highlight Todo ctermbg=red ctermfg=gray
-"highlight MatchParen ctermbg=3
-"highlight Search ctermbg=14
 "}}}
 
 " Mappings {{{
@@ -237,11 +233,14 @@ inoremap kj <Esc>
 " Editing mappings {{{
 " Exchange operation-delete, target highlight, exchange
 vnoremap gx <Esc>`.``gvP``P
+
 " Swap word with the next full word, even across punctuation or newlines.
 "nnoremap <silent> gw "_yiw:s/\(\%#\w\+\)\(\_W\+\)\(\w\+\)/\3\2\1/<CR><c-o><c-l>:nohlsearch<CR>
+
 " Push words 'right' or 'left', keeping cursor position constant
-nnoremap <silent> <C-Right> "_yiw:s/\(\%#\w\+\)\(\_W\+\)\(\w\+\)/\3\2\1/<CR><C-o>/\w\+\_W\+<CR><C-l>:nohlsearch<CR>
-nnoremap <silent> <C-Left> "_yiw?\w\+\_W\+\%#<CR>:s/\(\%#\w\+\)\(\_W\+\)\(\w\+\)/\3\2\1/<CR><C-o><C-l>:nohlsearch<CR>
+"nnoremap <silent> <C-Right> "_yiw:s/\(\%#\w\+\)\(\_W\+\)\(\w\+\)/\3\2\1/<CR><C-o>/\w\+\_W\+<CR><C-l>:nohlsearch<CR>
+"nnoremap <silent> <C-Left> "_yiw?\w\+\_W\+\%#<CR>:s/\(\%#\w\+\)\(\_W\+\)\(\w\+\)/\3\2\1/<CR><C-o><C-l>:nohlsearch<CR>
+
 " Insertion of single characters before or after cursor
 "nnoremap <silent> <Space> :exec "normal i".nr2char(getchar())."\e"<CR>
 "nnoremap <silent> <S-Space> :exec "normal a".nr2char(getchar())."\e"<CR>
@@ -381,6 +380,7 @@ Bundle 'jiangmiao/auto-pairs'
 Bundle 'shinokada/dragvisuals.vim'
 Bundle 'vim-scripts/matchit.zip'
 
+" Text objects
 Bundle 'kana/vim-textobj-user'
 Bundle 'kana/vim-textobj-function'
 
