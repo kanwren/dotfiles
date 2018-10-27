@@ -71,6 +71,7 @@ set scrolloff=0
 set list listchars=tab:>-,eol:~,extends:>,precedes:<
 set modelines=0
 set textwidth=80
+set nrformats=bin,hex
 set formatoptions=croqln1
 
 set autoindent smartindent
@@ -83,7 +84,6 @@ set noshiftround
 
 highlight ColorColumn ctermbg=1
 set colorcolumn=81
-call matchadd('ColorColumn', '\%81v\S', 100)
 highlight ExtraWhitespace ctermbg=3
 match ExtraWhitespace /\s\+$/
 

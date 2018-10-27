@@ -164,6 +164,7 @@ set modelines=0
 set foldmethod=manual
 set foldcolumn=1
 set textwidth=80
+set nrformats=bin,hex                " Don't increment octal numbers
 set formatoptions=croqln
 " c=wrap comments
 " r=insert comment on enter
@@ -233,17 +234,6 @@ inoremap kj <Esc>
 " Editing mappings {{{
 " Exchange operation-delete, target highlight, exchange
 vnoremap gx <Esc>`.``gvP``P
-
-" Swap word with the next full word, even across punctuation or newlines.
-"nnoremap <silent> gw "_yiw:s/\(\%#\w\+\)\(\_W\+\)\(\w\+\)/\3\2\1/<CR><c-o><c-l>:nohlsearch<CR>
-
-" Push words 'right' or 'left', keeping cursor position constant
-"nnoremap <silent> <C-Right> "_yiw:s/\(\%#\w\+\)\(\_W\+\)\(\w\+\)/\3\2\1/<CR><C-o>/\w\+\_W\+<CR><C-l>:nohlsearch<CR>
-"nnoremap <silent> <C-Left> "_yiw?\w\+\_W\+\%#<CR>:s/\(\%#\w\+\)\(\_W\+\)\(\w\+\)/\3\2\1/<CR><C-o><C-l>:nohlsearch<CR>
-
-" Insertion of single characters before or after cursor
-"nnoremap <silent> <Space> :exec "normal i".nr2char(getchar())."\e"<CR>
-"nnoremap <silent> <S-Space> :exec "normal a".nr2char(getchar())."\e"<CR>
 " }}}
 
 " Leader mappings {{{
@@ -470,3 +460,13 @@ let g:rbpt_colorpairs = [
 "let g:ctrlp_show_hidden = 1
 "let g:ctrlp_open_multiple_files = 't'
 
+
+" Old cool mappings
+" - Swap word with the next full word, even across punctuation or newlines.
+"nnoremap <silent> gw "_yiw:s/\(\%#\w\+\)\(\_W\+\)\(\w\+\)/\3\2\1/<CR><c-o><c-l>:nohlsearch<CR>
+" - Push words 'right' or 'left', keeping cursor position constant
+"nnoremap <silent> <C-Right> "_yiw:s/\(\%#\w\+\)\(\_W\+\)\(\w\+\)/\3\2\1/<CR><C-o>/\w\+\_W\+<CR><C-l>:nohlsearch<CR>
+"nnoremap <silent> <C-Left> "_yiw?\w\+\_W\+\%#<CR>:s/\(\%#\w\+\)\(\_W\+\)\(\w\+\)/\3\2\1/<CR><C-o><C-l>:nohlsearch<CR>
+" - Insertion of single characters before or after cursor
+"nnoremap <silent> <Space> :exec "normal i".nr2char(getchar())."\e"<CR>
+"nnoremap <silent> <S-Space> :exec "normal a".nr2char(getchar())."\e"<CR>
