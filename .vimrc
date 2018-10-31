@@ -1,37 +1,7 @@
 set nocompatible
 
-set diffexpr=MyDiff()
-function! MyDiff()
-    let opt = '-a --binary '
-    if &diffopt =~ 'icase'  | let opt = opt . '-i ' | endif
-    if &diffopt =~ 'iwhite' | let opt = opt . '-b ' | endif
-    let arg1 = v:fname_in
-    if arg1 =~ ' ' | let arg1 = '"' . arg1 . '"' | endif
-    let arg2 = v:fname_new
-    if arg2 =~ ' ' | let arg2 = '"' . arg2 . '"' | endif
-    let arg3 = v:fname_out
-    if arg3 =~ ' ' | let arg3 = '"' . arg3 . '"' | endif
-    if $VIMRUNTIME =~ ' '
-        if &sh =~ '\<cmd'
-            if empty(&shellxquote)
-                let l:shxq_sav = ''
-                set shellxquote&
-            endif
-            let cmd = '"' . $VIMRUNTIME . '\diff"'
-        else
-            let cmd = substitute($VIMRUNTIME, ' ', '" ', '') . '\diff"'
-        endif
-    else
-        let cmd = $VIMRUNTIME . '\diff'
-    endif
-    silent execute '!' . cmd . ' ' . opt . arg1 . ' ' . arg2 . ' > ' . arg3
-    if exists('l:shxq_sav')
-        let &shellxquote=l:shxq_sav
-    endif
-endfunction
-
 function! ClearRegisters()
-    let regs='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/-*"'
+    let regs='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/-*+"'
     let i = 0
     while (i < strlen(regs))
         exec 'let @' . regs[i] . '=""'
@@ -147,7 +117,7 @@ set ignorecase
 set smartcase
 
 set nojoinspaces                     " never two spaces after sentence
-set ve=block
+set virtualedit=block
 set nospell spelllang=en_us
 set splitbelow splitright            " directions for vs/sp
 set nowrap
@@ -320,9 +290,9 @@ iabbrev xdiary <C-r>=expand('%:t:r')<CR><Esc><C-x>+f]i\|< prev<Esc>odiary<Esc>+f
 iabbrev xlecture %date <C-r>=strftime("%Y-%m-%d")<CR><CR>_<C-r>=strftime("%a %d %b %Y")<CR>_<CR><CR><C-r>=expand('%:t:r')<CR><Esc><C-x>V<CR>0f]i\|< prev<Esc>oindex<Esc>V<CR>o<C-r>=expand('%:t:r')<CR><Esc><C-a>V<CR>0f]i\|next ><Esc>o
 
 " Abbreviations for inserting common sequences
-iabbrev xalpha abcdefghijklmnopqrstuvwxyz
-iabbrev xAlpha ABCDEFGHIJKLMNOPQRSTUVWXYZ
-iabbrev xdigits 0123456789
+iabbrev xalpha <C-r>="abcdefghijklmnopqrstuvwxyz"<CR>
+iabbrev xAlpha <C-r>="ABCDEFGHIJKLMNOPQRSTUVWXYZ"<CR>
+iabbrev xdigits <C-r>="0123456789"
 " }}}
 
 " Vundle plugins {{{
@@ -395,7 +365,7 @@ highlight VimwikiHeader1 ctermfg=magenta
 highlight VimwikiHeader2 ctermfg=blue
 highlight VimwikiHeader3 ctermfg=green
 let wiki = {}
-let wiki.path = '~/Dropbox/wiki'
+let wiki.path = '~/wiki'
 let wiki.nested_syntaxes = {'python': 'python', 'c++': 'cpp', 'java': 'java', 'haskell': 'haskell', 'js': 'javascript'}
 let g:vimwiki_list = [wiki]
 let g:vimwiki_listsyms = ' .○●✓'
@@ -446,6 +416,7 @@ let g:rbpt_colorpairs = [
 "let g:EasyMotion_use_upper = 0
 "let g:EasyMotion_smartcase = 1
 
+
 " Old Syntastic settings
 "let g:syntastic_always_populate_loc_list = 1
 "let g:syntastic_auto_loc_list = 1
@@ -455,6 +426,7 @@ let g:rbpt_colorpairs = [
 "let g:syntastic_java_checkers = ['checkstyle']
 "let g:syntastic_java_checkstyle_classpath = 'C:/tools/checkstyle/checkstyle-8.12-all.jar'
 "let g:syntastic_java_checkstyle_conf_file = 'C:/tools/checkstyle/cs1331-checkstyle.xml'
+
 
 " Old CtrlP settings
 "let g:ctrlp_show_hidden = 1
@@ -470,3 +442,35 @@ let g:rbpt_colorpairs = [
 " - Insertion of single characters before or after cursor
 "nnoremap <silent> <Space> :exec "normal i".nr2char(getchar())."\e"<CR>
 "nnoremap <silent> <S-Space> :exec "normal a".nr2char(getchar())."\e"<CR>
+
+
+"set diffexpr=MyDiff()
+"function! MyDiff()
+"    let opt = '-a --binary '
+"    if &diffopt =~ 'icase'  | let opt = opt . '-i ' | endif
+"    if &diffopt =~ 'iwhite' | let opt = opt . '-b ' | endif
+"    let arg1 = v:fname_in
+"    if arg1 =~ ' ' | let arg1 = '"' . arg1 . '"' | endif
+"    let arg2 = v:fname_new
+"    if arg2 =~ ' ' | let arg2 = '"' . arg2 . '"' | endif
+"    let arg3 = v:fname_out
+"    if arg3 =~ ' ' | let arg3 = '"' . arg3 . '"' | endif
+"    if $VIMRUNTIME =~ ' '
+"        if &sh =~ '\<cmd'
+"            if empty(&shellxquote)
+"                let l:shxq_sav = ''
+"                set shellxquote&
+"            endif
+"            let cmd = '"' . $VIMRUNTIME . '\diff"'
+"        else
+"            let cmd = substitute($VIMRUNTIME, ' ', '" ', '') . '\diff"'
+"        endif
+"    else
+"        let cmd = $VIMRUNTIME . '\diff'
+"    endif
+"    silent execute '!' . cmd . ' ' . opt . arg1 . ' ' . arg2 . ' > ' . arg3
+"    if exists('l:shxq_sav')
+"        let &shellxquote=l:shxq_sav
+"    endif
+"endfunction
+
