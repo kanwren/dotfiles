@@ -1,5 +1,6 @@
 set nocompatible
 
+" Functions {{{
 function! ClearRegisters()
     let regs='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/-*+"'
     let i = 0
@@ -24,6 +25,7 @@ function! SetIndents()
     exec "setlocal softtabstop=" . i
     exec "setlocal shiftwidth=" . i
 endfunction
+" }}}
 
 " Autocommands {{{
 if has('autocmd')
@@ -33,10 +35,6 @@ if has('autocmd')
         autocmd VimEnter * RainbowParenthesesToggle
         autocmd Syntax * RainbowParenthesesLoadRound
         autocmd StdinReadPre * let s:std_in=1
-    augroup END
-    augroup vimscript_group
-        autocmd!
-        autocmd FileType vim setlocal foldmethod=marker
     augroup END
     augroup java_group
         autocmd!
@@ -63,7 +61,7 @@ if has('autocmd')
 endif
 " }}}
 
-" Settings Configuration {{{
+" Settings {{{
 syntax on
 filetype on
 filetype indent on
@@ -119,7 +117,7 @@ set smartcase
 set scrolloff=0                      " TODO: 5? 7?
 
 set list listchars=tab:>-,eol:¬,extends:>,precedes:<
-set modelines=0
+set modelines=1
 set textwidth=80
 set nrformats=bin,hex                " Don't increment octal numbers
 set formatoptions=croqln
@@ -182,30 +180,25 @@ map <C-u> <C-u><C-l>
 " }}}
 
 " Convenience mappings {{{
-" Familiar saving from insert mode
-"inoremap <C-s> <C-o>:w<CR>
 " Work by visual line without a count, but normal when used with one
 noremap <silent> <expr> j (v:count == 0 ? 'gj' : 'j')
 noremap <silent> <expr> k (v:count == 0 ? 'gk' : 'k')
-" Makes temporary macros more tolerable
-nnoremap Q @q
-" Repeat commands across visual selections
-vnoremap . :norm .<CR>
-vnoremap Q :norm @q<CR>
-" Makes Y consistent with C and D, because I always use yy for Y anyway
-nnoremap Y y$
-" Display registers
-noremap <silent> "" :registers<CR>
 " Provide easier alternative to escape-hit them at the same time
 inoremap jk <Esc>
 inoremap kj <Esc>
-" }}}
-
-" Editing mappings {{{
-" Exchange operation-delete, target highlight, exchange
-vnoremap gx <Esc>`.``gvP``P
+" Makes temporary macros more tolerable
+nnoremap Q @q
+" Repeat macros/commands across visual selections
+vnoremap Q :norm @q<CR>
+vnoremap . :norm .<CR>
+" Makes Y consistent with C and D, because I always use yy for Y anyway
+nnoremap Y y$
 " Highlight last inserted text
 nnoremap gV `[v`]
+" Exchange operation-delete, target highlight, exchange
+vnoremap gx <Esc>`.``gvP``P
+" Display registers
+noremap <silent> "" :registers<CR>
 " }}}
 
 " Leader mappings {{{
@@ -406,6 +399,7 @@ let g:rbpt_colorpairs = [
             \ ]
 " }}}
 
+" Old Settings {{{
 " Old EasyMotion settings
 "map <Leader><Leader> <Plug>(easymotion-prefix)
 "nmap <Leader>s <Plug>(easymotion-s2)
@@ -472,3 +466,6 @@ let g:rbpt_colorpairs = [
 "    endif
 "endfunction
 
+" }}}
+
+" vim:foldmethod=marker:foldlevel=0
