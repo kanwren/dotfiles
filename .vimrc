@@ -83,6 +83,7 @@ set encoding=utf-8
 scriptencoding utf-8
 set ffs=dos,unix,mac
 let $LANG='en'
+set nospell spelllang=en_us
 
 set autoread
 set noconfirm                        " fail, don't ask to save
@@ -95,44 +96,30 @@ set tags=tags;/
 
 set lazyredraw
 
-set laststatus=2                     " For when Airline isn't available
-set statusline=buf\ %n:\ \"%F\"%<\ \ \ %m%y%h%w%r%=%(col\ %c%)\ \ \ \ \ \ %(%l\ /\ %L%)\ \ \ \ \ \ %p%%
-
-set wildmenu                         " better command-line completion
-set wildmode=longest:list,full       " TODO: decide between this and longest:full,full
-
-set cmdheight=1
-set showcmd                          " show partial commands on bottom
-set showmode
-
 set noerrorbells novisualbell
 
 set mouse-=a
 
 set number relativenumber
+set nocursorline
+set laststatus=2                     " For when Airline isn't available
+set statusline=buf\ %n:\ \"%F\"%<\ \ \ %m%y%h%w%r%=%(col\ %c%)\ \ \ \ \ \ %(%l\ /\ %L%)\ \ \ \ \ \ %p%%
+set wildmenu                         " better command-line completion
+set wildmode=longest:list,full       " TODO: decide between this and longest:full,full
+set cmdheight=1
+set showcmd                          " show partial commands on bottom
+set showmode
+set nowrap
 
 set showmatch                        " matching brace/parens/etc.
 set incsearch hlsearch
 set ignorecase
 set smartcase
 
-set nojoinspaces                     " never two spaces after sentence
-set virtualedit=block
-set nospell spelllang=en_us
-set splitbelow splitright            " directions for vs/sp
-set nowrap
-set backspace=indent,eol,start
-set whichwrap+=<,>,h,l,[,]           " direction key wrapping
-
-set timeout timeoutlen=500
-
-set ttyfast
 set scrolloff=0                      " TODO: 5? 7?
 
 set list listchars=tab:>-,eol:¬,extends:>,precedes:<
 set modelines=0
-set foldmethod=manual
-set foldcolumn=1
 set textwidth=80
 set nrformats=bin,hex                " Don't increment octal numbers
 set formatoptions=croqln
@@ -150,6 +137,19 @@ set expandtab softtabstop=4 " expand tabs to 4 spaces
 set shiftwidth=4            " use 4 spaces when using > or <
 set smarttab
 set noshiftround
+
+set ttyfast
+set timeout timeoutlen=500
+
+set nojoinspaces                     " never two spaces after sentence
+set virtualedit=block
+set splitbelow splitright            " directions for vs/sp
+set backspace=indent,eol,start
+set whichwrap+=<,>,h,l,[,]           " direction key wrapping
+
+set foldmethod=manual
+set foldcolumn=1
+set foldlevelstart=99
 " }}}
 
 " Highlighting {{{
@@ -204,6 +204,8 @@ inoremap kj <Esc>
 " Editing mappings {{{
 " Exchange operation-delete, target highlight, exchange
 vnoremap gx <Esc>`.``gvP``P
+" Highlight last inserted text
+nnoremap gV `[v`]
 " }}}
 
 " Leader mappings {{{
@@ -231,9 +233,6 @@ nnoremap <Leader>ewh yyp:s/[^\|]/-/g<CR>:nohlsearch<CR>
 nnoremap <Leader>; m`A;<Esc>``
 " Retab and delete whitespace
 noremap <Leader><Tab> m`:%s/\s\+$//ge<CR>``:retab<CR>
-" Make a new blank line and navigate to it
-nnoremap <Leader><CR> o<Esc>
-nnoremap <Leader><S-CR> O<Esc>
 " }}}
 
 " Plugin mappings {{{
@@ -319,7 +318,6 @@ Bundle 'powerline/fonts'
 " Functionality
 " TODO: Replace CtrlP with fzf
 "Bundle 'kien/ctrlp.vim'
-Bundle 'junegunn/fzf.vim'
 Bundle 'tpope/vim-eunuch'
 Bundle 'scrooloose/nerdtree'
 Bundle 'w0rp/ale'
