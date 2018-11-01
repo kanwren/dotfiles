@@ -36,6 +36,7 @@ set tags=tags;/
 set lazyredraw
 
 set noerrorbells novisualbell
+set t_vb=
 
 set mouse-=a
 
@@ -50,6 +51,7 @@ set showcmd
 set showmode
 set nowrap
 
+set magic
 set showmatch
 set incsearch hlsearch
 set ignorecase
@@ -112,13 +114,16 @@ noremap <Leader><Leader>ic :call SetIndents()<CR>
 nnoremap <Leader>en m`O<Esc>jo<Esc>``
 vnoremap <Leader>en <Esc>`<O<Esc>`>o<Esc>'>
 noremap <Leader><Tab> m`:%s/\s\+$//ge<CR>``:retab<CR>
+noremap <Leader>cb :let @*=@"<CR>
 
-iabbrev xymd <C-r>=strftime("%Y-%m-%d")<CR>
-iabbrev xswdate <C-r>=strftime("%a %d %b %Y")<CR>
-iabbrev xdatetime <C-r>=strftime("%a %d %b %Y %I:%M %p")<CR>
-iabbrev xalpha <C-r>="abcdefghijklmnopqrstuvwxyz"<CR>
-iabbrev xAlpha <C-r>="ABCDEFGHIJKLMNOPQRSTUVWXYZ"<CR>
-iabbrev xdigits <C-r>="0123456789"<CR>
+iabbrev    <expr> xymd       strftime("%Y-%m-%d")
+iabbrev    <expr> xswdate    strftime("%a %d %b %Y")
+iabbrev    <expr> xdatetime  strftime("%a %d %b %Y %I:%M %p")
+iabbrev    <expr> xalpha     "abcdefghijklmnopqrstuvwxyz"
+iabbrev    <expr> xAlpha     "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+iabbrev    <expr> xdigits    "0123456789"
+abbreviate <expr> xpath      expand('%:p:h')
+abbreviate <expr> xfpath     expand('%:p')
 
 " Vundle quick installation:
 " git clone https://github.com/VundleVim/Vundle.vim ~/.vim/bundle/Vundle.vim

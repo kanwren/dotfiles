@@ -57,7 +57,10 @@ if has('autocmd')
         autocmd FileType vimwiki map <F10> :VimwikiAll2HTML<CR>
         autocmd FileType vimwiki setlocal formatoptions+=t
     augroup END
-    autocmd VimEnter,BufEnter * :normal zR
+    augroup general_group
+        " Return to last edit position when opening files
+        autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+    augroup END
 endif
 " }}}
 
@@ -95,6 +98,7 @@ set tags=tags;/
 set lazyredraw
 
 set noerrorbells novisualbell
+set t_vb=
 
 set mouse-=a
 
@@ -109,6 +113,7 @@ set showcmd                          " show partial commands on bottom
 set showmode
 set nowrap
 
+set magic
 set showmatch                        " matching brace/parens/etc.
 set incsearch hlsearch
 set ignorecase
@@ -222,6 +227,8 @@ vnoremap <Leader>en <Esc>`<O<Esc>`>o<Esc>'>
 " Add header row to tables in Vimwiki
 nnoremap <Leader>ewh yyp:s/[^\|]/-/g<CR>:nohlsearch<CR>
 
+" Copy unnamed register to clipboard
+noremap <Leader>cb :let @*=@"<CR>
 " Add semicolon at end of line without moving cursor
 nnoremap <Leader>; m`A;<Esc>``
 " Retab and delete whitespace
@@ -247,30 +254,30 @@ nmap gLo :VimwikiChangeSymbolInListTo *<CR>
 "}}}
 
 " Abbreviations {{{
-iabbrev xdmy <C-r>=strftime("%d/%m/%y")<CR>
-iabbrev xmdy <C-r>=strftime("%m/%d/%y")<CR>
-iabbrev xymd <C-r>=strftime("%Y-%m-%d")<CR>
+iabbrev <expr> xdmy strftime("%d/%m/%y")
+iabbrev <expr> xmdy strftime("%m/%d/%y")
+iabbrev <expr> xymd strftime("%Y-%m-%d")
 
 " 15 Sep 2018
-iabbrev xsdate <C-r>=strftime("%d %b %Y")<CR>
+iabbrev <expr> xsdate strftime("%d %b %Y")
 " September 15, 2018
-iabbrev xldate <C-r>=strftime("%B %d, %Y")<CR>
+iabbrev <expr> xldate strftime("%B %d, %Y")
 " Sat 15 Sep 2018
-iabbrev xswdate <C-r>=strftime("%a %d %b %Y")<CR>
+iabbrev <expr> xswdate strftime("%a %d %b %Y")
 " Saturday, September 15, 2018
-iabbrev xlwdate <C-r>=strftime("%A, %B %d, %Y")<CR>
+iabbrev <expr> xlwdate strftime("%A, %B %d, %Y")
 
 " 11:31 PM
-iabbrev xtime <C-r>=strftime("%I:%M %p")<CR>
+iabbrev <expr> xtime strftime("%I:%M %p")
 " 23:31
-iabbrev xmtime <C-r>=strftime("%H:%M")<CR>
+iabbrev <expr> xmtime strftime("%H:%M")
 
 " Sat 15 Sep 2018 11:31 PM
-iabbrev xdatetime <C-r>=strftime("%a %d %b %Y %I:%M %p")<CR>
+iabbrev <expr> xdatetime strftime("%a %d %b %Y %I:%M %p")
 " 2018-09-15 23:31
-iabbrev xdt <C-r>=strftime("%Y-%m-%d %H:%M")<CR>
+iabbrev <expr> xdt strftime("%Y-%m-%d %H:%M")
 " 2018-09-15T23:31:54
-iabbrev xiso <C-r>=strftime("%Y-%m-%dT%H:%M:%S")<CR>
+iabbrev <expr> xiso strftime("%Y-%m-%dT%H:%M:%S")
 
 " Wiki date header with YMD date annotation and presentable date in italics
 iabbrev xheader %date <C-r>=strftime("%Y-%m-%d")<CR><CR>_<C-r>=strftime("%a %d %b %Y")<CR>_
@@ -282,9 +289,13 @@ iabbrev xdiary <C-r>=expand('%:t:r')<CR><Esc><C-x>+f]i\|< prev<Esc>odiary<Esc>+f
 iabbrev xlecture %date <C-r>=strftime("%Y-%m-%d")<CR><CR>_<C-r>=strftime("%a %d %b %Y")<CR>_<CR><CR><C-r>=expand('%:t:r')<CR><Esc><C-x>V<CR>0f]i\|< prev<Esc>oindex<Esc>V<CR>o<C-r>=expand('%:t:r')<CR><Esc><C-a>V<CR>0f]i\|next ><Esc>o
 
 " Abbreviations for inserting common sequences
-iabbrev xalpha <C-r>="abcdefghijklmnopqrstuvwxyz"<CR>
-iabbrev xAlpha <C-r>="ABCDEFGHIJKLMNOPQRSTUVWXYZ"<CR>
-iabbrev xdigits <C-r>="0123456789"
+iabbrev <expr> xalpha "abcdefghijklmnopqrstuvwxyz"
+iabbrev <expr> xAlpha "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+iabbrev <expr> xdigits "0123456789"
+
+" Abbreviations for getting the path and filepath
+abbreviate <expr> xpath expand('%:p:h')
+abbreviate <expr> xfpath expand('%:p')
 " }}}
 
 " Vundle plugins {{{
