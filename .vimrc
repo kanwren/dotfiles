@@ -254,16 +254,26 @@ nmap gLo :VimwikiChangeSymbolInListTo *<CR>
 "}}}
 
 " Abbreviations {{{
+
+" Abbreviations for inserting common sequences
+iabbrev <expr> xalpha "abcdefghijklmnopqrstuvwxyz"
+iabbrev <expr> xAlpha "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+iabbrev <expr> xdigits "0123456789"
+
+" Abbreviations for getting the path and filepath
+abbreviate <expr> xpath expand('%:p:h')
+abbreviate <expr> xfpath expand('%:p')
+
 iabbrev <expr> xdmy strftime("%d/%m/%y")
 iabbrev <expr> xmdy strftime("%m/%d/%y")
 iabbrev <expr> xymd strftime("%Y-%m-%d")
 
 " 15 Sep 2018
-iabbrev <expr> xsdate strftime("%d %b %Y")
+iabbrev <expr> xdate strftime("%d %b %Y")
 " September 15, 2018
 iabbrev <expr> xldate strftime("%B %d, %Y")
 " Sat 15 Sep 2018
-iabbrev <expr> xswdate strftime("%a %d %b %Y")
+iabbrev <expr> xwdate strftime("%a %d %b %Y")
 " Saturday, September 15, 2018
 iabbrev <expr> xlwdate strftime("%A, %B %d, %Y")
 
@@ -281,21 +291,10 @@ iabbrev <expr> xiso strftime("%Y-%m-%dT%H:%M:%S")
 
 " Wiki date header with YMD date annotation and presentable date in italics
 iabbrev xheader %date <C-r>=strftime("%Y-%m-%d")<CR><CR>_<C-r>=strftime("%a %d %b %Y")<CR>_
-
 " Diary header with navigation and date header
 iabbrev xdiary <C-r>=expand('%:t:r')<CR><Esc><C-x>+f]i\|< prev<Esc>odiary<Esc>+f]i\|index<Esc>o<C-r>=expand('%:t:r')<CR><Esc><C-a>+f]i\|next ><Esc>o<CR>%date <C-r>=strftime("%Y-%m-%d")<CR><CR><C-r>=strftime("%a %d %b %Y")<CR><Esc>yss_o<CR>
-
 " Lecture header with navigation and date header
 iabbrev xlecture %date <C-r>=strftime("%Y-%m-%d")<CR><CR>_<C-r>=strftime("%a %d %b %Y")<CR>_<CR><CR><C-r>=expand('%:t:r')<CR><Esc><C-x>V<CR>0f]i\|< prev<Esc>oindex<Esc>V<CR>o<C-r>=expand('%:t:r')<CR><Esc><C-a>V<CR>0f]i\|next ><Esc>o
-
-" Abbreviations for inserting common sequences
-iabbrev <expr> xalpha "abcdefghijklmnopqrstuvwxyz"
-iabbrev <expr> xAlpha "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-iabbrev <expr> xdigits "0123456789"
-
-" Abbreviations for getting the path and filepath
-abbreviate <expr> xpath expand('%:p:h')
-abbreviate <expr> xfpath expand('%:p')
 " }}}
 
 " Vundle plugins {{{
