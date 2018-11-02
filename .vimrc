@@ -308,51 +308,51 @@ call vundle#begin('~/.vim/bundle/')
 " maxbrunsfeld/vim-yankstack
 " amix/vim-zenroom2
 
-Bundle 'gmarik/Vundle.vim'
+Plugin 'gmarik/Vundle.vim'
 
-Bundle 'vimwiki/vimwiki'
+Plugin 'vimwiki/vimwiki'
 
 " Interface
-Bundle 'vim-airline/vim-airline'
-Bundle 'vim-airline/vim-airline-themes'
-Bundle 'powerline/fonts'
+Plugin 'vim-airline/vim-airline'
+Plugin 'vim-airline/vim-airline-themes'
+Plugin 'powerline/fonts'
 
 " Functionality
 " TODO: Replace CtrlP with fzf
-"Bundle 'kien/ctrlp.vim'
-Bundle 'tpope/vim-eunuch'
-Bundle 'scrooloose/nerdtree'
-Bundle 'w0rp/ale'
-Bundle 'tpope/vim-fugitive'
-Bundle 'kien/rainbow_parentheses.vim'
+"Plugin 'kien/ctrlp.vim'
+Plugin 'tpope/vim-eunuch'
+Plugin 'scrooloose/nerdtree'
+Plugin 'w0rp/ale'
+Plugin 'tpope/vim-fugitive'
+Plugin 'kien/rainbow_parentheses.vim'
 
 " Utility plugins
-Bundle 'tpope/vim-surround'
-Bundle 'tpope/vim-repeat'
-Bundle 'tpope/vim-unimpaired'
-Bundle 'tpope/vim-abolish'
-Bundle 'tpope/vim-speeddating'
+Plugin 'tpope/vim-surround'
+Plugin 'tpope/vim-repeat'
+Plugin 'tpope/vim-unimpaired'
+Plugin 'tpope/vim-abolish'
+Plugin 'tpope/vim-speeddating'
 
-Bundle 'godlygeek/tabular'
-Bundle 'vim-scripts/tComment'
-Bundle 'jiangmiao/auto-pairs'
-"Bundle 'easymotion/vim-easymotion'
-Bundle 'shinokada/dragvisuals.vim'
-Bundle 'vim-scripts/matchit.zip'
+Plugin 'godlygeek/tabular'
+Plugin 'vim-scripts/tComment'
+Plugin 'jiangmiao/auto-pairs'
+"Plugin 'easymotion/vim-easymotion'
+Plugin 'shinokada/dragvisuals.vim'
+Plugin 'vim-scripts/matchit.zip'
 
 " Text objects
-Bundle 'kana/vim-textobj-user'
-Bundle 'kana/vim-textobj-function'
+Plugin 'kana/vim-textobj-user'
+Plugin 'kana/vim-textobj-function'
 
 " Snippets
-Bundle 'tomtom/tlib_vim'
-Bundle 'MarcWeber/vim-addon-mw-utils'
-Bundle 'garbas/vim-snipmate'
-Bundle 'honza/vim-snippets'
+Plugin 'tomtom/tlib_vim'
+Plugin 'MarcWeber/vim-addon-mw-utils'
+Plugin 'garbas/vim-snipmate'
+Plugin 'honza/vim-snippets'
 
 " Language-specific
-Bundle 'bps/vim-textobj-python'
-Bundle 'vim-ruby/vim-ruby'
+Plugin 'bps/vim-textobj-python'
+Plugin 'vim-ruby/vim-ruby'
 call vundle#end()
 " }}}
 

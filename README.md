@@ -14,7 +14,7 @@ Repository for my configurations, particularly for vim
 ```vimscript
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin('~/.vim/bundle/')
-*Bundle calls here*
+*Plugin calls here*
 call vundle#end()
 ```
 
