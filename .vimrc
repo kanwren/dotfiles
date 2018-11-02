@@ -11,7 +11,7 @@ function! ClearRegisters()
     unlet regs
 endfunction
 
-function! DelAllMarks()
+function! EraseMarks()
     delmarks!
     delmarks A-Z0-9
 endfunction
@@ -85,6 +85,7 @@ scriptencoding utf-8
 set ffs=dos,unix,mac
 let $LANG='en'
 set nospell spelllang=en_us
+set clipboard=unnamed                " copy unnamed register to clipboard
 
 set autoread
 set noconfirm                        " fail, don't ask to save
@@ -104,7 +105,7 @@ set mouse-=a
 
 set number relativenumber
 set nocursorline
-set laststatus=2                     " For when Airline isn't available
+set laststatus=2                     " for when Airline isn't available
 set statusline=buf\ %n:\ \"%F\"%<\ \ \ %m%y%h%w%r%=%(col\ %c%)\ \ \ \ \ \ %(%l\ /\ %L%)\ \ \ \ \ \ %p%%
 set wildmenu                         " better command-line completion
 set wildmode=longest:list,full       " TODO: decide between this and longest:full,full
@@ -227,8 +228,6 @@ vnoremap <Leader>en <Esc>`<O<Esc>`>o<Esc>'>
 " Add header row to tables in Vimwiki
 nnoremap <Leader>ewh yyp:s/[^\|]/-/g<CR>:nohlsearch<CR>
 
-" Copy unnamed register to clipboard
-noremap <Leader>cb :let @*=@"<CR>
 " Add semicolon at end of line without moving cursor
 nnoremap <Leader>; m`A;<Esc>``
 " Retab and delete whitespace
