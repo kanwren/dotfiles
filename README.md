@@ -4,6 +4,22 @@ Repository for my configurations, particularly for vim
 
 ## Notes
 
+**Vundle quick installation**
+
+1. git clone https://github.com/VundleVim/Vundle.vim ~/.vim/bundle/Vundle.vim
+2. Insert the lines below into .vimrc
+3. Find the plugin you want to install and insert "Plugin 'plugin\_name'"
+4. Run :PluginInstall in vim after sourcing the .vimrc
+
+```vimscript
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin('~/.vim/bundle/')
+*Bundle calls here*
+call vundle#end()
+```
+
+**qutebrowser config**
+
 How to use qute's config.py after installing qutebrowser:
 1. Open qutebrowser
 2. Run ":config-edit"

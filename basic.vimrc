@@ -125,43 +125,37 @@ iabbrev    <expr> xymd      strftime("%Y-%m-%d")
 iabbrev    <expr> xwdate    strftime("%a %d %b %Y")
 iabbrev    <expr> xdatetime strftime("%a %d %b %Y %I:%M %p")
 
-" Vundle quick installation:
-" git clone https://github.com/VundleVim/Vundle.vim ~/.vim/bundle/Vundle.vim
-" Uncomment the two calls and the set below to enable Vundle
-" Uncomment the Bundle calls that you want to install
-" Run PluginInstall
-
 "set rtp+=~/.vim/bundle/Vundle.vim
 "call vundle#begin('~/.vim/bundle/')
 "
 " - Automatically update Vundle
-"Bundle 'gmarik/Vundle.vim'
+"Plugin 'gmarik/Vundle.vim'
 "
 " - Repeating more actions with .
-"Bundle 'tpope/vim-repeat'
+"Plugin 'tpope/vim-repeat'
 " - Mappings for inserting/changing/deleting surrounding characters/elements
-"Bundle 'tpope/vim-surround'
+"Plugin 'tpope/vim-surround'
 " - File operations
-"Bundle 'tpope/vim-eunuch'
+"Plugin 'tpope/vim-eunuch'
 " - Git integration
-"Bundle 'tpope/vim-fugitive'
+"Plugin 'tpope/vim-fugitive'
 " - Quickfix/location list/buffer navigation, paired editor commands, etc.
-"Bundle 'tpope/vim-unimpaired'
+"Plugin 'tpope/vim-unimpaired'
 " - Subvert and coercion
-"Bundle 'tpope/vim-abolish'
+"Plugin 'tpope/vim-abolish'
 "
 " - Easy commenting
-"Bundle 'vim-scripts/tComment'
+"Plugin 'vim-scripts/tComment'
 "
 " - Automatic pair insertion/deletion
-"Bundle 'jiangmiao/auto-pairs'
+"Plugin 'jiangmiao/auto-pairs'
 " Tabularize
-"Bundle 'godlygeek/tabular'
+"Plugin 'godlygeek/tabular'
 "
-" - High level plugins
-"Bundle 'junegunn/fzf.vim'
-"Bundle 'itchyny/lightline'
-"Bundle 'scrooloose/nerdtree'
-"Bundle 'w0rp/ale'
+" - Higher-level plugins
+"Plugin 'junegunn/fzf.vim'
+"Plugin 'itchyny/lightline'
+"Plugin 'scrooloose/nerdtree'
+"Plugin 'w0rp/ale'
 "
 "call vundle#end()
