@@ -1,26 +1,28 @@
 set surround
-map <Space> nop
-let mapleader = " "
 
 set number relativenumber
 " set incsearch hlsearch
 " set ignorecase
 " set smartcase
 " set nojoinspaces                     " never two spaces after sentence
-" set ve=block
 " set splitbelow splitright            " directions for vs/sp
-" set backspace=indent,eol,start
-" set whichwrap+=<,>,h,l,[,]           " direction key wrapping
 " set list listchars=tab:>-,eol:¬,extends:>,precedes:<
-" set autoindent smartindent
-" set tabstop=4               " treat tabs as 4 spaces wide
-" set expandtab softtabstop=4 " expand tabs to 4 spaces
-" set shiftwidth=4            " use 4 spaces when using > or <
-" set smarttab
 
-nnoremap Q @q
-vnoremap . :norm .<CR>
-vnoremap Q :norm @q<CR>
-nnoremap Y y$
 inoremap jk <Esc>
 inoremap kj <Esc>
+nnoremap Q @q
+vnoremap Q :norm @q<CR>
+vnoremap . :norm .<CR>
+nnoremap Y y$
+vnoremap gx <Esc>`.``gvP``P
+nnoremap gV `[v`]
+
+map <Space> nop
+map <S-Space> <Space>
+let mapleader = " "
+nnoremap <Leader>en m`O<Esc>jo<Esc>``
+vnoremap <Leader>en <Esc>`<O<Esc>`>o<Esc>'>
+
+iabbrev <expr> xalpha  "abcdefghijklmnopqrstuvwxyz"
+iabbrev <expr> xAlpha  "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+iabbrev <expr> xdigits "0123456789"
