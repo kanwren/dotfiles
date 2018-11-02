@@ -43,6 +43,7 @@ if has('autocmd')
     augroup python_group
         autocmd!
         autocmd FileType python setlocal nosmartindent
+        autocmd FileType python setlocal foldmethod=indent
     augroup END
     augroup javascript_group
         autocmd!
