@@ -23,6 +23,7 @@ scriptencoding utf-8
 set ffs=dos,unix,mac
 let $LANG='en'
 set nospell spelllang=en_us
+set clipboard=unnamed
 
 set autoread
 set noconfirm
@@ -114,16 +115,15 @@ noremap <Leader><Leader>ic :call SetIndents()<CR>
 nnoremap <Leader>en m`O<Esc>jo<Esc>``
 vnoremap <Leader>en <Esc>`<O<Esc>`>o<Esc>'>
 noremap <Leader><Tab> m`:%s/\s\+$//ge<CR>``:retab<CR>
-noremap <Leader>cb :let @*=@"<CR>
 
-iabbrev    <expr> xymd      strftime("%Y-%m-%d")
-iabbrev    <expr> xwdate    strftime("%a %d %b %Y")
-iabbrev    <expr> xdatetime strftime("%a %d %b %Y %I:%M %p")
 iabbrev    <expr> xalpha    "abcdefghijklmnopqrstuvwxyz"
 iabbrev    <expr> xAlpha    "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 iabbrev    <expr> xdigits   "0123456789"
 abbreviate <expr> xpath     expand('%:p:h')
 abbreviate <expr> xfpath    expand('%:p')
+iabbrev    <expr> xymd      strftime("%Y-%m-%d")
+iabbrev    <expr> xwdate    strftime("%a %d %b %Y")
+iabbrev    <expr> xdatetime strftime("%a %d %b %Y %I:%M %p")
 
 " Vundle quick installation:
 " git clone https://github.com/VundleVim/Vundle.vim ~/.vim/bundle/Vundle.vim
