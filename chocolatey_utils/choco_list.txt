@@ -14,10 +14,9 @@ ctags
 curl
 discord
 discord.install
+DotNet4.6.1
 dotnet4.7.1
 dropbox
-eclipse
-evernote
 filezilla
 fzf
 gimp
@@ -28,7 +27,6 @@ gradle
 InkScape
 jdk10
 jdk11
-jdk8
 KB2670838
 KB2919355
 KB2919442
