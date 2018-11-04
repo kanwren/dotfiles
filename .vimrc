@@ -36,6 +36,10 @@ if has('autocmd')
         autocmd Syntax * RainbowParenthesesLoadRound
         autocmd StdinReadPre * let s:std_in=1
     augroup END
+    augroup haskell_group
+        autocmd!
+        autocmd FileType haskell setlocal shiftwidth=2 tabstop=2 softtabstop=2
+    augroup END
     augroup java_group
         autocmd!
         autocmd FileType java setlocal foldmethod=syntax
@@ -301,13 +305,8 @@ iabbrev xlecture %date <C-r>=strftime("%Y-%m-%d")<CR><CR>_<C-r>=strftime("%a %d 
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin('~/.vim/bundle/')
 
-" TODO: try these out:
+" Plugins to try out:
 " itchyny/lightline
-" michaeljsmith/vim-indent-object
-" terryma/vim-expand-region
-" terryma/vim-multiple-cursors
-" maxbrunsfeld/vim-yankstack
-" amix/vim-zenroom2
 
 Plugin 'gmarik/Vundle.vim'
 
@@ -319,11 +318,10 @@ Plugin 'vim-airline/vim-airline-themes'
 Plugin 'powerline/fonts'
 
 " Functionality
-" TODO: Replace CtrlP with fzf
-"Plugin 'kien/ctrlp.vim'
-Plugin 'tpope/vim-eunuch'
-Plugin 'scrooloose/nerdtree'
 Plugin 'w0rp/ale'
+"Plugin 'junegunn/fzf.vim'
+Plugin 'scrooloose/nerdtree'
+Plugin 'tpope/vim-eunuch'
 Plugin 'tpope/vim-fugitive'
 Plugin 'kien/rainbow_parentheses.vim'
 
@@ -337,7 +335,6 @@ Plugin 'tpope/vim-speeddating'
 Plugin 'godlygeek/tabular'
 Plugin 'vim-scripts/tComment'
 Plugin 'jiangmiao/auto-pairs'
-"Plugin 'easymotion/vim-easymotion'
 Plugin 'shinokada/dragvisuals.vim'
 Plugin 'vim-scripts/matchit.zip'
 
