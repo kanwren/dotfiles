@@ -87,7 +87,7 @@ set foldmethod=manual
 set foldcolumn=1
 set foldlevelstart=99
 
-highlight ColorColumn ctermbg=1
+highlight ColorColumn ctermbg=darkgray
 set colorcolumn=81
 highlight ExtraWhitespace ctermbg=3
 match ExtraWhitespace /\s\+$/
