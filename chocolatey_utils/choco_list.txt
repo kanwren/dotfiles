@@ -1,6 +1,9 @@
 Chocolatey
 androidstudio
 audacity
+autohotkey
+autohotkey.install
+binroot
 ccleaner
 chocolatey
 chocolatey-core.extension
@@ -12,8 +15,6 @@ cmake.install
 cmder
 ctags
 curl
-discord
-discord.install
 DotNet4.6.1
 dotnet4.7.1
 dropbox
@@ -25,6 +26,7 @@ git.install
 googledrive
 gradle
 InkScape
+javaruntime
 jdk10
 jdk11
 KB2670838
@@ -48,7 +50,10 @@ python3
 qutebrowser
 qutebrowser.install
 ruby
+scala
+scala.portable
 skype
+slack
 strawberryperl
 vcredist140
 vcredist2010
