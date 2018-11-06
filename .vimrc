@@ -356,7 +356,7 @@ call vundle#end()
 
 " Plugin settings {{{
 highlight VimwikiLink ctermbg=black ctermfg=2
-highlight VimwikiBold ctermfg=magenta
+highlight VimwikiBold ctermfg=cyan
 highlight VimwikiItalic ctermfg=yellow
 highlight VimwikiBoldItalic ctermfg=darkyellow
 highlight VimwikiHeader1 ctermfg=magenta
