@@ -8,7 +8,7 @@ slack_path      := "C:\Users\nprin\AppData\Local\slack\slack.exe"
 spotify_path    := "C:\Users\nprin\AppData\Roaming\Spotify\Spotify.exe"
 
 ; Program manager
-#/::
+>!/::
 input key, I L1
 ; Command line
 if key = c
@@ -22,16 +22,16 @@ else if key = g
     input key2, I L2
     ; Google Drive
     if key2 = dr
-        run, %chrome_path% "https://www.drive.google.com/"
+        run, %chrome_path% "drive.google.com/"
     ; Google Docs
     else if key2 = do
-        run, %chrome_path% "https://www.docs.google.com/"
+        run, %chrome_path% "docs.google.com/"
     ; Google Sheets
     else if key2 = sh
-        run, %chrome_path% "https://www.sheets.google.com/"
+        run, %chrome_path% "sheets.google.com/"
     ; Google Slides
     else if key2 = sl
-        run, %chrome_path% "https://www.slides.google.com/"
+        run, %chrome_path% "slides.google.com/"
 }
 ; Microsoft
 else if key = m
@@ -56,6 +56,8 @@ else if key = m
     else if key2 = p
         run, %office_path%POWERPNT.EXE
 }
+else if key = n
+    run, %chrome_path% "https://www.netflix.com/"
 ; Qutebrowser
 else if key = q
     run, %qute_path%
@@ -63,18 +65,23 @@ else if key = q
 else if key = s
 {
     input key2, I L1
-    if key2 = sl
+    if key2 = l
         run, %slack_path%
-    else if key2 = sp
+    else if key2 = p
         run, %spotify_path%
 }
 ; Vim
 else if key = v
     run, %conemu_path% /cmd vim -c "cd ~"
-Return
+return
 
 ; Keys
 Capslock::Esc
-#F5::Reload
-#Del::Suspend
-#Esc::ExitApp
+>!F5::
+reload
+sleep 1000
+msgBox, 4,, The script could not be reloaded. Would you like to open it for editing?
+ifMsgBox, Yes, edit
+return
+>!Del::suspend
+>!Esc::exitApp
