@@ -59,7 +59,7 @@ if has('autocmd')
     augroup END
     augroup wiki_group
         autocmd!
-        autocmd FileType vimwiki map <F10> :VimwikiAll2HTML<CR>
+        autocmd FileType vimwiki map <Leader>wa :VimwikiAll2HTML<CR>
         autocmd FileType vimwiki setlocal formatoptions+=t
     augroup END
     augroup general_group
