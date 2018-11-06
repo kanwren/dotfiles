@@ -317,9 +317,12 @@ Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
 Plugin 'powerline/fonts'
 
+" Fuzzy Finder
+Plugin 'junegunn/fzf'
+Plugin 'junegunn/fzf.vim'
+
 " Functionality
 Plugin 'w0rp/ale'
-"Plugin 'junegunn/fzf.vim'
 Plugin 'scrooloose/nerdtree'
 Plugin 'tpope/vim-eunuch'
 Plugin 'tpope/vim-fugitive'
