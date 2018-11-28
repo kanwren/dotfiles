@@ -11,7 +11,9 @@ spotify_path    := "C:\Users\nprin\AppData\Roaming\Spotify\Spotify.exe"
 >!/::
 input key, I L1
 ; Command line
-if key = c
+if key = b
+    run, chrome
+else if key = c
     run, %cmder_path%
 ; Search Everything
 else if key = e
@@ -49,9 +51,6 @@ else if key = m
     ; Onenote
     else if key2 = n
         run, %office_path%ONENOTE.EXE
-    ; Excel
-    else if key2 = e
-        run, %office_path%EXCEL.EXE
     ; Powerpoint
     else if key2 = p
         run, %office_path%POWERPNT.EXE
@@ -76,7 +75,7 @@ else if key = v
 return
 
 ; Keys
-Capslock::Esc
+; Capslock::Esc
 >!F5::
 reload
 sleep 1000

@@ -59,7 +59,6 @@ if has('autocmd')
     augroup END
     augroup wiki_group
         autocmd!
-        autocmd FileType vimwiki map <Leader>wa :VimwikiAll2HTML<CR>
         autocmd FileType vimwiki setlocal formatoptions+=t
     augroup END
     augroup general_group
@@ -140,10 +139,10 @@ set formatoptions=croqln
 " n=recognize numbered lists
 
 set autoindent smartindent
-set tabstop=4               " treat tabs as 4 spaces wide
-set cinoptions+=:0L0g0      " indent distance for case, jumps, scope declarations
-set expandtab softtabstop=4 " expand tabs to 4 spaces
-set shiftwidth=4            " use 4 spaces when using > or <
+set tabstop=4                        " treat tabs as 4 spaces wide
+set cinoptions+=:0L0g0               " indent distance for case, jumps, scope declarations
+set expandtab softtabstop=4          " expand tabs to 4 spaces
+set shiftwidth=4                     " use 4 spaces when using > or <
 set smarttab
 set noshiftround
 
@@ -151,7 +150,7 @@ set ttyfast
 set timeout timeoutlen=500
 
 set nojoinspaces                     " never two spaces after sentence
-set virtualedit=block
+set virtualedit=all                  " TODO: block,insert?
 set splitbelow splitright            " directions for vs/sp
 set backspace=indent,eol,start
 set whichwrap+=<,>,h,l,[,]           " direction key wrapping
@@ -254,6 +253,7 @@ noremap <expr> <Leader>a ":Tab /" . input("/") . "<CR>"
 " Vimwiki
 nmap glo :VimwikiChangeSymbolTo *<CR>
 nmap gLo :VimwikiChangeSymbolInListTo *<CR>
+map <Leader>wa :VimwikiAll2HTML<CR>
 "}}}
 "}}}
 
@@ -298,7 +298,7 @@ iabbrev xheader %date <C-r>=strftime("%Y-%m-%d")<CR><CR>_<C-r>=strftime("%a %d %
 " Diary header with navigation and date header
 iabbrev xdiary <C-r>=expand('%:t:r')<CR><Esc><C-x>+f]i\|< prev<Esc>odiary<Esc>+f]i\|index<Esc>o<C-r>=expand('%:t:r')<CR><Esc><C-a>+f]i\|next ><Esc>o<CR>%date <C-r>=strftime("%Y-%m-%d")<CR><CR><C-r>=strftime("%a %d %b %Y")<CR><Esc>yss_o<CR>
 " Lecture header with navigation and date header
-iabbrev xlecture %date <C-r>=strftime("%Y-%m-%d")<CR><CR>_<C-r>=strftime("%a %d %b %Y")<CR>_<CR><CR><C-r>=expand('%:t:r')<CR><Esc><C-x>V<CR>0f]i\|< prev<Esc>oindex<Esc>V<CR>o<C-r>=expand('%:t:r')<CR><Esc><C-a>V<CR>0f]i\|next ><Esc>o
+iabbrev xlecture %date <C-r>=strftime("%Y-%m-%d")<CR><CR>_<C-r>=strftime("%a %d %b %Y")<CR>_<CR><CR><C-r>=expand('%:t:r')<CR><Esc><C-x>V<CR>0f]i\|< prev<Esc>oindex<Esc>V<CR>o<C-r>=expand('%:t:r')<CR><Esc><C-a>V<CR>0f]i\|next ><Esc>o<CR>
 " }}}
 
 " Vundle plugins {{{
