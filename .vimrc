@@ -182,11 +182,16 @@ noremap <C-l> :nohlsearch<CR><C-l>
 " }}}
 
 " Fixing mappings {{{
-" Fix screen errors when using Ctrl+FBDU
-map <C-f> <C-f><C-l>
-map <C-b> <C-b><C-l>
-map <C-d> <C-d><C-l>
-map <C-u> <C-u><C-l>
+" Prevent screen drawing errors when navigating
+nmap <C-f> <C-f><C-l>
+nmap <C-b> <C-b><C-l>
+nmap <C-d> <C-d><C-l>
+nmap <C-u> <C-u><C-l>
+nmap zz zz<C-l>
+nmap zt zt<C-l>
+nmap zb zb<C-l>
+nmap gg gg<C-l>
+nmap G  G<C-l>
 " }}}
 
 " Convenience mappings {{{
@@ -366,7 +371,8 @@ highlight VimwikiHeader1 ctermfg=magenta
 highlight VimwikiHeader2 ctermfg=blue
 highlight VimwikiHeader3 ctermfg=green
 let wiki = {}
-let wiki.path = '~/wiki'
+let wiki.path = '~/Dropbox/wiki'
+let wiki.path_html = '~/wiki_html'
 let wiki.nested_syntaxes = {'python': 'python', 'c++': 'cpp', 'java': 'java', 'haskell': 'haskell', 'js': 'javascript'}
 let g:vimwiki_list = [wiki]
 let g:vimwiki_listsyms = ' .○●✓'
