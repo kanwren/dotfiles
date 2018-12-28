@@ -21,9 +21,17 @@ function! SetIndents()
     if !i
         let i = &softtabstop
     endif
-    exec "setlocal tabstop=" . i
-    exec "setlocal softtabstop=" . i
-    exec "setlocal shiftwidth=" . i
+    exec 'setlocal tabstop=' . i
+    exec 'setlocal softtabstop=' . i
+    exec 'setlocal shiftwidth=' . i
+endfunction
+
+function! ExpandSpaces()
+    normal gvy
+    let n = strlen(@")
+    let com = 'normal ' . n . 'I '
+    normal gv
+    execute com
 endfunction
 " }}}
 
@@ -228,15 +236,14 @@ noremap <Leader><Leader>sv :sou $MYVIMRC<CR>
 " Change working directory to directory of current file
 noremap <Leader><Leader>cd :cd <C-r>=expand('%:p:h:r')<CR><CR>
 " Modify indent level on the fly
-noremap <Leader><Leader>ic :call SetIndents()<CR>
+noremap <expr> <Leader><Leader>i SetIndents()
 
-" Saved macros for editing (prefixed with 'e')
+" Saved macros for editing
 " Add newlines around current line or selection
-nnoremap <Leader>en m`O<Esc>jo<Esc>``
-vnoremap <Leader>en <Esc>`<O<Esc>`>o<Esc>'>
-" Add header row to tables in Vimwiki
-nnoremap <Leader>ewh yyp:s/[^\|]/-/g<CR>:nohlsearch<CR>
-
+nnoremap <Leader>n m`O<Esc>jo<Esc>``
+vnoremap <Leader>n <Esc>`<O<Esc>`>o<Esc>'>
+" Expand line by padding visual block selection with spaces
+vnoremap <Leader>e :call ExpandSpaces()<CR>
 " Add semicolon at end of line without moving cursor
 nnoremap <Leader>; m`A;<Esc>``
 " Retab and delete whitespace
@@ -259,6 +266,8 @@ noremap <expr> <Leader>a ":Tab /" . input("/") . "<CR>"
 nmap glo :VimwikiChangeSymbolTo *<CR>
 nmap gLo :VimwikiChangeSymbolInListTo *<CR>
 map <Leader>wa :VimwikiAll2HTML<CR>
+" Add header row to tables
+nnoremap <Leader>awh yyp:s/[^\|]/-/g<CR>:nohlsearch<CR>
 "}}}
 "}}}
 
