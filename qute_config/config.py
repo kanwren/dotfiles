@@ -114,4 +114,5 @@ c.url.searchengines = {'DEFAULT': 'https://www.duckduckgo.com/?q={}'}
 c.url.start_pages = 'https://start.duckduckgo.com/'
 
 # Bindings for normal mode
+config.bind('Q', 'run-macro q')
 config.bind('z', 'open file:///C:/users/nprin/wiki_html/index.html')
