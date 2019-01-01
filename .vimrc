@@ -27,8 +27,7 @@ function! SetIndents()
 endfunction
 
 function! ExpandSpaces()
-    normal gvy
-    let n = strlen(@")
+    let n = abs(col("'<") - col("'>")) + 1
     let com = 'normal ' . n . 'I '
     normal gv
     execute com
@@ -229,7 +228,9 @@ map <Space> <nop>
 map <S-Space> <Space>
 let mapleader=" "
 
-" Abbreviated commands (prefixed with second <Leader>)
+" Search word underneath cursor but don't jump
+nnoremap <Leader>* m`*``
+
 noremap <Leader><Leader>es :e ~/scratch<CR>
 noremap <Leader><Leader>ev :e ~/dotfiles/.vimrc<CR>
 noremap <Leader><Leader>sv :sou $MYVIMRC<CR>
@@ -238,12 +239,11 @@ noremap <Leader><Leader>cd :cd <C-r>=expand('%:p:h:r')<CR><CR>
 " Modify indent level on the fly
 noremap <expr> <Leader><Leader>i SetIndents()
 
-" Saved macros for editing
 " Add newlines around current line or selection
 nnoremap <Leader>n m`O<Esc>jo<Esc>``
 vnoremap <Leader>n <Esc>`<O<Esc>`>o<Esc>'>
 " Expand line by padding visual block selection with spaces
-vnoremap <Leader>e :call ExpandSpaces()<CR>
+vnoremap <Leader>e <Esc>:call ExpandSpaces()<CR>
 " Add semicolon at end of line without moving cursor
 nnoremap <Leader>; m`A;<Esc>``
 " Retab and delete whitespace
