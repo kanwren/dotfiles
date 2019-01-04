@@ -17,7 +17,7 @@ function! EraseMarks()
 endfunction
 
 function! SetIndents()
-    let i = input("ts=sts=sw=", "")
+    let i = input('ts=sts=sw=', '')
     if !i
         let i = &softtabstop
     endif
@@ -50,6 +50,10 @@ if has('autocmd')
     augroup java_group
         autocmd!
         autocmd FileType java setlocal foldmethod=syntax
+        autocmd Filetype java set makeprg=javac\ %
+        set errorformat=%A%f:%l:\ %m,%-Z%p^,%-C%.%#
+        nmap <F9> :make<CR>:copen<CR><C-w>w
+        nmap <F10> :execute '!java <C-r>=expand('%:r')<CR>'<CR>
     augroup END
     augroup python_group
         autocmd!
@@ -128,7 +132,7 @@ set nowrap
 set magic
 set showmatch                        " matching brace/parens/etc.
 set incsearch hlsearch
-set ignorecase
+set noignorecase
 set smartcase
 
 set scrolloff=0                      " TODO: 5? 7?
@@ -231,21 +235,28 @@ let mapleader=" "
 " Search word underneath cursor but don't jump
 nnoremap <Leader>* m`*``
 
-noremap <Leader><Leader>es :e ~/scratch<CR>
-noremap <Leader><Leader>ev :e ~/dotfiles/.vimrc<CR>
-noremap <Leader><Leader>sv :sou $MYVIMRC<CR>
+" Run selection in Python and output result back into buffer
+nnoremap <Leader><Leader>p :.!python<CR>
+vnoremap <Leader><Leader>p :'<,'>!python<CR>
+
+noremap <Leader><Leader>es :edit ~/scratch<CR>
+noremap <Leader><Leader>ev :edit ~/dotfiles/.vimrc<CR>
+noremap <Leader><Leader>sv :source $MYVIMRC<CR>
 " Change working directory to directory of current file
-noremap <Leader><Leader>cd :cd <C-r>=expand('%:p:h:r')<CR><CR>
+noremap <expr> <Leader><Leader>cd ':cd ' . expand('%:p:h:r')
 " Modify indent level on the fly
 noremap <expr> <Leader><Leader>i SetIndents()
 
-" Add newlines around current line or selection
-nnoremap <Leader>n m`O<Esc>jo<Esc>``
-vnoremap <Leader>n <Esc>`<O<Esc>`>o<Esc>'>
+" Split current line by provided regex
+nnoremap <silent> <expr> <Leader>sp ':s/' . input('sp/') . '/\r/g<CR>'
 " Expand line by padding visual block selection with spaces
 vnoremap <Leader>e <Esc>:call ExpandSpaces()<CR>
+" Add newlines around current line or selection
+nnoremap <Leader>n m`:-pu _<CR>:+pu _<CR>``
+vnoremap <Leader>n <Esc>'<:-pu _<CR>'>:pu _<CR>'>
 " Add semicolon at end of line without moving cursor
 nnoremap <Leader>; m`A;<Esc>``
+vnoremap <Leader>; :s/$/;/g<CR>
 " Retab and delete whitespace
 noremap <Leader><Tab> m`:%s/\s\+$//ge<CR>``:retab<CR>
 " }}}
@@ -260,8 +271,8 @@ vmap <expr> <Down> DVB_Drag('down')
 vmap <expr> <Up> DVB_Drag('up')
 vmap <expr> D DVB_Duplicate()
 " Tabular
-" Prompt for regular expression to tabularize on
-noremap <expr> <Leader>a ":Tab /" . input("/") . "<CR>"
+" Prompt for regular expression on which to tabularize
+noremap <silent> <expr> <Leader>a ':Tabularize /' . input('tab/') . '<CR>'
 " Vimwiki
 nmap glo :VimwikiChangeSymbolTo *<CR>
 nmap gLo :VimwikiChangeSymbolInListTo *<CR>
@@ -355,6 +366,10 @@ Plugin 'jiangmiao/auto-pairs'
 Plugin 'shinokada/dragvisuals.vim'
 Plugin 'vim-scripts/matchit.zip'
 
+" Run the following command in the installed directory of vimproc.vim (Windows):
+" mingw32-make -f make_mingw64.mak
+Plugin 'Shougo/vimproc.vim'
+
 " Text objects
 Plugin 'kana/vim-textobj-user'
 Plugin 'kana/vim-textobj-function'
@@ -366,8 +381,8 @@ Plugin 'garbas/vim-snipmate'
 Plugin 'honza/vim-snippets'
 
 " Language-specific
+"Plugin 'eagletmt/ghcmod-vim'              " Waiting on newer base support
 Plugin 'bps/vim-textobj-python'
-Plugin 'vim-ruby/vim-ruby'
 call vundle#end()
 " }}}
 
@@ -403,7 +418,6 @@ let g:ale_python_pylint_options = '--disable=C0103,C0111,W0621,R0902'
 
 let g:DVB_TrimWS = 1
 
-let g:airline#extensions#tabline#enabled = 1
 let g:airline_powerline_fonts = 1
 let g:airline_left_alt_sep = '»'
 let g:airline_right_alt_sep = '«'
@@ -414,6 +428,7 @@ let g:airline_symbols.maxlinenr = '㏑'
 let g:airline_symbols.branch = 'ᚠ'
 let g:airline_symbols.readonly = 'RO'
 let g:airline_symbols.spell = 'S'
+let g:airline#extensions#tabline#enabled = 1
 
 let g:rbpt_max = 15
 let g:rbpt_loadcmd_toggle = 0
