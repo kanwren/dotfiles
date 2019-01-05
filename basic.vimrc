@@ -10,6 +10,16 @@ function! SetIndents()
     exec "setlocal shiftwidth=" . i
 endfunction
 
+function! ExpandSpaces()
+    let [start, startv] = getpos("'<")[2:3]
+    let [end, endv]     = getpos("'>")[2:3]
+    " Index 3 includes overflow information for virtualedit
+    let cols = abs(end + endv - start - startv) + 1
+    let com  = 'normal ' . cols . 'I '
+    normal gv
+    execute com
+endfunction
+
 autocmd FileType help wincmd L
 syntax on
 filetype on
@@ -36,8 +46,8 @@ set tags=tags;/
 
 set lazyredraw
 
-set noerrorbells novisualbell
-set t_vb=
+set noerrorbells
+set visualbell t_vb=
 
 set mouse-=a
 
@@ -87,10 +97,14 @@ set foldmethod=manual
 set foldcolumn=1
 set foldlevelstart=99
 
+highlight FoldColumn ctermbg=black
+highlight Folded ctermbg=darkblue
 highlight ColorColumn ctermbg=darkgray
 set colorcolumn=81
-highlight ExtraWhitespace ctermbg=3
+highlight ExtraWhitespace ctermbg=darkcyan
 match ExtraWhitespace /\s\+$/
+highlight CursorLineNr ctermbg=darkblue ctermfg=white
+highlight Todo ctermbg=red ctermfg=gray
 
 noremap <C-l> :nohlsearch<CR><C-l>
 noremap <silent> <expr> j (v:count == 0 ? 'gj' : 'j')
@@ -103,22 +117,34 @@ vnoremap . :norm .<CR>
 nnoremap Y y$
 vnoremap gx <Esc>`.``gvP``P
 nnoremap gV `[v`]
+noremap <silent> "" :registers<CR>
 
 map <Space> <nop>
 map <S-Space> <Space>
 let mapleader=" "
+nnoremap <Leader>* mx*`x
+nnoremap <Leader><Leader>p :.!python<CR>
+vnoremap <Leader><Leader>p :!python<CR>
+nnoremap <Leader><Leader>v 0"xy$:@x<CR>
+vnoremap <Leader><Leader>v "xy:@x<CR>
 noremap <Leader><Leader>es :e ~/scratch<CR>
 noremap <Leader><Leader>ev :e ~/dotfiles/.vimrc<CR>
 noremap <Leader><Leader>sv :sou $MYVIMRC<CR>
-noremap <Leader><Leader>cd :cd <C-r>=expand('%:p:h:r')<CR><CR>
-noremap <Leader><Leader>ic :call SetIndents()<CR>
-nnoremap <Leader>en m`O<Esc>jo<Esc>``
-vnoremap <Leader>en <Esc>`<O<Esc>`>o<Esc>'>
-noremap <Leader><Tab> m`:%s/\s\+$//ge<CR>``:retab<CR>
+noremap <expr> <Leader><Leader>cd ':cd ' . expand('%:p:h:r')
+noremap <expr> <Leader><Leader>i SetIndents()
+nnoremap <silent> <expr> <Leader>sp ':s/' . input('sp/') . '/\r/g<CR>'
+vnoremap <Leader>e <Esc>:call ExpandSpaces()<CR>
+nnoremap <silent> <Leader>o :<C-u>call append(line("."), repeat([''], v:count1))<CR>
+nnoremap <silent> <Leader>O :<C-u>call append(line(".") - 1, repeat([''], v:count1))<CR>
+nnoremap <silent> <Leader>n :<C-u>call append(line('.'), repeat([''], v:count1)) \| call append(line('.') - 1, repeat([''], v:count1))<CR>
+vnoremap <silent> <Leader>n <Esc>:call append(line("'>"), '') \| call append(line("'<") - 1, '')<CR>
+nnoremap <Leader>; mxA;<Esc>`x
+vnoremap <Leader>; :s/$/;/g<CR>
+noremap <Leader><Tab> mx:%s/\s\+$//ge \| retab<CR>`x
 
-iabbrev    <expr> xalpha    "abcdefghijklmnopqrstuvwxyz"
-iabbrev    <expr> xAlpha    "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-iabbrev    <expr> xdigits   "0123456789"
+iabbrev xalpha <C-r>='abcdefghijklmnopqrstuvwxyz'<CR>
+iabbrev xAlpha <C-r>='ABCDEFGHIJKLMNOPQRSTUVWXYZ'<CR>
+iabbrev xdigits <C-r>='0123456789'<CR>
 abbreviate <expr> xpath     expand('%:p:h')
 abbreviate <expr> xfpath    expand('%:p')
 iabbrev    <expr> xymd      strftime("%Y-%m-%d")
@@ -127,35 +153,5 @@ iabbrev    <expr> xdatetime strftime("%a %d %b %Y %I:%M %p")
 
 "set rtp+=~/.vim/bundle/Vundle.vim
 "call vundle#begin('~/.vim/bundle/')
-"
-" - Automatically update Vundle
-"Plugin 'gmarik/Vundle.vim'
-"
-" - Repeating more actions with .
-"Plugin 'tpope/vim-repeat'
-" - Mappings for inserting/changing/deleting surrounding characters/elements
 "Plugin 'tpope/vim-surround'
-" - File operations
-"Plugin 'tpope/vim-eunuch'
-" - Git integration
-"Plugin 'tpope/vim-fugitive'
-" - Quickfix/location list/buffer navigation, paired editor commands, etc.
-"Plugin 'tpope/vim-unimpaired'
-" - Subvert and coercion
-"Plugin 'tpope/vim-abolish'
-"
-" - Easy commenting
-"Plugin 'vim-scripts/tComment'
-"
-" - Automatic pair insertion/deletion
-"Plugin 'jiangmiao/auto-pairs'
-" Tabularize
-"Plugin 'godlygeek/tabular'
-"
-" - Higher-level plugins
-"Plugin 'junegunn/fzf.vim'
-"Plugin 'itchyny/lightline'
-"Plugin 'scrooloose/nerdtree'
-"Plugin 'w0rp/ale'
-"
 "call vundle#end()

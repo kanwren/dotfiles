@@ -243,11 +243,11 @@ nnoremap <Leader>* mx*`x
 " Run selection in Python and output result back into buffer
 " TODO: fix Perl errors
 nnoremap <Leader><Leader>p :.!python<CR>
-vnoremap <Leader><Leader>p :'<,'>!python<CR>
+vnoremap <Leader><Leader>p :!python<CR>
 
 " Run selection in vimscript
-nnoremap <silent> <Leader><Leader>v 0"xy$:@x<CR>
-vnoremap <silent> <Leader><Leader>v "xy:@x<CR>
+nnoremap <Leader><Leader>v 0"xy$:@x<CR>
+vnoremap <Leader><Leader>v "xy:@x<CR>
 
 noremap <Leader><Leader>es :edit ~/scratch<CR>
 noremap <Leader><Leader>ev :edit ~/dotfiles/.vimrc<CR>
@@ -346,7 +346,7 @@ call vundle#begin('~/.vim/bundle/')
 " Plugins to try out:
 " itchyny/lightline
 
-Plugin 'gmarik/Vundle.vim'
+Plugin 'gmarik/Vundle.vim'                 " Plugin installer
 
 Plugin 'vimwiki/vimwiki'
 
@@ -360,23 +360,23 @@ Plugin 'junegunn/fzf'
 Plugin 'junegunn/fzf.vim'
 
 " Functionality
-Plugin 'w0rp/ale'
-Plugin 'scrooloose/nerdtree'
-Plugin 'tpope/vim-eunuch'
-Plugin 'tpope/vim-fugitive'
-Plugin 'kien/rainbow_parentheses.vim'
+Plugin 'w0rp/ale'                          " Async linting tool
+Plugin 'scrooloose/nerdtree'               " File explorer/interface
+Plugin 'tpope/vim-eunuch'                  " File operations
+Plugin 'tpope/vim-fugitive'                " Git integration
+Plugin 'kien/rainbow_parentheses.vim'      " Highlight matching punctuation pairs in color
 
 " Utility plugins
-Plugin 'tpope/vim-surround'
-Plugin 'tpope/vim-repeat'
-Plugin 'tpope/vim-unimpaired'
-Plugin 'tpope/vim-abolish'
-Plugin 'tpope/vim-speeddating'
+Plugin 'tpope/vim-surround'                " Mappings for inserting/changing/deleting surrounding characters/elements
+Plugin 'tpope/vim-repeat'                  " Repeating more actions with .
+Plugin 'tpope/vim-unimpaired'              " Quickfix/location list/buffer navigation, paired editor commands, etc.
+Plugin 'tpope/vim-abolish'                 " Subvert and coercion
+Plugin 'tpope/vim-speeddating'             " Fix negative problem when incrementing dates
 
-Plugin 'godlygeek/tabular'
-Plugin 'vim-scripts/tComment'
-Plugin 'jiangmiao/auto-pairs'
-Plugin 'shinokada/dragvisuals.vim'
+Plugin 'godlygeek/tabular'                 " Tabularize
+Plugin 'vim-scripts/tComment'              " Easy commenting
+Plugin 'jiangmiao/auto-pairs'              " Automatically insert matching punctuation pair, etc.
+Plugin 'shinokada/dragvisuals.vim'         " Add ability to drag visual blocks
 Plugin 'vim-scripts/matchit.zip'
 
 " Run the following command in the installed directory of vimproc.vim (Windows):
