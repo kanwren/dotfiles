@@ -12,7 +12,7 @@ clipgrab
 clisp
 cmake
 cmake.install
-cmder
+Cmder
 ctags
 curl
 DotNet4.6.1
@@ -58,4 +58,4 @@ strawberryperl
 vcredist140
 vcredist2010
 vim
-wget
+Wget
