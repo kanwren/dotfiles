@@ -27,8 +27,11 @@ function! SetIndents()
 endfunction
 
 function! ExpandSpaces()
-    let n = abs(col("'<") - col("'>")) + 1
-    let com = 'normal ' . n . 'I '
+    let [start, startv] = getpos("'<")[2:3]
+    let [end, endv]     = getpos("'>")[2:3]
+    " Index 3 includes overflow information for virtualedit
+    let cols = abs(end + endv - start - startv) + 1
+    let com  = 'normal ' . cols . 'I '
     normal gv
     execute com
 endfunction
@@ -39,8 +42,10 @@ if has('autocmd')
     autocmd FileType help wincmd L
     augroup plugin_group
         autocmd!
-        autocmd VimEnter * RainbowParenthesesToggle
-        autocmd Syntax * RainbowParenthesesLoadRound
+        if exists(':RainbowParenthesesToggle')
+            autocmd VimEnter * RainbowParenthesesToggle
+            autocmd Syntax * RainbowParenthesesLoadRound
+        endif
         autocmd StdinReadPre * let s:std_in=1
     augroup END
     augroup haskell_group
@@ -50,10 +55,10 @@ if has('autocmd')
     augroup java_group
         autocmd!
         autocmd FileType java setlocal foldmethod=syntax
-        autocmd Filetype java set makeprg=javac\ %
-        set errorformat=%A%f:%l:\ %m,%-Z%p^,%-C%.%#
-        nmap <F9> :make<CR>:copen<CR><C-w>w
-        nmap <F10> :execute '!java <C-r>=expand('%:r')<CR>'<CR>
+        autocmd FileType java set makeprg=javac\ %
+        autocmd FileType java set errorformat=%A%f:%l:\ %m,%-Z%p^,%-C%.%#
+        autocmd FileType java nmap <F9> :make \| copen<CR><C-w>w
+        autocmd FileType java nmap <F10> :execute '!java <C-r>=expand('%:r')<CR>'<CR>
     augroup END
     augroup python_group
         autocmd!
@@ -113,8 +118,8 @@ set tags=tags;/
 
 set lazyredraw
 
-set noerrorbells novisualbell
-set t_vb=
+set noerrorbells
+set visualbell t_vb=
 
 set mouse-=a
 
@@ -192,7 +197,7 @@ highlight Todo ctermbg=red ctermfg=gray
 noremap <C-l> :nohlsearch<CR><C-l>
 " }}}
 
-" Fixing mappings {{{
+" Bugfix mappings {{{
 " Prevent screen drawing errors when navigating
 nmap <C-f> <C-f><C-l>
 nmap <C-b> <C-b><C-l>
@@ -219,9 +224,9 @@ vnoremap Q :norm @q<CR>
 vnoremap . :norm .<CR>
 " Makes Y consistent with C and D, because I always use yy for Y anyway
 nnoremap Y y$
-" Highlight last inserted text
+" Highlight text that was just inserted
 nnoremap gV `[v`]
-" Exchange operation-delete, target highlight, exchange
+" Exchange operation-delete, highlight target, exchange
 vnoremap gx <Esc>`.``gvP``P
 " Display registers
 noremap <silent> "" :registers<CR>
@@ -233,11 +238,16 @@ map <S-Space> <Space>
 let mapleader=" "
 
 " Search word underneath cursor but don't jump
-nnoremap <Leader>* m`*``
+nnoremap <Leader>* mx*`x
 
 " Run selection in Python and output result back into buffer
+" TODO: fix Perl errors
 nnoremap <Leader><Leader>p :.!python<CR>
 vnoremap <Leader><Leader>p :'<,'>!python<CR>
+
+" Run selection in vimscript
+nnoremap <silent> <Leader><Leader>v 0"xy$:@x<CR>
+vnoremap <silent> <Leader><Leader>v "xy:@x<CR>
 
 noremap <Leader><Leader>es :edit ~/scratch<CR>
 noremap <Leader><Leader>ev :edit ~/dotfiles/.vimrc<CR>
@@ -251,14 +261,18 @@ noremap <expr> <Leader><Leader>i SetIndents()
 nnoremap <silent> <expr> <Leader>sp ':s/' . input('sp/') . '/\r/g<CR>'
 " Expand line by padding visual block selection with spaces
 vnoremap <Leader>e <Esc>:call ExpandSpaces()<CR>
+" Add newline above or below without moving cursor, unlike uninpaired's [/]<Space>
+" TODO: Add commands to pad selection with newlines, just like ExpandSpaces()
+nnoremap <silent> <Leader>o :<C-u>call append(line("."), repeat([''], v:count1))<CR>
+nnoremap <silent> <Leader>O :<C-u>call append(line(".") - 1, repeat([''], v:count1))<CR>
 " Add newlines around current line or selection
-nnoremap <Leader>n m`:-pu _<CR>:+pu _<CR>``
-vnoremap <Leader>n <Esc>'<:-pu _<CR>'>:pu _<CR>'>
-" Add semicolon at end of line without moving cursor
-nnoremap <Leader>; m`A;<Esc>``
+nnoremap <silent> <Leader>n :<C-u>call append(line('.'), repeat([''], v:count1)) \| call append(line('.') - 1, repeat([''], v:count1))<CR>
+vnoremap <silent> <Leader>n <Esc>:call append(line("'>"), '') \| call append(line("'<") - 1, '')<CR>
+" Add semicolon at end of line(s) without moving cursor
+nnoremap <Leader>; mxA;<Esc>`x
 vnoremap <Leader>; :s/$/;/g<CR>
-" Retab and delete whitespace
-noremap <Leader><Tab> m`:%s/\s\+$//ge<CR>``:retab<CR>
+" Retab and delete trailing whitespace
+noremap <Leader><Tab> mx:%s/\s\+$//ge \| retab<CR>`x
 " }}}
 
 " Plugin mappings {{{
@@ -278,16 +292,15 @@ nmap glo :VimwikiChangeSymbolTo *<CR>
 nmap gLo :VimwikiChangeSymbolInListTo *<CR>
 map <Leader>wa :VimwikiAll2HTML<CR>
 " Add header row to tables
-nnoremap <Leader>awh yyp:s/[^\|]/-/g<CR>:nohlsearch<CR>
+nnoremap <Leader>ewh yyp:s/[^\|]/-/g \| nohlsearch<CR>
 "}}}
 "}}}
 
 " Abbreviations {{{
-
 " Abbreviations for inserting common sequences
-iabbrev <expr> xalpha "abcdefghijklmnopqrstuvwxyz"
-iabbrev <expr> xAlpha "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-iabbrev <expr> xdigits "0123456789"
+iabbrev xalpha <C-r>='abcdefghijklmnopqrstuvwxyz'<CR>
+iabbrev xAlpha <C-r>='ABCDEFGHIJKLMNOPQRSTUVWXYZ'<CR>
+iabbrev xdigits <C-r>='0123456789'<CR>
 
 " Abbreviations for getting the path and filepath
 abbreviate <expr> xpath expand('%:p:h')
@@ -387,37 +400,44 @@ call vundle#end()
 " }}}
 
 " Plugin settings {{{
-highlight VimwikiLink ctermbg=black ctermfg=2
-highlight VimwikiBold ctermfg=cyan
-highlight VimwikiItalic ctermfg=yellow
-highlight VimwikiBoldItalic ctermfg=darkyellow
-highlight VimwikiHeader1 ctermfg=magenta
-highlight VimwikiHeader2 ctermfg=blue
-highlight VimwikiHeader3 ctermfg=green
-let wiki = {}
-let wiki.path = '~/Dropbox/wiki'
-let wiki.path_html = '~/wiki_html'
-let wiki.nested_syntaxes = {'python': 'python', 'c++': 'cpp', 'java': 'java', 'haskell': 'haskell', 'js': 'javascript'}
-let g:vimwiki_list = [wiki]
-let g:vimwiki_listsyms = ' .○●✓'
-let g:vimwiki_listsym_rejected = '✗'
-let g:vimwiki_dir_link = 'index'
+if exists(':VimwikiShowVersion')
+    highlight VimwikiLink ctermbg=black ctermfg=2
+    highlight VimwikiBold ctermfg=cyan
+    highlight VimwikiItalic ctermfg=yellow
+    highlight VimwikiBoldItalic ctermfg=darkyellow
+    highlight VimwikiHeader1 ctermfg=magenta
+    highlight VimwikiHeader2 ctermfg=blue
+    highlight VimwikiHeader3 ctermfg=green
+    let wiki = {}
+    let wiki.path = '~/Dropbox/wiki'
+    let wiki.path_html = '~/wiki_html'
+    let wiki.nested_syntaxes = {'python': 'python', 'c++': 'cpp', 'java': 'java', 'haskell': 'haskell', 'js': 'javascript'}
+    let g:vimwiki_list = [wiki]
+    let g:vimwiki_listsyms = ' .○●✓'
+    let g:vimwiki_listsym_rejected = '✗'
+    let g:vimwiki_dir_link = 'index'
+endif
 
-let g:ale_lint_on_enter = 0
-let g:ale_lint_on_filetype_changed = 1
-let g:ale_lint_on_insert_leave = 1
-let g:ale_lint_on_save = 1
-let g:ale_lint_on_text_changed = 1
-let g:ale_set_signs = 1
-let g:ale_linters = {
-            \ 'python': ['pylint', 'flake8'],
-            \ 'java': ['javac', 'checkstyle']
-            \ }
-let g:ale_java_checkstyle_options = '-c C:/tools/checkstyle/cs1331-checkstyle.xml'
-let g:ale_python_pylint_options = '--disable=C0103,C0111,W0621,R0902'
+if exists(':ALELint')
+    let g:ale_lint_on_enter = 0
+    let g:ale_lint_on_filetype_changed = 1
+    let g:ale_lint_on_insert_leave = 1
+    let g:ale_lint_on_save = 1
+    let g:ale_lint_on_text_changed = 1
+    let g:ale_set_signs = 1
+    let g:ale_linters = {
+                \ 'python': ['pylint', 'flake8'],
+                \ 'java': ['javac', 'checkstyle']
+                \ }
+    let g:ale_java_checkstyle_options = '-c C:/tools/checkstyle/cs1331-checkstyle.xml'
+    let g:ale_python_pylint_options = '--disable=C0103,C0111,W0621,R0902'
+endif
 
-let g:DVB_TrimWS = 1
+if exists('g:DVB_TrimWS')
+    let g:DVB_TrimWS = 1
+endif
 
+" TODO: exists block
 let g:airline_powerline_fonts = 1
 let g:airline_left_alt_sep = '»'
 let g:airline_right_alt_sep = '«'
@@ -430,13 +450,15 @@ let g:airline_symbols.readonly = 'RO'
 let g:airline_symbols.spell = 'S'
 let g:airline#extensions#tabline#enabled = 1
 
-let g:rbpt_max = 15
-let g:rbpt_loadcmd_toggle = 0
-let g:rbpt_colorpairs = [
-            \ ['blue',      'RoyalBlue3'],
-            \ ['green',     'SeaGreen3'],
-            \ ['red',       'firebrick3'],
-            \ ]
+if exists(':RainbowParenthesesToggle')
+    let g:rbpt_max = 15
+    let g:rbpt_loadcmd_toggle = 0
+    let g:rbpt_colorpairs = [
+                \ ['blue',      'RoyalBlue3'],
+                \ ['green',     'SeaGreen3'],
+                \ ['red',       'firebrick3'],
+                \ ]
+endif
 " }}}
 
 " Old Settings {{{
@@ -447,22 +469,6 @@ let g:rbpt_colorpairs = [
 "nmap <Leader>l <Plug>(easymotion-overwin-line)
 "let g:EasyMotion_use_upper = 0
 "let g:EasyMotion_smartcase = 1
-
-
-" Old Syntastic settings
-"let g:syntastic_always_populate_loc_list = 1
-"let g:syntastic_auto_loc_list = 1
-"let g:syntastic_check_on_open = 1
-"let g:syntastic_check_on_wq = 0
-"let g:syntastic_python_checkers = ['pylint', 'pyflakes', 'flake8']
-"let g:syntastic_java_checkers = ['checkstyle']
-"let g:syntastic_java_checkstyle_classpath = 'C:/tools/checkstyle/checkstyle-8.12-all.jar'
-"let g:syntastic_java_checkstyle_conf_file = 'C:/tools/checkstyle/cs1331-checkstyle.xml'
-
-
-" Old CtrlP settings
-"let g:ctrlp_show_hidden = 1
-"let g:ctrlp_open_multiple_files = 't'
 
 
 " Old cool mappings
