@@ -232,10 +232,10 @@ vnoremap Q :norm @q<CR>
 vnoremap . :norm .<CR>
 " Makes Y consistent with C and D, because I always use yy for Y anyway
 nnoremap Y y$
+" Exchange operation-delete, highlight target, exchange (made obsolete by exchange.vim)
+vnoremap gx <Esc>`.``gvP``P
 " Highlight text that was just inserted
 nnoremap gV `[v`]
-" Exchange operation-delete, highlight target, exchange
-vnoremap gx <Esc>`.``gvP``P
 " Display registers
 noremap <silent> "" :registers<CR>
 " }}}
@@ -353,7 +353,6 @@ call vundle#begin('~/.vim/bundle/')
 
 " Plugins to try out:
 " itchyny/lightline
-" 
 " romainl/vim-cool
 " svermeulen/vim-subversive
 " inkarkat/vim-UnconditionalPaste
