@@ -26,6 +26,12 @@ function! SetIndents()
     exec 'setlocal shiftwidth=' . i
 endfunction
 
+function! CopyRegister()
+    let r1 = substitute(nr2char(getchar()), "'", "\"")
+    let r2 = substitute(nr2char(getchar()), "'", "\"")
+    exec 'let @' . r2 . '=@' . r1
+endfunction
+
 function! ExpandSpaces()
     let [start, startv] = getpos("'<")[2:3]
     let [end, endv]     = getpos("'>")[2:3]
@@ -69,13 +75,13 @@ if has('autocmd')
         autocmd!
         autocmd FileType javascript setlocal shiftwidth=2 tabstop=2 softtabstop=2
     augroup END
-    augroup pug_group
-        autocmd!
-        autocmd FileType pug setlocal shiftwidth=2 tabstop=2 softtabstop=2
-    augroup END
     augroup wiki_group
         autocmd!
         autocmd FileType vimwiki setlocal formatoptions+=t
+    augroup END
+    augroup pug_group
+        autocmd!
+        autocmd FileType pug setlocal shiftwidth=2 tabstop=2 softtabstop=2
     augroup END
     augroup general_group
         " Return to last edit position when opening files
@@ -106,6 +112,8 @@ set ffs=dos,unix,mac
 let $LANG='en'
 set nospell spelllang=en_us
 set clipboard=unnamed                " copy unnamed register to clipboard
+
+set shortmess=I                      " Disable Vim intro screen
 
 set autoread
 set noconfirm                        " fail, don't ask to save
@@ -237,28 +245,28 @@ map <Space> <nop>
 map <S-Space> <Space>
 let mapleader=" "
 
-" Search word underneath cursor but don't jump
-nnoremap <Leader>* mx*`x
-
-" Run selection in Python and output result back into buffer
+" Run selection in Python and output result back into buffer for automatic text generation
 " TODO: fix Perl errors
 nnoremap <Leader><Leader>p :.!python<CR>
 vnoremap <Leader><Leader>p :!python<CR>
-
 " Run selection in vimscript
 nnoremap <Leader><Leader>v 0"xy$:@x<CR>
 vnoremap <Leader><Leader>v "xy:@x<CR>
-
+" Global scratch buffer
 noremap <Leader><Leader>es :edit ~/scratch<CR>
+" .vimrc editing/sourcing
 noremap <Leader><Leader>ev :edit ~/dotfiles/.vimrc<CR>
 noremap <Leader><Leader>sv :source $MYVIMRC<CR>
 " Change working directory to directory of current file
-noremap <expr> <Leader><Leader>cd ':cd ' . expand('%:p:h:r')
+noremap <expr> <Leader><Leader>cd ':cd ' . expand('%:p:h:r') . '<CR>'
 " Modify indent level on the fly
 noremap <expr> <Leader><Leader>i SetIndents()
-
+" Search word underneath cursor but don't jump
+noremap <Leader>* mx*`x
 " Split current line by provided regex
 nnoremap <silent> <expr> <Leader>sp ':s/' . input('sp/') . '/\r/g<CR>'
+" Copy contents from one register to another
+noremap <silent> <expr> <Leader>r CopyRegister()
 " Expand line by padding visual block selection with spaces
 vnoremap <Leader>e <Esc>:call ExpandSpaces()<CR>
 " Add newline above or below without moving cursor, unlike uninpaired's [/]<Space>
@@ -345,15 +353,23 @@ call vundle#begin('~/.vim/bundle/')
 
 " Plugins to try out:
 " itchyny/lightline
+" tommcdo/vim-exchange
+" romainl/vim-cool
+" svermeulen/vim-subversive
+" inkarkat/vim-UnconditionalPaste
+" inkarkat/vim-LineJuggler
+" airblade/vim-gitgutter
+" majutsushi/tagbar
+" kana/vim-niceblock
 
 Plugin 'gmarik/Vundle.vim'                 " Plugin installer
 
-Plugin 'vimwiki/vimwiki'
+Plugin 'vimwiki/vimwiki'                   " Personal wiki for Vim
 
 " Interface
-Plugin 'vim-airline/vim-airline'
-Plugin 'vim-airline/vim-airline-themes'
-Plugin 'powerline/fonts'
+Plugin 'vim-airline/vim-airline'           " Better status bar and tabline for Vim
+Plugin 'vim-airline/vim-airline-themes'    " Supports airline
+Plugin 'powerline/fonts'                   " Supports airline
 
 " Fuzzy Finder
 Plugin 'junegunn/fzf'
@@ -361,6 +377,7 @@ Plugin 'junegunn/fzf.vim'
 
 " Functionality
 Plugin 'w0rp/ale'                          " Async linting tool
+Plugin 'sheerun/vim-polyglot'              " Collection of language packs to rule them all (testing)
 Plugin 'scrooloose/nerdtree'               " File explorer/interface
 Plugin 'tpope/vim-eunuch'                  " File operations
 Plugin 'tpope/vim-fugitive'                " Git integration

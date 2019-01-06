@@ -10,6 +10,12 @@ function! SetIndents()
     exec "setlocal shiftwidth=" . i
 endfunction
 
+function! CopyRegister()
+    let r1 = substitute(nr2char(getchar()), "'", "\"")
+    let r2 = substitute(nr2char(getchar()), "'", "\"")
+    exec 'let @' . r2 . '=@' . r1
+endfunction
+
 function! ExpandSpaces()
     let [start, startv] = getpos("'<")[2:3]
     let [end, endv]     = getpos("'>")[2:3]
@@ -34,6 +40,8 @@ set ffs=dos,unix,mac
 let $LANG='en'
 set nospell spelllang=en_us
 set clipboard=unnamed
+
+set shortmess=I
 
 set autoread
 set noconfirm
@@ -133,6 +141,7 @@ noremap <Leader><Leader>sv :sou $MYVIMRC<CR>
 noremap <expr> <Leader><Leader>cd ':cd ' . expand('%:p:h:r')
 noremap <expr> <Leader><Leader>i SetIndents()
 nnoremap <silent> <expr> <Leader>sp ':s/' . input('sp/') . '/\r/g<CR>'
+noremap <silent> <expr> <Leader>r CopyRegister()
 vnoremap <Leader>e <Esc>:call ExpandSpaces()<CR>
 nnoremap <silent> <Leader>o :<C-u>call append(line("."), repeat([''], v:count1))<CR>
 nnoremap <silent> <Leader>O :<C-u>call append(line(".") - 1, repeat([''], v:count1))<CR>
