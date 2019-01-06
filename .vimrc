@@ -353,7 +353,7 @@ call vundle#begin('~/.vim/bundle/')
 
 " Plugins to try out:
 " itchyny/lightline
-" tommcdo/vim-exchange
+" 
 " romainl/vim-cool
 " svermeulen/vim-subversive
 " inkarkat/vim-UnconditionalPaste
@@ -389,7 +389,7 @@ Plugin 'tpope/vim-repeat'                  " Repeating more actions with .
 Plugin 'tpope/vim-unimpaired'              " Quickfix/location list/buffer navigation, paired editor commands, etc.
 Plugin 'tpope/vim-abolish'                 " Subvert and coercion
 Plugin 'tpope/vim-speeddating'             " Fix negative problem when incrementing dates
-
+Plugin 'tommcdo/vim-exchange'              " Text exchanging operators (testing)
 Plugin 'godlygeek/tabular'                 " Tabularize
 Plugin 'vim-scripts/tComment'              " Easy commenting
 Plugin 'jiangmiao/auto-pairs'              " Automatically insert matching punctuation pair, etc.
