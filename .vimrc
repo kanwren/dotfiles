@@ -416,7 +416,9 @@ call vundle#end()
 " }}}
 
 " Plugin settings {{{
-if exists(':VimwikiShowVersion')
+
+" Vimwiki
+if exists('g:vimwiki_list')
     highlight VimwikiLink ctermbg=black ctermfg=2
     highlight VimwikiBold ctermfg=cyan
     highlight VimwikiItalic ctermfg=yellow
@@ -434,6 +436,7 @@ if exists(':VimwikiShowVersion')
     let g:vimwiki_dir_link = 'index'
 endif
 
+" ALE
 if exists(':ALELint')
     let g:ale_lint_on_enter = 0
     let g:ale_lint_on_filetype_changed = 1
@@ -449,23 +452,28 @@ if exists(':ALELint')
     let g:ale_python_pylint_options = '--disable=C0103,C0111,W0621,R0902'
 endif
 
+" DragVisuals
 if exists('g:DVB_TrimWS')
     let g:DVB_TrimWS = 1
 endif
 
-" TODO: exists block
-let g:airline_powerline_fonts = 1
-let g:airline_left_alt_sep = '»'
-let g:airline_right_alt_sep = '«'
-if !exists('g:airline_symbols')
-    let g:airline_symbols = {}
+" Airline
+" TODO: exists condition
+if 1
+    let g:airline_powerline_fonts = 1
+    let g:airline_left_alt_sep = '»'
+    let g:airline_right_alt_sep = '«'
+    if !exists('g:airline_symbols')
+        let g:airline_symbols = {}
+    endif
+    let g:airline_symbols.maxlinenr = '㏑'
+    let g:airline_symbols.branch = 'ᚠ'
+    let g:airline_symbols.readonly = 'RO'
+    let g:airline_symbols.spell = 'S'
+    let g:airline#extensions#tabline#enabled = 1
 endif
-let g:airline_symbols.maxlinenr = '㏑'
-let g:airline_symbols.branch = 'ᚠ'
-let g:airline_symbols.readonly = 'RO'
-let g:airline_symbols.spell = 'S'
-let g:airline#extensions#tabline#enabled = 1
 
+" RainbowParentheses
 if exists(':RainbowParenthesesToggle')
     let g:rbpt_max = 15
     let g:rbpt_loadcmd_toggle = 0
