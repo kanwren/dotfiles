@@ -18,9 +18,18 @@ endfunction
 function! SetIndents()
     let i = input('ts=sts=sw=', '')
     if i
-        execute 'setlocal tabstop=' . i . ' softtabstop=' . i . ' shiftwidth=' . i
+        call SetIndentsN(i)
     endif
-    echo 'ts=' . &tabstop . ', sts=' . &softtabstop . ', sw=' . &shiftwidth . ', et=' . &expandtab
+    echo 'ts=' . &tabstop
+                \ . ', sts=' . &softtabstop
+                \ . ', sw=' . &shiftwidth
+                \ . ', et=' . &expandtab
+endfunction
+
+function! SetIndentsN(i)
+    execute 'setlocal tabstop=' . a:i
+                \ . ' softtabstop=' . a:i
+                \ . ' shiftwidth=' . a:i
 endfunction
 
 function! CopyRegister()
@@ -55,7 +64,7 @@ if has('autocmd')
     augroup END
     augroup haskell_group
         autocmd!
-        autocmd FileType haskell setlocal shiftwidth=2 tabstop=2 softtabstop=2
+        autocmd FileType haskell call SetIndentsN(2)
     augroup END
     augroup java_group
         autocmd!
@@ -72,7 +81,7 @@ if has('autocmd')
     augroup END
     augroup javascript_group
         autocmd!
-        autocmd FileType javascript setlocal shiftwidth=2 tabstop=2 softtabstop=2
+        autocmd FileType javascript call SetIndentsN(2)
     augroup END
     augroup wiki_group
         autocmd!
@@ -80,11 +89,14 @@ if has('autocmd')
     augroup END
     augroup pug_group
         autocmd!
-        autocmd FileType pug setlocal shiftwidth=2 tabstop=2 softtabstop=2
+        autocmd FileType pug call SetIndentsN(2)
     augroup END
     augroup general_group
         " Return to last edit position when opening files
-        autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+        autocmd BufReadPost *
+                    \ if line("'\"") > 1 && line("'\"") <= line("$")
+                    \ | exe "normal! g'\""
+                    \ | endif
     augroup END
 endif
 " }}}
@@ -233,7 +245,7 @@ vnoremap . :norm .<CR>
 nnoremap Y y$
 " Exchange operation-delete, highlight target, exchange (made obsolete by exchange.vim)
 vnoremap gx <Esc>`.``gvP``P
-" Highlight text that was just inserted
+" Highlight text that was just inserted (very buggy!)
 nnoremap gV `[v`]
 " Display registers
 noremap <silent> "" :registers<CR>
@@ -415,73 +427,72 @@ call vundle#end()
 " }}}
 
 " Plugin settings {{{
-
 " Vimwiki
-if exists('g:vimwiki_list')
-    highlight VimwikiLink ctermbg=black ctermfg=2
-    highlight VimwikiBold ctermfg=cyan
-    highlight VimwikiItalic ctermfg=yellow
-    highlight VimwikiBoldItalic ctermfg=darkyellow
-    highlight VimwikiHeader1 ctermfg=magenta
-    highlight VimwikiHeader2 ctermfg=blue
-    highlight VimwikiHeader3 ctermfg=green
-    let wiki = {}
-    let wiki.path = '~/Dropbox/wiki'
-    let wiki.path_html = '~/wiki_html'
-    let wiki.nested_syntaxes = {'python': 'python', 'c++': 'cpp', 'java': 'java', 'haskell': 'haskell', 'js': 'javascript'}
-    let g:vimwiki_list = [wiki]
-    let g:vimwiki_listsyms = ' .○●✓'
-    let g:vimwiki_listsym_rejected = '✗'
-    let g:vimwiki_dir_link = 'index'
-endif
+highlight VimwikiLink ctermbg=black ctermfg=2
+highlight VimwikiBold ctermfg=cyan
+highlight VimwikiItalic ctermfg=yellow
+highlight VimwikiBoldItalic ctermfg=darkyellow
+highlight VimwikiHeader1 ctermfg=magenta
+highlight VimwikiHeader2 ctermfg=blue
+highlight VimwikiHeader3 ctermfg=green
+let wiki = {}
+let wiki.path = '~/Dropbox/wiki'
+let wiki.path_html = '~/wiki_html'
+let wiki.nested_syntaxes = {
+            \ 'haskell':     'haskell',
+            \ 'hs':          'haskell',
+            \ 'c++':         'cpp',
+            \ 'cpp':         'cpp',
+            \ 'java':        'java',
+            \ 'javascript':  'javascript',
+            \ 'js':          'javascript',
+            \ 'python':      'python',
+            \ 'py':          'python',
+            \ }
+let g:vimwiki_list = [wiki]
+let g:vimwiki_listsyms = ' .○●✓'
+let g:vimwiki_listsym_rejected = '✗'
+let g:vimwiki_dir_link = 'index'
 
 " ALE
-if exists(':ALELint')
-    let g:ale_lint_on_enter = 0
-    let g:ale_lint_on_filetype_changed = 1
-    let g:ale_lint_on_insert_leave = 1
-    let g:ale_lint_on_save = 1
-    let g:ale_lint_on_text_changed = 1
-    let g:ale_set_signs = 1
-    let g:ale_linters = {
-                \ 'python': ['pylint', 'flake8'],
-                \ 'java': ['javac', 'checkstyle']
-                \ }
-    let g:ale_java_checkstyle_options = '-c C:/tools/checkstyle/cs1331-checkstyle.xml'
-    let g:ale_python_pylint_options = '--disable=C0103,C0111,W0621,R0902'
-endif
+let g:ale_lint_on_enter = 0
+let g:ale_lint_on_filetype_changed = 1
+let g:ale_lint_on_insert_leave = 1
+let g:ale_lint_on_save = 1
+let g:ale_lint_on_text_changed = 1
+let g:ale_set_signs = 1
+let g:ale_linters = {
+            \ 'python': ['pylint', 'flake8'],
+            \ 'java': ['javac', 'checkstyle']
+            \ }
+let g:ale_java_checkstyle_options = '-c C:/tools/checkstyle/cs1331-checkstyle.xml'
+let g:ale_python_pylint_options = '--disable=C0103,C0111,W0621,R0902'
 
 " DragVisuals
-if exists('g:DVB_TrimWS')
-    let g:DVB_TrimWS = 1
-endif
+let g:DVB_TrimWS = 1
 
 " Airline
 " TODO: exists condition
-if 1
-    let g:airline_powerline_fonts = 1
-    let g:airline_left_alt_sep = '»'
-    let g:airline_right_alt_sep = '«'
-    if !exists('g:airline_symbols')
-        let g:airline_symbols = {}
-    endif
-    let g:airline_symbols.maxlinenr = '㏑'
-    let g:airline_symbols.branch = 'ᚠ'
-    let g:airline_symbols.readonly = 'RO'
-    let g:airline_symbols.spell = 'S'
-    let g:airline#extensions#tabline#enabled = 1
+let g:airline_powerline_fonts = 1
+let g:airline_left_alt_sep = '»'
+let g:airline_right_alt_sep = '«'
+if !exists('g:airline_symbols')
+    let g:airline_symbols = {}
 endif
+let g:airline_symbols.maxlinenr = '㏑'
+let g:airline_symbols.branch = 'ᚠ'
+let g:airline_symbols.readonly = 'RO'
+let g:airline_symbols.spell = 'S'
+let g:airline#extensions#tabline#enabled = 1
 
 " RainbowParentheses
-if exists(':RainbowParenthesesToggle')
-    let g:rbpt_max = 15
-    let g:rbpt_loadcmd_toggle = 0
-    let g:rbpt_colorpairs = [
-                \ ['blue',      'RoyalBlue3'],
-                \ ['green',     'SeaGreen3'],
-                \ ['red',       'firebrick3'],
-                \ ]
-endif
+let g:rbpt_max = 15
+let g:rbpt_loadcmd_toggle = 0
+let g:rbpt_colorpairs = [
+            \ ['blue',      'RoyalBlue3'],
+            \ ['green',     'SeaGreen3'],
+            \ ['red',       'firebrick3'],
+            \ ]
 " }}}
 
 " Old Settings {{{
