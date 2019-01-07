@@ -1,19 +1,19 @@
 set nocompatible
 
 function! SetIndents()
-    let i = input("ts=sts=sw=", "")
-    if !i
-        let i = &softtabstop
+    let i = input('ts=sts=sw=', '')
+    if i
+        execute 'setlocal tabstop=' . i . ' softtabstop=' . i . ' shiftwidth=' . i
     endif
-    exec "setlocal tabstop=" . i
-    exec "setlocal softtabstop=" . i
-    exec "setlocal shiftwidth=" . i
+    echo 'ts=' . &tabstop . ', sts=' . &softtabstop . ', sw=' . &shiftwidth . ', et=' . &expandtab
 endfunction
 
 function! CopyRegister()
-    let r1 = substitute(nr2char(getchar()), "'", "\"")
-    let r2 = substitute(nr2char(getchar()), "'", "\"")
-    exec 'let @' . r2 . '=@' . r1
+    " Provide ' as an easier-to-type alias for "
+    let r1 = substitute(nr2char(getchar()), "'", "\"", "")
+    let r2 = substitute(nr2char(getchar()), "'", "\"", "")
+    execute 'let @' . r2 . '=@' . r1
+    echo "Copied @" . r1 . " to @" . r2
 endfunction
 
 function! ExpandSpaces()
@@ -141,7 +141,7 @@ noremap <Leader><Leader>sv :sou $MYVIMRC<CR>
 noremap <expr> <Leader><Leader>cd ':cd ' . expand('%:p:h:r')
 noremap <expr> <Leader><Leader>i SetIndents()
 nnoremap <silent> <expr> <Leader>sp ':s/' . input('sp/') . '/\r/g<CR>'
-noremap <silent> <expr> <Leader>r CopyRegister()
+noremap <silent> <Leader>r CopyRegister()
 vnoremap <Leader>e <Esc>:call ExpandSpaces()<CR>
 nnoremap <silent> <Leader>o :<C-u>call append(line("."), repeat([''], v:count1))<CR>
 nnoremap <silent> <Leader>O :<C-u>call append(line(".") - 1, repeat([''], v:count1))<CR>

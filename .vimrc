@@ -5,10 +5,9 @@ function! ClearRegisters()
     let regs='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/-*+"'
     let i = 0
     while (i < strlen(regs))
-        exec 'let @' . regs[i] . '=""'
+        execute 'let @' . regs[i] . '=""'
         let i += 1
     endwhile
-    unlet regs
 endfunction
 
 function! EraseMarks()
@@ -19,15 +18,17 @@ endfunction
 function! SetIndents()
     let i = input('ts=sts=sw=', '')
     if i
-        exec 'setlocal tabstop=' . i . ' softtabstop=' . i . ' shiftwidth=' . i
+        execute 'setlocal tabstop=' . i . ' softtabstop=' . i . ' shiftwidth=' . i
     endif
     echo 'ts=' . &tabstop . ', sts=' . &softtabstop . ', sw=' . &shiftwidth . ', et=' . &expandtab
 endfunction
 
 function! CopyRegister()
-    let r1 = substitute(nr2char(getchar()), "'", "\"")
-    let r2 = substitute(nr2char(getchar()), "'", "\"")
-    exec 'let @' . r2 . '=@' . r1
+    " Provide ' as an easier-to-type alias for "
+    let r1 = substitute(nr2char(getchar()), "'", "\"", "")
+    let r2 = substitute(nr2char(getchar()), "'", "\"", "")
+    execute 'let @' . r2 . '=@' . r1
+    echo "Copied @" . r1 . " to @" . r2
 endfunction
 
 function! ExpandSpaces()
@@ -264,7 +265,7 @@ noremap <Leader>* mx*`x
 " Split current line by provided regex
 nnoremap <silent> <expr> <Leader>sp ':s/' . input('sp/') . '/\r/g<CR>'
 " Copy contents from one register to another
-noremap <silent> <expr> <Leader>r CopyRegister()
+noremap <silent> <Leader>r :call CopyRegister()<CR>
 " Expand line by padding visual block selection with spaces
 vnoremap <Leader>e <Esc>:call ExpandSpaces()<CR>
 " Add newline above or below without moving cursor, unlike uninpaired's [/]<Space>
