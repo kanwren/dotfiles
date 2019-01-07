@@ -1,11 +1,20 @@
 set nocompatible
 
-function! SetIndents()
-    let i = input('ts=sts=sw=', '')
-    if i
-        execute 'setlocal tabstop=' . i . ' softtabstop=' . i . ' shiftwidth=' . i
+function! SetIndents(...)
+    if a:0 > 0
+        execute 'setlocal tabstop=' . a:1
+                    \ . ' softtabstop=' . a:1
+                    \ . ' shiftwidth=' . a:1
+    else
+        let i = input('ts=sts=sw=', '')
+        if i
+            call SetIndents(i)
+        endif
+        echo 'ts=' . &tabstop
+                    \ . ', sts=' . &softtabstop
+                    \ . ', sw=' . &shiftwidth
+                    \ . ', et=' . &expandtab
     endif
-    echo 'ts=' . &tabstop . ', sts=' . &softtabstop . ', sw=' . &shiftwidth . ', et=' . &expandtab
 endfunction
 
 function! CopyRegister()
