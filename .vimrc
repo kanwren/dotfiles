@@ -18,12 +18,10 @@ endfunction
 
 function! SetIndents()
     let i = input('ts=sts=sw=', '')
-    if !i
-        let i = &softtabstop
+    if i
+        exec 'setlocal tabstop=' . i . ' softtabstop=' . i . ' shiftwidth=' . i
     endif
-    exec 'setlocal tabstop=' . i
-    exec 'setlocal softtabstop=' . i
-    exec 'setlocal shiftwidth=' . i
+    echo 'ts=' . &tabstop . ', sts=' . &softtabstop . ', sw=' . &shiftwidth . ', et=' . &expandtab
 endfunction
 
 function! CopyRegister()
