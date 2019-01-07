@@ -151,9 +151,9 @@ nnoremap <Leader>; mxA;<Esc>`x
 vnoremap <Leader>; :s/$/;/g<CR>
 noremap <Leader><Tab> mx:%s/\s\+$//ge \| retab<CR>`x
 
-iabbrev xalpha <C-r>='abcdefghijklmnopqrstuvwxyz'<CR>
-iabbrev xAlpha <C-r>='ABCDEFGHIJKLMNOPQRSTUVWXYZ'<CR>
-iabbrev xdigits <C-r>='0123456789'<CR>
+iabbrev xaz <C-r>='abcdefghijklmnopqrstuvwxyz'<CR>
+iabbrev xAZ <C-r>='ABCDEFGHIJKLMNOPQRSTUVWXYZ'<CR>
+iabbrev x09 <C-r>='0123456789'<CR>
 abbreviate <expr> xpath     expand('%:p:h')
 abbreviate <expr> xfpath    expand('%:p')
 iabbrev    <expr> xymd      strftime("%Y-%m-%d")

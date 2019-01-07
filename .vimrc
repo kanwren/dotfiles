@@ -305,9 +305,9 @@ nnoremap <Leader>ewh yyp:s/[^\|]/-/g \| nohlsearch<CR>
 
 " Abbreviations {{{
 " Abbreviations for inserting common sequences
-iabbrev xalpha <C-r>='abcdefghijklmnopqrstuvwxyz'<CR>
-iabbrev xAlpha <C-r>='ABCDEFGHIJKLMNOPQRSTUVWXYZ'<CR>
-iabbrev xdigits <C-r>='0123456789'<CR>
+iabbrev xaz <C-r>='abcdefghijklmnopqrstuvwxyz'<CR>
+iabbrev xAZ <C-r>='ABCDEFGHIJKLMNOPQRSTUVWXYZ'<CR>
+iabbrev x09 <C-r>='0123456789'<CR>
 
 " Abbreviations for getting the path and filepath
 abbreviate <expr> xpath expand('%:p:h')
