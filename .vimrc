@@ -15,21 +15,21 @@ function! EraseMarks()
     delmarks A-Z0-9
 endfunction
 
-function! SetIndents()
-    let i = input('ts=sts=sw=', '')
-    if i
-        call SetIndentsN(i)
+function! SetIndents(...)
+    if a:0 > 0
+        execute 'setlocal tabstop=' . a:1
+                    \ . ' softtabstop=' . a:1
+                    \ . ' shiftwidth=' . a:1
+    else
+        let i = input('ts=sts=sw=', '')
+        if i
+            call SetIndents(i)
+        endif
+        echo 'ts=' . &tabstop
+                    \ . ', sts=' . &softtabstop
+                    \ . ', sw=' . &shiftwidth
+                    \ . ', et=' . &expandtab
     endif
-    echo 'ts=' . &tabstop
-                \ . ', sts=' . &softtabstop
-                \ . ', sw=' . &shiftwidth
-                \ . ', et=' . &expandtab
-endfunction
-
-function! SetIndentsN(i)
-    execute 'setlocal tabstop=' . a:i
-                \ . ' softtabstop=' . a:i
-                \ . ' shiftwidth=' . a:i
 endfunction
 
 function! CopyRegister()
@@ -64,7 +64,7 @@ if has('autocmd')
     augroup END
     augroup haskell_group
         autocmd!
-        autocmd FileType haskell call SetIndentsN(2)
+        autocmd FileType haskell call SetIndents(2)
     augroup END
     augroup java_group
         autocmd!
@@ -81,7 +81,7 @@ if has('autocmd')
     augroup END
     augroup javascript_group
         autocmd!
-        autocmd FileType javascript call SetIndentsN(2)
+        autocmd FileType javascript call SetIndents(2)
     augroup END
     augroup wiki_group
         autocmd!
@@ -89,7 +89,7 @@ if has('autocmd')
     augroup END
     augroup pug_group
         autocmd!
-        autocmd FileType pug call SetIndentsN(2)
+        autocmd FileType pug call SetIndents(2)
     augroup END
     augroup general_group
         " Return to last edit position when opening files
