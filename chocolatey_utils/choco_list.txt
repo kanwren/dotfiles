@@ -31,6 +31,7 @@ InkScape
 javaruntime
 jdk10
 jdk11
+jdk8
 KB2670838
 KB2919355
 KB2919442
@@ -52,8 +53,6 @@ python3
 qutebrowser
 qutebrowser.install
 ruby
-scala
-scala.portable
 skype
 slack
 strawberryperl
