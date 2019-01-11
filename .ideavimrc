@@ -4,12 +4,10 @@ set number relativenumber
 " set incsearch hlsearch
 " set ignorecase
 " set smartcase
-" set nojoinspaces                     " never two spaces after sentence
-" set splitbelow splitright            " directions for vs/sp
+" set nojoinspaces
+" set splitbelow splitright
 " set list listchars=tab:>-,eol:¬,extends:>,precedes:<
 
-inoremap jk <Esc>
-inoremap kj <Esc>
 nnoremap Q @q
 vnoremap Q :norm @q<CR>
 vnoremap . :norm .<CR>
@@ -20,9 +18,7 @@ nnoremap gV `[v`]
 map <Space> nop
 map <S-Space> <Space>
 let mapleader = " "
-nnoremap <Leader>en m`O<Esc>jo<Esc>``
-vnoremap <Leader>en <Esc>`<O<Esc>`>o<Esc>'>
 
-iabbrev <expr> xalpha  "abcdefghijklmnopqrstuvwxyz"
-iabbrev <expr> xAlpha  "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-iabbrev <expr> xdigits "0123456789"
+iabbrev <expr> xaz     <C-r>="abcdefghijklmnopqrstuvwxyz"<CR>
+iabbrev <expr> xAZ     <C-r>="ABCDEFGHIJKLMNOPQRSTUVWXYZ"<CR>
+iabbrev <expr> xdigits <C-r>="0123456789"<CR>
