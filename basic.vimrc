@@ -124,6 +124,8 @@ highlight CursorLineNr ctermbg=darkblue ctermfg=white
 highlight Todo ctermbg=red ctermfg=gray
 
 noremap <C-l> :nohlsearch<CR><C-l>
+noremap <C-s> :w<CR>
+inoremap <C-s> <Esc>:w<CR>gi
 noremap <silent> <expr> j (v:count == 0 ? 'gj' : 'j')
 noremap <silent> <expr> k (v:count == 0 ? 'gk' : 'k')
 inoremap jk <ESC>
