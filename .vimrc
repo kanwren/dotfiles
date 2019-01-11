@@ -124,7 +124,7 @@ let $LANG='en'
 set nospell spelllang=en_us
 set clipboard=unnamed                " copy unnamed register to clipboard
 
-set shortmess=I                      " Disable Vim intro screen
+set shortmess+=I                      " Disable Vim intro screen
 
 set autoread
 set noconfirm                        " fail, don't ask to save
@@ -230,6 +230,8 @@ nmap G  G<C-l>
 " }}}
 
 " Convenience mappings {{{
+noremap <C-s> :w<CR>
+inoremap <C-s> <Esc>:w<CR>gi
 " Work by visual line without a count, but normal when used with one
 noremap <silent> <expr> j (v:count == 0 ? 'gj' : 'j')
 noremap <silent> <expr> k (v:count == 0 ? 'gk' : 'k')
@@ -438,6 +440,8 @@ highlight VimwikiHeader3 ctermfg=green
 let wiki = {}
 let wiki.path = '~/Dropbox/wiki'
 let wiki.path_html = '~/wiki_html'
+let wiki.template_path = '~/Dropbox/wiki/templates/'
+let wiki.template_ext = '.tpl'
 let wiki.nested_syntaxes = {
             \ 'haskell':     'haskell',
             \ 'hs':          'haskell',
@@ -448,6 +452,7 @@ let wiki.nested_syntaxes = {
             \ 'js':          'javascript',
             \ 'python':      'python',
             \ 'py':          'python',
+            \ 'scala':       'scala',
             \ }
 let g:vimwiki_list = [wiki]
 let g:vimwiki_listsyms = ' .○●✓'
