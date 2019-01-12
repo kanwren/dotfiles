@@ -72,7 +72,7 @@ if has('autocmd')
         autocmd FileType java set makeprg=javac\ %
         autocmd FileType java set errorformat=%A%f:%l:\ %m,%-Z%p^,%-C%.%#
         autocmd FileType java nmap <F9> :make \| copen<CR><C-w>w
-        autocmd FileType java nmap <F10> :execute '!java <C-r>=expand('%:r')<CR>'<CR>
+        autocmd FileType java nmap <F10> :execute '!java -cp <C-r>=expand('%:p:h')<CR> <C-r>=expand('%:t:r')<CR>'<CR>
     augroup END
     augroup python_group
         autocmd!
@@ -319,9 +319,14 @@ nnoremap <Leader>ewh yyp:s/[^\|]/-/g \| nohlsearch<CR>
 
 " Abbreviations {{{
 " Abbreviations for inserting common sequences
-iabbrev xaz <C-r>='abcdefghijklmnopqrstuvwxyz'<CR>
-iabbrev xAZ <C-r>='ABCDEFGHIJKLMNOPQRSTUVWXYZ'<CR>
-iabbrev x09 <C-r>='0123456789'<CR>
+abbreviate xaz <C-r>='abcdefghijklmnopqrstuvwxyz'<CR>
+abbreviate xAZ <C-r>='ABCDEFGHIJKLMNOPQRSTUVWXYZ'<CR>
+abbreviate x09 <C-r>='0123456789'<CR>
+
+" MathJax abbreviations
+iabbrev mjal {{$%align%<CR><CR>}}$
+iabbrev mjiz \in \mathbb{Z}
+iabbrev mjst \mathrm{~s.t.~}
 
 " Abbreviations for getting the path and filepath
 abbreviate <expr> xpath expand('%:p:h')
@@ -423,6 +428,7 @@ Plugin 'garbas/vim-snipmate'
 Plugin 'honza/vim-snippets'
 
 " Language-specific
+Plugin 'neovimhaskell/haskell-vim'
 "Plugin 'eagletmt/ghcmod-vim'              " Waiting on newer base support
 Plugin 'bps/vim-textobj-python'
 call vundle#end()
@@ -472,6 +478,15 @@ let g:ale_linters = {
             \ }
 let g:ale_java_checkstyle_options = '-c C:/tools/checkstyle/cs1331-checkstyle.xml'
 let g:ale_python_pylint_options = '--disable=C0103,C0111,W0621,R0902'
+
+" Haskell-vim
+let g:haskell_enable_quantification = 1   " to enable highlighting of `forall`
+let g:haskell_enable_recursivedo = 1      " to enable highlighting of `mdo` and `rec`
+let g:haskell_enable_arrowsyntax = 1      " to enable highlighting of `proc`
+let g:haskell_enable_pattern_synonyms = 1 " to enable highlighting of `pattern`
+let g:haskell_enable_typeroles = 1        " to enable highlighting of type roles
+let g:haskell_enable_static_pointers = 1  " to enable highlighting of `static`
+let g:haskell_backpack = 1                " to enable highlighting of backpack keywords
 
 " DragVisuals
 let g:DVB_TrimWS = 1
