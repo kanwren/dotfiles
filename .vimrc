@@ -64,28 +64,41 @@ if has('autocmd')
     augroup END
     augroup haskell_group
         autocmd!
-        autocmd FileType haskell call SetIndents(2)
+        autocmd FileType haskell
+                    \ call SetIndents(2)
     augroup END
     augroup java_group
         autocmd!
-        autocmd FileType java setlocal foldmethod=syntax
-        autocmd FileType java set makeprg=javac\ %
-        autocmd FileType java set errorformat=%A%f:%l:\ %m,%-Z%p^,%-C%.%#
-        autocmd FileType java nmap <F9> :make \| copen<CR><C-w>w
-        autocmd FileType java nmap <F10> :execute '!java -cp <C-r>=expand('%:p:h')<CR> <C-r>=expand('%:t:r')<CR>'<CR>
+        autocmd FileType java
+                    \   setlocal foldmethod=syntax
+                    \ | set makeprg=javac\ %
+                    \ | set errorformat=%A%f:%l:\ %m,%-Z%p^,%-C%.%#
+                    \ | noremap <F9> :make \| copen<CR><C-w>w
+                    \ | noremap <F10> :execute '!java %<'<CR>
     augroup END
     augroup python_group
         autocmd!
-        autocmd FileType python setlocal nosmartindent
-        autocmd FileType python setlocal foldmethod=indent
+        autocmd FileType python
+                    \   setlocal nosmartindent
+                    \ | setlocal foldmethod=indent
     augroup END
     augroup javascript_group
         autocmd!
-        autocmd FileType javascript call SetIndents(2)
+        autocmd FileType javascript
+                    \   call SetIndents(2)
     augroup END
     augroup wiki_group
         autocmd!
-        autocmd FileType vimwiki setlocal formatoptions+=t
+        autocmd FileType vimwiki
+                    \   setlocal formatoptions+=t
+    augroup END
+    augroup tex_group
+        autocmd!
+        autocmd FileType tex
+                    \   setlocal formatoptions+=t
+                    \ | noremap <F9> :! pdflatex %<CR><CR>
+                    \ | inoremap <F9> <Esc>:! pdflatex %<CR><CR>gi
+                    \ | noremap <F10> :! okular %<.pdf<CR><CR>
     augroup END
     augroup pug_group
         autocmd!
@@ -94,8 +107,8 @@ if has('autocmd')
     augroup general_group
         " Return to last edit position when opening files
         autocmd BufReadPost *
-                    \ if line("'\"") > 1 && line("'\"") <= line("$")
-                    \ | exe "normal! g'\""
+                    \   if line("'\"") > 1 && line("'\"") <= line("$")
+                    \ |     exe "normal! g'\""
                     \ | endif
     augroup END
 endif
@@ -324,9 +337,16 @@ abbreviate xAZ <C-r>='ABCDEFGHIJKLMNOPQRSTUVWXYZ'<CR>
 abbreviate x09 <C-r>='0123456789'<CR>
 
 " MathJax abbreviations
-iabbrev mjal {{$%align%<CR><CR>}}$
+iabbrev mj( \left(\right)
+iabbrev mj[ \left[\right]
+iabbrev mj{ \left{\right}
+iabbrev mj< \left<\right>
+iabbrev mj\| \left\|\right\|
+
+iabbrev mjb {{$<CR><CR>}}$
+iabbrev mja {{$%align%<CR><CR>}}$
 iabbrev mjiz \in \mathbb{Z}
-iabbrev mjst \mathrm{~s.t.~}
+iabbrev mjst \text{ s.t. }
 
 " Abbreviations for getting the path and filepath
 abbreviate <expr> xpath expand('%:p:h')
@@ -431,6 +451,7 @@ Plugin 'honza/vim-snippets'
 Plugin 'neovimhaskell/haskell-vim'
 "Plugin 'eagletmt/ghcmod-vim'              " Waiting on newer base support
 Plugin 'bps/vim-textobj-python'
+
 call vundle#end()
 " }}}
 
