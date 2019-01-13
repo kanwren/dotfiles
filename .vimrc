@@ -337,16 +337,16 @@ abbreviate xAZ <C-r>='ABCDEFGHIJKLMNOPQRSTUVWXYZ'<CR>
 abbreviate x09 <C-r>='0123456789'<CR>
 
 " MathJax abbreviations
-iabbrev mj( \left(\right)
-iabbrev mj[ \left[\right]
-iabbrev mj{ \left{\right}
-iabbrev mj< \left<\right>
-iabbrev mj\| \left\|\right\|
+iabbrev MJb \left(\right)<Esc>F\i
+iabbrev MJr \left[\right]<Esc>F\i
+iabbrev MJB \left\{\right\}<Esc>2F\i
+iabbrev MJa \left<\right><Esc>F\i
+iabbrev MJ\| \left\|\right\|<Esc>F\i
 
-iabbrev mjb {{$<CR><CR>}}$
-iabbrev mja {{$%align%<CR><CR>}}$
-iabbrev mjiz \in \mathbb{Z}
-iabbrev mjst \text{ s.t. }
+iabbrev MJD {{$<CR><CR>}}$<Esc>kI
+iabbrev MJA {{$%align%<CR><CR>}}$<Esc>kI
+iabbrev MJiz \in \mathbb{Z}
+iabbrev MJst \text{ s.t. }
 
 " Abbreviations for getting the path and filepath
 abbreviate <expr> xpath expand('%:p:h')
