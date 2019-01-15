@@ -287,8 +287,10 @@ noremap <Leader><Leader>sv :source $MYVIMRC<CR>
 noremap <expr> <Leader><Leader>cd ':cd ' . expand('%:p:h:r') . '<CR>'
 " Modify indent level on the fly
 noremap <expr> <Leader><Leader>i SetIndents()
-" Search word underneath cursor but don't jump
+" Search word underneath cursor/selection but don't jump
 noremap <Leader>* mx*`x
+" TODO: Tentative
+vnoremap <Leader>* y:let @/=@"<CR>
 " Split current line by provided regex
 nnoremap <silent> <expr> <Leader>sp ':s/' . input('sp/') . '/\r/g<CR>'
 " Copy contents from one register to another
