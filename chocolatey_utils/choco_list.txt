@@ -46,6 +46,7 @@ nodejs
 nodejs.install
 notepadplusplus
 notepadplusplus.install
+okular
 paint.net
 pandoc
 python
