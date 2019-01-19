@@ -8,6 +8,7 @@ set number relativenumber
 " set splitbelow splitright
 " set list listchars=tab:>-,eol:¬,extends:>,precedes:<
 
+inoremap jk <Esc>
 nnoremap Q @q
 vnoremap Q :norm @q<CR>
 vnoremap . :norm .<CR>

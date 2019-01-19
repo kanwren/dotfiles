@@ -65,16 +65,25 @@ if has('autocmd')
     augroup haskell_group
         autocmd!
         autocmd FileType haskell
-                    \ call SetIndents(2)
+                    \   call SetIndents(2)
     augroup END
     augroup java_group
         autocmd!
+        " S wraps in System.out.println()
         autocmd FileType java
                     \   setlocal foldmethod=syntax
                     \ | set makeprg=javac\ %
                     \ | set errorformat=%A%f:%l:\ %m,%-Z%p^,%-C%.%#
-                    \ | noremap <F9> :make \| copen<CR><C-w>w
-                    \ | noremap <F10> :execute '!java %<'<CR>
+                    \ | let g:surround_83 = "System.out.println(\r)"
+        autocmd FileType java noremap <F9> :make \| copen<CR><C-w>w
+        autocmd FileType java noremap <F10> :execute '!java %<'<CR>
+    augroup END
+    augroup scala_group
+        autocmd!
+        autocmd FileType scala
+                    \   call SetIndents(2)
+        autocmd FileType sc
+                    \   call SetIndents(2)
     augroup END
     augroup python_group
         autocmd!
@@ -89,16 +98,22 @@ if has('autocmd')
     augroup END
     augroup wiki_group
         autocmd!
+        " D wraps in a MathJax display block
+        " A wraps in a MathJax align block
+        " C wraps in a vimwiki code block
         autocmd FileType vimwiki
                     \   setlocal formatoptions+=t
+                    \ | let g:surround_68 = "{{$\r}}$"
+                    \ | let g:surround_65 = "{{$%align%\r}}$"
+                    \ | let g:surround_67 = "{{{\r}}}"
     augroup END
     augroup tex_group
         autocmd!
         autocmd FileType tex
                     \   setlocal formatoptions+=t
-                    \ | noremap <F9> :! pdflatex %<CR><CR>
-                    \ | inoremap <F9> <Esc>:! pdflatex %<CR><CR>gi
-                    \ | noremap <F10> :! okular %<.pdf<CR><CR>
+        autocmd FileType tex noremap <F9> :! pdflatex %<CR><CR>
+        autocmd FileType tex inoremap <F9> <Esc>:! pdflatex %<CR><CR>gi
+        autocmd FileType tex noremap <F10> :! okular %<.pdf<CR><CR>
     augroup END
     augroup pug_group
         autocmd!
@@ -345,8 +360,6 @@ iabbrev MJB \left\{\right\}<Esc>2F\i
 iabbrev MJa \left<\right><Esc>F\i
 iabbrev MJ\| \left\|\right\|<Esc>F\i
 
-iabbrev MJD {{$<CR><CR>}}$<Esc>kI
-iabbrev MJA {{$%align%<CR><CR>}}$<Esc>kI
 iabbrev MJiz \in \mathbb{Z}
 iabbrev MJst \text{ s.t. }
 
@@ -384,7 +397,7 @@ iabbrev xheader %date <C-r>=strftime("%Y-%m-%d")<CR><CR>_<C-r>=strftime("%a %d %
 " Diary header with navigation and date header
 iabbrev xdiary <C-r>=expand('%:t:r')<CR><Esc><C-x>+f]i\|< prev<Esc>odiary<Esc>+f]i\|index<Esc>o<C-r>=expand('%:t:r')<CR><Esc><C-a>+f]i\|next ><Esc>o<CR>%date <C-r>=strftime("%Y-%m-%d")<CR><CR><C-r>=strftime("%a %d %b %Y")<CR><Esc>yss_o<CR>
 " Lecture header with navigation and date header
-iabbrev xlecture %date <C-r>=strftime("%Y-%m-%d")<CR><CR>_<C-r>=strftime("%a %d %b %Y")<CR>_<CR><CR><C-r>=expand('%:t:r')<CR><Esc><C-x>V<CR>0f]i\|< prev<Esc>oindex<Esc>V<CR>o<C-r>=expand('%:t:r')<CR><Esc><C-a>V<CR>0f]i\|next ><Esc>o<CR>
+iabbrev xlecture %date <C-r>=strftime("%Y-%m-%d")<CR><CR>_<C-r>=strftime("%a %d %b %Y")<CR>_<CR><CR><C-r>=expand('%:t:r')<CR><Esc><C-x>V<CR>0f]i\|< prev<Esc>oindex<Esc>V<CR>o<C-r>=expand('%:t:r')<CR><Esc><C-a>V<CR>0f]i\|next ><Esc>o<CR><C-r>=expand('%:p:r')<CR><Esc>F\r F_r bgUiwd0I= <Esc>A =<CR>== - ==<CR>----<CR><CR>
 " }}}
 
 " Vundle plugins {{{
