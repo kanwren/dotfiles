@@ -1,12 +1,6 @@
 set surround
 
 set number relativenumber
-" set incsearch hlsearch
-" set ignorecase
-" set smartcase
-" set nojoinspaces
-" set splitbelow splitright
-" set list listchars=tab:>-,eol:¬,extends:>,precedes:<
 
 inoremap jk <Esc>
 nnoremap Q @q
