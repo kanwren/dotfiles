@@ -1,10 +1,43 @@
 set nocompatible
 
 " Functions {{{
+" Randomness {{{
+" Warning: not efficient at all, demonstrative purposes only
+function! RandNumber()
+    return eval(system('python -c "import random; print(random.randint(0, 100), end=\"\")"'))
+endfunction
+
+function! RandSample(lower, upper, size)
+    return eval(system('python -c "import random; print(random.sample(range(' . a:lower . ', ' . a:upper . '), ' . a:size . '), end=\"\")"'))
+endfunction
+
+function! RandInts(lower, upper, count)
+    return eval(system('python -c "import random; print([random.randint(' . a:lower . ', ' . a:upper . ') for _ in range(' . a:count . ')], end=\"\")"'))
+endfunction
+
+function! RandStr(length)
+    let chars = RandInts(char2nr('A'), char2nr('Z'), a:length)
+    let cases = RandInts(0, 1, a:length)
+    let res = ''
+    let i = 0
+    while i < a:length
+        let c = nr2char(chars[i])
+        if cases[i]
+            let res .= tolower(c)
+        else
+            let res .= c
+        endif
+        let i += 1
+    endwhile
+    return res
+endfunction
+" }}}
+
+" Clearing {{{
 function! ClearRegisters()
     let regs='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/-*+"'
     let i = 0
-    while (i < strlen(regs))
+    while i < strlen(regs)
         execute 'let @' . regs[i] . '=""'
         let i += 1
     endwhile
@@ -21,17 +54,19 @@ function! SetIndents(...)
                     \ . ' softtabstop=' . a:1
                     \ . ' shiftwidth=' . a:1
     else
-        let i = input('ts=sts=sw=', '')
+        let i = input('ts=sts=sw=')
         if i
             call SetIndents(i)
         endif
         echo 'ts=' . &tabstop
                     \ . ', sts=' . &softtabstop
-                    \ . ', sw=' . &shiftwidth
-                    \ . ', et=' . &expandtab
+                    \ . ', sw='  . &shiftwidth
+                    \ . ', et='  . &expandtab
     endif
 endfunction
+" }}}
 
+" Utility {{{
 function! CopyRegister()
     " Provide ' as an easier-to-type alias for "
     let r1 = substitute(nr2char(getchar()), "'", "\"", "")
@@ -49,6 +84,7 @@ function! ExpandSpaces()
     normal gv
     execute com
 endfunction
+" }}}
 " }}}
 
 " Autocommands {{{
@@ -286,8 +322,8 @@ map <Space> <nop>
 map <S-Space> <Space>
 let mapleader=" "
 
-" Run selection in Python and output result back into buffer for automatic text generation
 " TODO: fix Perl errors
+" Run selection in Python and output result back into buffer for automatic text generation
 nnoremap <Leader><Leader>p :.!python<CR>
 vnoremap <Leader><Leader>p :!python<CR>
 " Run selection in vimscript
@@ -302,14 +338,18 @@ noremap <Leader><Leader>sv :source $MYVIMRC<CR>
 noremap <expr> <Leader><Leader>cd ':cd ' . expand('%:p:h:r') . '<CR>'
 " Modify indent level on the fly
 noremap <expr> <Leader><Leader>i SetIndents()
+
 " Search word underneath cursor/selection but don't jump
 noremap <Leader>* mx*`x
 " TODO: Tentative
 vnoremap <Leader>* y:let @/=@"<CR>
+" Copy contents from one register to another (like MOV, but with arguments reversed)
+noremap <silent> <Leader>m :call CopyRegister()<CR>
+
+" Retab and delete trailing whitespace
+noremap <Leader><Tab> mx:%s/\s\+$//ge \| retab<CR>`x
 " Split current line by provided regex
 nnoremap <silent> <expr> <Leader>sp ':s/' . input('sp/') . '/\r/g<CR>'
-" Copy contents from one register to another
-noremap <silent> <Leader>r :call CopyRegister()<CR>
 " Expand line by padding visual block selection with spaces
 vnoremap <Leader>e <Esc>:call ExpandSpaces()<CR>
 " Add newline above or below without moving cursor, unlike uninpaired's [/]<Space>
@@ -322,8 +362,14 @@ vnoremap <silent> <Leader>n <Esc>:call append(line("'>"), '') \| call append(lin
 " Add semicolon at end of line(s) without moving cursor
 nnoremap <Leader>; mxA;<Esc>`x
 vnoremap <Leader>; :s/$/;/g<CR>
-" Retab and delete trailing whitespace
-noremap <Leader><Tab> mx:%s/\s\+$//ge \| retab<CR>`x
+
+" Randomness
+" Generate a single random number from 1-100 and store in @r
+nmap <Leader><Leader>rn :let @r=RandNumber()<CR>
+" Generate random numbers and store in @r
+nmap <expr> <Leader><Leader>ri ':let @r=join(RandInts(' . input('lower=') . ', ' . input('upper=') . ', ' . input('count=') . '), "\r")<CR>'
+" Generate a random string and store in @r
+nmap <expr> <Leader><Leader>rs ':let @r=RandStr(' . input('length=') . ')<CR>'
 " }}}
 
 " Plugin mappings {{{
