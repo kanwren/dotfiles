@@ -111,7 +111,11 @@ if has('autocmd')
                     \ | set makeprg=javac\ %
                     \ | set errorformat=%A%f:%l:\ %m,%-Z%p^,%-C%.%#
                     \ | let g:surround_83 = "System.out.println(\r)"
+        " Compile and run
+        autocmd FileType java noremap <F8> :make \| execute '!java %<'<CR>
+        " Compile and open error window
         autocmd FileType java noremap <F9> :make \| copen<CR><C-w>w
+        " Just run
         autocmd FileType java noremap <F10> :execute '!java %<'<CR>
     augroup END
     augroup scala_group
@@ -344,7 +348,7 @@ noremap <Leader>* mx*`x
 " TODO: Tentative
 vnoremap <Leader>* y:let @/=@"<CR>
 " Copy contents from one register to another (like MOV, but with arguments reversed)
-noremap <silent> <Leader>m :call CopyRegister()<CR>
+noremap <silent> <Leader>r :call CopyRegister()<CR>
 
 " Retab and delete trailing whitespace
 noremap <Leader><Tab> mx:%s/\s\+$//ge \| retab<CR>`x
@@ -360,8 +364,8 @@ nnoremap <silent> <Leader>O :<C-u>call append(line(".") - 1, repeat([''], v:coun
 nnoremap <silent> <Leader>n :<C-u>call append(line('.'), repeat([''], v:count1)) \| call append(line('.') - 1, repeat([''], v:count1))<CR>
 vnoremap <silent> <Leader>n <Esc>:call append(line("'>"), '') \| call append(line("'<") - 1, '')<CR>
 " Add semicolon at end of line(s) without moving cursor
-nnoremap <Leader>; mxA;<Esc>`x
-vnoremap <Leader>; :s/$/;/g<CR>
+nnoremap <Leader>; mxg_a;<Esc>`x
+vnoremap <Leader>; :s/\v(\s*$)(;)@<!/;/g<CR>
 
 " Randomness
 " Generate a single random number from 1-100 and store in @r
@@ -407,7 +411,7 @@ iabbrev MJa \left<\right><Esc>F\i
 iabbrev MJ\| \left\|\right\|<Esc>F\i
 
 iabbrev MJiz \in \mathbb{Z}
-iabbrev MJst \text{ s.t. }
+iabbrev MJst <C-r>='\text{ s.t. }'<CR>
 
 " Abbreviations for getting the path and filepath
 abbreviate <expr> xpath expand('%:p:h')
