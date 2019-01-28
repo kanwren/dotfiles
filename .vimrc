@@ -143,9 +143,9 @@ if has('autocmd')
         " C wraps in a vimwiki code block
         autocmd FileType vimwiki
                     \   setlocal formatoptions+=t
-                    \ | let g:surround_68 = "{{$\r}}$"
-                    \ | let g:surround_65 = "{{$%align%\r}}$"
-                    \ | let g:surround_67 = "{{{\r}}}"
+                    \ | let g:surround_68 = "{{$ \r }}$"
+                    \ | let g:surround_65 = "{{$%align% \r }}$"
+                    \ | let g:surround_67 = "{{{ \r }}}"
     augroup END
     augroup tex_group
         autocmd!
@@ -184,6 +184,8 @@ set directory^=~/.vim/tmp
 " }}}
 
 color default
+
+set shell=bash
 
 set encoding=utf-8
 scriptencoding utf-8
@@ -243,7 +245,7 @@ set formatoptions=croqln
 
 set autoindent smartindent
 set tabstop=4                        " treat tabs as 4 spaces wide
-set cinoptions+=:0L0g0               " indent distance for case, jumps, scope declarations
+set cinoptions+=:0L0g0j1J1           " indent distance for case, jumps, scope declarations
 set expandtab softtabstop=4          " expand tabs to 4 spaces
 set shiftwidth=4                     " use 4 spaces when using > or <
 set smarttab
@@ -448,6 +450,9 @@ iabbrev xheader %date <C-r>=strftime("%Y-%m-%d")<CR><CR>_<C-r>=strftime("%a %d %
 iabbrev xdiary <C-r>=expand('%:t:r')<CR><Esc><C-x>+f]i\|< prev<Esc>odiary<Esc>+f]i\|index<Esc>o<C-r>=expand('%:t:r')<CR><Esc><C-a>+f]i\|next ><Esc>o<CR>%date <C-r>=strftime("%Y-%m-%d")<CR><CR><C-r>=strftime("%a %d %b %Y")<CR><Esc>yss_o<CR>
 " Lecture header with navigation and date header
 iabbrev xlecture %date <C-r>=strftime("%Y-%m-%d")<CR><CR>_<C-r>=strftime("%a %d %b %Y")<CR>_<CR><CR><C-r>=expand('%:t:r')<CR><Esc><C-x>V<CR>0f]i\|< prev<Esc>oindex<Esc>V<CR>o<C-r>=expand('%:t:r')<CR><Esc><C-a>V<CR>0f]i\|next ><Esc>o<CR><C-r>=expand('%:p:r')<CR><Esc>F\r F_r bgUiwd0I= <Esc>A =<CR>== - ==<CR>----<CR><CR>
+
+" This is so sad, Vim play Despacito
+iabbrev Despacito <Esc>:!C:/Program\ Files\ \(x86\)/Google/Chrome/Application/chrome "https://www.youtube.com/watch?v=kJQP7kiw5Fk"<CR>
 " }}}
 
 " Vundle plugins {{{
