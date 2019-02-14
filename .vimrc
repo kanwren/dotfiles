@@ -112,7 +112,7 @@ if has('autocmd')
                     \ | set errorformat=%A%f:%l:\ %m,%-Z%p^,%-C%.%#
                     \ | let g:surround_83 = "System.out.println(\r)"
         " Compile and run
-        autocmd FileType java noremap <F8> :make \| execute '!java %<'<CR>
+        autocmd FileType java noremap <F8> :execute '!java %'<CR>
         " Compile and open error window
         autocmd FileType java noremap <F9> :make \| copen<CR><C-w>w
         " Just run
@@ -185,7 +185,7 @@ set directory^=~/.vim/tmp
 
 color default
 
-set shell=bash
+" set shell=bash
 
 set encoding=utf-8
 scriptencoding utf-8
@@ -194,7 +194,7 @@ let $LANG='en'
 set nospell spelllang=en_us
 set clipboard=unnamed                " copy unnamed register to clipboard
 
-set shortmess+=I                      " Disable Vim intro screen
+set shortmess+=I                     " Disable Vim intro screen
 
 set autoread
 set noconfirm                        " fail, don't ask to save
@@ -307,7 +307,7 @@ noremap <silent> <expr> j (v:count == 0 ? 'gj' : 'j')
 noremap <silent> <expr> k (v:count == 0 ? 'gk' : 'k')
 " Provide easier alternative to escape-hit them at the same time
 inoremap jk <Esc>
-inoremap kj <Esc>
+"inoremap kj <Esc>
 " Makes temporary macros more tolerable
 nnoremap Q @q
 " Repeat macros/commands across visual selections
@@ -452,7 +452,7 @@ iabbrev xdiary <C-r>=expand('%:t:r')<CR><Esc><C-x>+f]i\|< prev<Esc>odiary<Esc>+f
 iabbrev xlecture %date <C-r>=strftime("%Y-%m-%d")<CR><CR>_<C-r>=strftime("%a %d %b %Y")<CR>_<CR><CR><C-r>=expand('%:t:r')<CR><Esc><C-x>V<CR>0f]i\|< prev<Esc>oindex<Esc>V<CR>o<C-r>=expand('%:t:r')<CR><Esc><C-a>V<CR>0f]i\|next ><Esc>o<CR><C-r>=expand('%:p:r')<CR><Esc>F\r F_r bgUiwd0I= <Esc>A =<CR>== - ==<CR>----<CR><CR>
 
 " This is so sad, Vim play Despacito
-iabbrev Despacito <Esc>:!C:/Program\ Files\ \(x86\)/Google/Chrome/Application/chrome "https://www.youtube.com/watch?v=kJQP7kiw5Fk"<CR>
+iabbrev Despacito <Esc>:!C:/Program\ Files\ \(x86\)/Google/Chrome/Application/chrome "https://youtu.be/kJQP7kiw5Fk?t=83"<CR>
 " }}}
 
 " Vundle plugins {{{
