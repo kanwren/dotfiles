@@ -1,8 +1,6 @@
 Chocolatey
 androidstudio
 audacity
-autohotkey
-autohotkey.install
 binroot
 ccleaner
 chocolatey
@@ -32,6 +30,7 @@ javaruntime
 jdk10
 jdk11
 jdk8
+jre8
 KB2670838
 KB2919355
 KB2919442
