@@ -52,6 +52,9 @@ python
 python3
 qutebrowser
 qutebrowser.install
+r
+R.Project
+R.Studio
 ruby
 skype
 slack
