@@ -360,8 +360,8 @@ nnoremap <silent> <expr> <Leader>sp ':s/' . input('sp/') . '/\r/g<CR>'
 vnoremap <Leader>e <Esc>:call ExpandSpaces()<CR>
 " Add newline above or below without moving cursor, unlike uninpaired's [/]<Space>
 " TODO: Add commands to pad selection with newlines, just like ExpandSpaces()
-nnoremap <silent> <Leader>o :<C-u>call append(line("."), repeat([''], v:count1))<CR>
-nnoremap <silent> <Leader>O :<C-u>call append(line(".") - 1, repeat([''], v:count1))<CR>
+nnoremap <silent> <Leader>o :<C-u>call append(line("."), repeat([''], v:count1)) \| norm <C-r>=v:count1<CR>j<CR>
+nnoremap <silent> <Leader>O :<C-u>call append(line(".") - 1, repeat([''], v:count1)) \| norm <C-r>=v:count1<CR>k<CR>
 " Add newlines around current line or selection
 nnoremap <silent> <Leader>n :<C-u>call append(line('.'), repeat([''], v:count1)) \| call append(line('.') - 1, repeat([''], v:count1))<CR>
 vnoremap <silent> <Leader>n <Esc>:call append(line("'>"), '') \| call append(line("'<") - 1, '')<CR>
