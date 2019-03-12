@@ -17,6 +17,7 @@ discord
 discord.install
 DotNet4.6.1
 dotnet4.7.1
+dotnetfx
 dropbox
 filezilla
 fzf
@@ -30,6 +31,7 @@ javaruntime
 jdk10
 jdk11
 jdk8
+jq
 jre8
 KB2670838
 KB2919355
