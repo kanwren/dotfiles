@@ -2,11 +2,9 @@ set surround
 
 set number relativenumber
 
-inoremap jk <Esc>
 nnoremap Q @q
 vnoremap Q :norm @q<CR>
 vnoremap . :norm .<CR>
-nnoremap Y y$
 vnoremap gx <Esc>`.``gvP``P
 nnoremap gV `[v`]
 
