@@ -66,6 +66,79 @@ function! SetIndents(...)
 endfunction
 " }}}
 
+" Hex editing {{{
+command! -bar Hexmode call ToggleHex()
+
+function! ToggleHex()
+    " hex mode should be considered a read-only operation
+    " save values for modified and read-only for restoration later,
+    " and clear the read-only flag for now
+    let l:modified=&mod
+    let l:oldreadonly=&readonly
+    let &readonly=0
+    let l:oldmodifiable=&modifiable
+    let &modifiable=1
+    if !exists("b:editHex") || !b:editHex
+        " save old options
+        let b:oldft=&ft
+        let b:oldbin=&bin
+        " set new options
+        setlocal binary " make sure it overrides any textwidth, etc.
+        silent :e " this will reload the file without trickeries
+        "(DOS line endings will be shown entirely )
+        let &ft="xxd"
+        " set status
+        let b:editHex=1
+        " switch to hex editor
+        %!xxd
+    else
+        " restore old options
+        let &ft=b:oldft
+        if !b:oldbin
+            setlocal nobinary
+        endif
+        " set status
+        let b:editHex=0
+        " return to normal editing
+        %!xxd -r
+    endif
+    " restore values for modified and read only state
+    let &mod=l:modified
+    let &readonly=l:oldreadonly
+    let &modifiable=l:oldmodifiable
+endfunction
+
+function! StrToHexCodes()
+    normal gvy
+    let str = @"
+    let i = 0
+    let codes = []
+    while i < strchars(str)
+        call add(codes, printf("%02x", strgetchar(str, i)))
+        let i += 1
+    endwhile
+    let @" = join(codes, ' ')
+    normal gv"0P
+endfunction
+
+function! HexCodesToStr()
+    normal gvy
+    let codes = split(@", '\x\{2}\zs *')
+    let str = ''
+    for code in codes
+        let str .= nr2char('0x' . code)
+    endfor
+    let @" = str
+    normal gv"0P
+endfunction
+
+function! StrToBinCodes()
+endfunction
+
+function! BincodesToStr()
+endfunction
+" }}}
+
 " Utility {{{
 function! CopyRegister()
     " Provide ' as an easier-to-type alias for "
@@ -88,6 +161,7 @@ endfunction
 " }}}
 
 " Autocommands {{{
+" TODO: hex editing as per https://vim.fandom.com/wiki/Improved_hex_editing
 if has('autocmd')
     autocmd FileType help wincmd L
     augroup plugin_group
@@ -151,8 +225,8 @@ if has('autocmd')
         autocmd!
         autocmd FileType tex
                     \   setlocal formatoptions+=t
-        autocmd FileType tex noremap <F9> :! pdflatex %<CR><CR>
-        autocmd FileType tex inoremap <F9> <Esc>:! pdflatex %<CR><CR>gi
+        autocmd FileType tex noremap <F9> :w \| ! pdflatex %<CR><CR>
+        autocmd FileType tex inoremap <F9> <Esc>:w \| ! pdflatex %<CR><CR>gi
         autocmd FileType tex noremap <F10> :! okular %<.pdf<CR><CR>
     augroup END
     augroup pug_group
@@ -300,25 +374,22 @@ nmap G  G<C-l>
 " }}}
 
 " Convenience mappings {{{
-noremap <C-s> :w<CR>
-inoremap <C-s> <Esc>:w<CR>gi
 " Work by visual line without a count, but normal when used with one
 noremap <silent> <expr> j (v:count == 0 ? 'gj' : 'j')
 noremap <silent> <expr> k (v:count == 0 ? 'gk' : 'k')
 " Provide easier alternative to escape-hit them at the same time
 inoremap jk <Esc>
-"inoremap kj <Esc>
-" Makes temporary macros more tolerable
+" Makes temporary macros faster and more tolerable
 nnoremap Q @q
 " Repeat macros/commands across visual selections
 vnoremap Q :norm @q<CR>
 vnoremap . :norm .<CR>
 " Makes Y consistent with C and D, because I always use yy for Y anyway
-nnoremap Y y$
+"nnoremap Y y$
 " Exchange operation-delete, highlight target, exchange (made obsolete by exchange.vim)
 vnoremap gx <Esc>`.``gvP``P
 " Highlight text that was just inserted (very buggy!)
-nnoremap gV `[v`]
+"nnoremap gV `[v`]
 " Display registers
 noremap <silent> "" :registers<CR>
 " }}}
@@ -345,16 +416,31 @@ noremap <expr> <Leader><Leader>cd ':cd ' . expand('%:p:h:r') . '<CR>'
 " Modify indent level on the fly
 noremap <expr> <Leader><Leader>i SetIndents()
 
+" Hex utilities
+nnoremap <Leader>hx :Hexmode<CR>
+vnoremap <Leader>he :call StrToHexCodes()<CR>
+vnoremap <Leader>hd :call HexCodesToStr()<CR>
+nnoremap <Leader>hs "xyiw:echo 0x<C-r>"<CR>
+vnoremap <Leader>hs "xy:echo 0x<C-r>"<CR>
+nnoremap <Leader>ht "xyiw:echo printf('%x', <C-r>")<CR>
+vnoremap <Leader>ht "xy:echo printf('%x', <C-r>")<CR>
+
+" Binary utilities
+vnoremap <Leader>be :call StrToBinCodes()<CR>
+vnoremap <Leader>bd :call BincodesToStr()<CR>
+nnoremap <Leader>bs "xyiw:echo 0b<C-r>"<CR>
+vnoremap <Leader>bs "xy:echo 0b<C-r>"<CR>
+nnoremap <Leader>bt "xyiw:echo printf('%b', <C-r>")<CR>
+vnoremap <Leader>bt "xy:echo printf('%b', <C-r>")<CR>
+
 " Search word underneath cursor/selection but don't jump
 noremap <Leader>* mx*`x
-" TODO: Tentative
-vnoremap <Leader>* y:let @/=@"<CR>
 " Copy contents from one register to another (like MOV, but with arguments reversed)
 noremap <silent> <Leader>r :call CopyRegister()<CR>
 
 " Retab and delete trailing whitespace
 noremap <Leader><Tab> mx:%s/\s\+$//ge \| retab<CR>`x
-" Split current line by provided regex
+" Split current line by provided regex (\zs or \ze to preserve separators)
 nnoremap <silent> <expr> <Leader>sp ':s/' . input('sp/') . '/\r/g<CR>'
 " Expand line by padding visual block selection with spaces
 vnoremap <Leader>e <Esc>:call ExpandSpaces()<CR>
@@ -371,11 +457,11 @@ vnoremap <Leader>; :s/\v(\s*$)(;)@<!/;/g<CR>
 
 " Randomness
 " Generate a single random number from 1-100 and store in @r
-nmap <Leader><Leader>rn :let @r=RandNumber()<CR>
+"nmap <Leader><Leader>rn :let @r=RandNumber()<CR>
 " Generate random numbers and store in @r
-nmap <expr> <Leader><Leader>ri ':let @r=join(RandInts(' . input('lower=') . ', ' . input('upper=') . ', ' . input('count=') . '), "\r")<CR>'
+"nmap <expr> <Leader><Leader>ri ':let @r=join(RandInts(' . input('lower=') . ', ' . input('upper=') . ', ' . input('count=') . '), "\r")<CR>'
 " Generate a random string and store in @r
-nmap <expr> <Leader><Leader>rs ':let @r=RandStr(' . input('length=') . ')<CR>'
+"nmap <expr> <Leader><Leader>rs ':let @r=RandStr(' . input('length=') . ')<CR>'
 " }}}
 
 " Plugin mappings {{{
@@ -391,8 +477,6 @@ vmap <expr> D DVB_Duplicate()
 " Prompt for regular expression on which to tabularize
 noremap <silent> <expr> <Leader>a ':Tabularize /' . input('tab/') . '<CR>'
 " Vimwiki
-nmap glo :VimwikiChangeSymbolTo *<CR>
-nmap gLo :VimwikiChangeSymbolInListTo *<CR>
 map <Leader>wa :VimwikiAll2HTML<CR>
 " Add header row to tables
 nnoremap <Leader>ewh yyp:s/[^\|]/-/g \| nohlsearch<CR>
@@ -405,42 +489,21 @@ abbreviate xaz <C-r>='abcdefghijklmnopqrstuvwxyz'<CR>
 abbreviate xAZ <C-r>='ABCDEFGHIJKLMNOPQRSTUVWXYZ'<CR>
 abbreviate x09 <C-r>='0123456789'<CR>
 
-" MathJax abbreviations
-iabbrev MJb \left(\right)<Esc>F\i
-iabbrev MJr \left[\right]<Esc>F\i
-iabbrev MJB \left\{\right\}<Esc>2F\i
-iabbrev MJa \left<\right><Esc>F\i
-iabbrev MJ\| \left\|\right\|<Esc>F\i
+iabbrev xcode {{{<CR>}}}<Esc>O
+iabbrev xmath {{$%align%<CR>}}$<Esc>O
 
-iabbrev MJiz \in \mathbb{Z}
-iabbrev MJst <C-r>='\text{ s.t. }'<CR>
-
-" Abbreviations for getting the path and filepath
-abbreviate <expr> xpath expand('%:p:h')
-abbreviate <expr> xfpath expand('%:p')
-
-iabbrev <expr> xdmy strftime("%d/%m/%y")
-iabbrev <expr> xmdy strftime("%m/%d/%y")
 iabbrev <expr> xymd strftime("%Y-%m-%d")
 
 " 15 Sep 2018
 iabbrev <expr> xdate strftime("%d %b %Y")
-" September 15, 2018
-iabbrev <expr> xldate strftime("%B %d, %Y")
 " Sat 15 Sep 2018
 iabbrev <expr> xwdate strftime("%a %d %b %Y")
-" Saturday, September 15, 2018
-iabbrev <expr> xlwdate strftime("%A, %B %d, %Y")
 
 " 11:31 PM
 iabbrev <expr> xtime strftime("%I:%M %p")
 " 23:31
 iabbrev <expr> xmtime strftime("%H:%M")
 
-" Sat 15 Sep 2018 11:31 PM
-iabbrev <expr> xdatetime strftime("%a %d %b %Y %I:%M %p")
-" 2018-09-15 23:31
-iabbrev <expr> xdt strftime("%Y-%m-%d %H:%M")
 " 2018-09-15T23:31:54
 iabbrev <expr> xiso strftime("%Y-%m-%dT%H:%M:%S")
 
@@ -450,6 +513,7 @@ iabbrev xheader %date <C-r>=strftime("%Y-%m-%d")<CR><CR>_<C-r>=strftime("%a %d %
 iabbrev xdiary <C-r>=expand('%:t:r')<CR><Esc><C-x>+f]i\|< prev<Esc>odiary<Esc>+f]i\|index<Esc>o<C-r>=expand('%:t:r')<CR><Esc><C-a>+f]i\|next ><Esc>o<CR>%date <C-r>=strftime("%Y-%m-%d")<CR><CR><C-r>=strftime("%a %d %b %Y")<CR><Esc>yss_o<CR>
 " Lecture header with navigation and date header
 iabbrev xlecture %date <C-r>=strftime("%Y-%m-%d")<CR><CR>_<C-r>=strftime("%a %d %b %Y")<CR>_<CR><CR><C-r>=expand('%:t:r')<CR><Esc><C-x>V<CR>0f]i\|< prev<Esc>oindex<Esc>V<CR>o<C-r>=expand('%:t:r')<CR><Esc><C-a>V<CR>0f]i\|next ><Esc>o<CR><C-r>=expand('%:p:r')<CR><Esc>F\r F_r bgUiwd0I= <Esc>A =<CR>== - ==<CR>----<CR><CR>
+iabbrev xmlecture %date <C-r>=strftime("%Y-%m-%d")<CR><CR>_<C-r>=strftime("%a %d %b %Y")<CR>_<CR><CR>%template math<CR><CR><C-r>=expand('%:t:r')<CR><Esc><C-x>V<CR>0f]i\|< prev<Esc>oindex<Esc>V<CR>o<C-r>=expand('%:t:r')<CR><Esc><C-a>V<CR>0f]i\|next ><Esc>o<CR><C-r>=expand('%:p:r')<CR><Esc>F\r F_r bgUiwd0I= <Esc>A =<CR>== - ==<CR>----<CR><CR>
 
 " This is so sad, Vim play Despacito
 iabbrev Despacito <Esc>:!C:/Program\ Files\ \(x86\)/Google/Chrome/Application/chrome "https://youtu.be/kJQP7kiw5Fk?t=83"<CR>
@@ -494,9 +558,9 @@ Plugin 'kien/rainbow_parentheses.vim'      " Highlight matching punctuation pair
 Plugin 'tpope/vim-surround'                " Mappings for inserting/changing/deleting surrounding characters/elements
 Plugin 'tpope/vim-repeat'                  " Repeating more actions with .
 Plugin 'tpope/vim-unimpaired'              " Quickfix/location list/buffer navigation, paired editor commands, etc.
-Plugin 'tpope/vim-abolish'                 " Subvert and coercion
+"Plugin 'tpope/vim-abolish'                 " Subvert and coercion
 Plugin 'tpope/vim-speeddating'             " Fix negative problem when incrementing dates
-Plugin 'tommcdo/vim-exchange'              " Text exchanging operators (testing)
+Plugin 'tommcdo/vim-exchange'              " Text exchanging operators
 Plugin 'godlygeek/tabular'                 " Tabularize
 Plugin 'vim-scripts/tComment'              " Easy commenting
 Plugin 'jiangmiao/auto-pairs'              " Automatically insert matching punctuation pair, etc.
@@ -564,11 +628,14 @@ let g:ale_lint_on_save = 1
 let g:ale_lint_on_text_changed = 1
 let g:ale_set_signs = 1
 let g:ale_linters = {
-            \ 'python': ['pylint', 'flake8'],
+            \ 'python': ['pylint'],
             \ 'java': ['javac', 'checkstyle']
             \ }
 let g:ale_java_checkstyle_options = '-c C:/tools/checkstyle/cs1331-checkstyle.xml'
-let g:ale_python_pylint_options = '--disable=C0103,C0111,W0621,R0902'
+let g:ale_java_javac_classpath = '.;C:/tools/jh61b.jar;C:/Users/nprin/cs1331/assignments/autograder_components/lib/*;C:/tools/javafx-sdk-11.0.2/lib/*'
+let g:ale_python_pylint_options = '--disable=C0103,C0111,C0301,C0305,W0621,R0902,R0903'
+" let g:ale_python_flake8_options = '--ignore=E501'
+" let g:ale_python_pycodestyle_options = '--ignore='
 
 " Haskell-vim
 let g:haskell_enable_quantification = 1   " to enable highlighting of `forall`
