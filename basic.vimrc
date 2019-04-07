@@ -35,7 +35,7 @@ function! ExpandSpaces()
     execute com
 endfunction
 
-autocmd FileType help wincmd L
+"autocmd FileType help wincmd L
 syntax on
 filetype on
 filetype indent on
@@ -50,7 +50,7 @@ let $LANG='en'
 set nospell spelllang=en_us
 set clipboard=unnamed
 
-set shortmess=I
+set shortmess+=I
 
 set autoread
 set noconfirm
@@ -71,7 +71,7 @@ set mouse-=a
 set number relativenumber
 set nocursorline
 set laststatus=2
-set statusline=buf\ %n:\ \
+set statusline=buf\ %n:\ \"%F\"%<\ \ \ %m%y%h%w%r%=%(col\ %c%)\ \ \ \ \ \ %(%l\ /\ %L%)\ \ \ \ \ \ %p%%
 set wildmenu
 set wildmode=longest:list,full
 set cmdheight=1
@@ -95,7 +95,7 @@ set formatoptions=croqln
 
 set autoindent smartindent
 set tabstop=4
-set cinoptions+=:0L0g0
+set cinoptions+=:0L0g0j1J1
 set expandtab softtabstop=4
 set shiftwidth=4
 set smarttab
@@ -105,7 +105,7 @@ set ttyfast
 set timeout timeoutlen=500
 
 set nojoinspaces
-set virtualedit=block
+set virtualedit=all
 set splitbelow splitright
 set backspace=indent,eol,start
 set whichwrap+=<,>,h,l,[,]
@@ -124,19 +124,15 @@ highlight CursorLineNr ctermbg=darkblue ctermfg=white
 highlight Todo ctermbg=red ctermfg=gray
 
 noremap <C-l> :nohlsearch<CR><C-l>
-noremap <C-s> :w<CR>
-inoremap <C-s> <Esc>:w<CR>gi
 noremap <silent> <expr> j (v:count == 0 ? 'gj' : 'j')
 noremap <silent> <expr> k (v:count == 0 ? 'gk' : 'k')
-inoremap jk <ESC>
-inoremap kj <ESC>
 nnoremap Q @q
 vnoremap Q :norm @q<CR>
 vnoremap . :norm .<CR>
-nnoremap Y y$
 vnoremap gx <Esc>`.``gvP``P
-nnoremap gV `[v`]
+"nnoremap gV `[v`]
 noremap <silent> "" :registers<CR>
+cnoremap <M-s> \%V
 
 map <Space> <nop>
 map <S-Space> <Space>
@@ -147,29 +143,27 @@ vnoremap <Leader><Leader>p :!python<CR>
 nnoremap <Leader><Leader>v 0"xy$:@x<CR>
 vnoremap <Leader><Leader>v "xy:@x<CR>
 noremap <Leader><Leader>es :e ~/scratch<CR>
-noremap <Leader><Leader>ev :e ~/dotfiles/.vimrc<CR>
-noremap <Leader><Leader>sv :sou $MYVIMRC<CR>
 noremap <expr> <Leader><Leader>cd ':cd ' . expand('%:p:h:r')
 noremap <expr> <Leader><Leader>i SetIndents()
 nnoremap <silent> <expr> <Leader>sp ':s/' . input('sp/') . '/\r/g<CR>'
 noremap <silent> <Leader>r CopyRegister()
 vnoremap <Leader>e <Esc>:call ExpandSpaces()<CR>
-nnoremap <silent> <Leader>o :<C-u>call append(line("."), repeat([''], v:count1))<CR>
-nnoremap <silent> <Leader>O :<C-u>call append(line(".") - 1, repeat([''], v:count1))<CR>
+nnoremap <silent> <Leader>o :<C-u>call append(line("."), repeat([''], v:count1)) \| norm <C-r>=v:count1<CR>j<CR>
+nnoremap <silent> <Leader>O :<C-u>call append(line(".") - 1, repeat([''], v:count1)) \| norm <C-r>=v:count1<CR>k<CR>
 nnoremap <silent> <Leader>n :<C-u>call append(line('.'), repeat([''], v:count1)) \| call append(line('.') - 1, repeat([''], v:count1))<CR>
 vnoremap <silent> <Leader>n <Esc>:call append(line("'>"), '') \| call append(line("'<") - 1, '')<CR>
-nnoremap <Leader>; mxA;<Esc>`x
-vnoremap <Leader>; :s/$/;/g<CR>
+nnoremap <Leader>; mxg_a;<Esc>`x
+vnoremap <Leader>; :s/\v(\s*$)(;)@<!/;/g<CR>
 noremap <Leader><Tab> mx:%s/\s\+$//ge \| retab<CR>`x
 
 iabbrev xaz <C-r>='abcdefghijklmnopqrstuvwxyz'<CR>
 iabbrev xAZ <C-r>='ABCDEFGHIJKLMNOPQRSTUVWXYZ'<CR>
 iabbrev x09 <C-r>='0123456789'<CR>
-abbreviate <expr> xpath     expand('%:p:h')
-abbreviate <expr> xfpath    expand('%:p')
-iabbrev    <expr> xymd      strftime("%Y-%m-%d")
-iabbrev    <expr> xwdate    strftime("%a %d %b %Y")
-iabbrev    <expr> xdatetime strftime("%a %d %b %Y %I:%M %p")
+iabbrev <expr> xymd   strftime("%Y-%m-%d")
+iabbrev <expr> xdate  strftime("%a %d %b %Y")
+iabbrev <expr> xtime  strftime("%I:%M %p")
+iabbrev <expr> xmtime strftime("%H:%M")
+iabbrev <expr> xiso   strftime("%Y-%m-%dT%H:%M:%S")
 
 "set rtp+=~/.vim/bundle/Vundle.vim
 "call vundle#begin('~/.vim/bundle/')
