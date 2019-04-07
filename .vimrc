@@ -1,38 +1,6 @@
 set nocompatible
 
 " Functions {{{
-" Randomness {{{
-" Warning: not efficient at all, demonstrative purposes only
-function! RandNumber()
-    return eval(system('python -c "import random; print(random.randint(0, 100), end=\"\")"'))
-endfunction
-
-function! RandSample(lower, upper, size)
-    return eval(system('python -c "import random; print(random.sample(range(' . a:lower . ', ' . a:upper . '), ' . a:size . '), end=\"\")"'))
-endfunction
-
-function! RandInts(lower, upper, count)
-    return eval(system('python -c "import random; print([random.randint(' . a:lower . ', ' . a:upper . ') for _ in range(' . a:count . ')], end=\"\")"'))
-endfunction
-
-function! RandStr(length)
-    let chars = RandInts(char2nr('A'), char2nr('Z'), a:length)
-    let cases = RandInts(0, 1, a:length)
-    let res = ''
-    let i = 0
-    while i < a:length
-        let c = nr2char(chars[i])
-        if cases[i]
-            let res .= tolower(c)
-        else
-            let res .= c
-        endif
-        let i += 1
-    endwhile
-    return res
-endfunction
-" }}}
-
 " Clearing {{{
 function! ClearRegisters()
     let regs='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/-*+"'
@@ -392,6 +360,8 @@ vnoremap gx <Esc>`.``gvP``P
 "nnoremap gV `[v`]
 " Display registers
 noremap <silent> "" :registers<CR>
+" Insert \%V for search/substitute in selection
+cnoremap <M-s> \%V
 " }}}
 
 " Leader mappings {{{
@@ -454,14 +424,6 @@ vnoremap <silent> <Leader>n <Esc>:call append(line("'>"), '') \| call append(lin
 " Add semicolon at end of line(s) without moving cursor
 nnoremap <Leader>; mxg_a;<Esc>`x
 vnoremap <Leader>; :s/\v(\s*$)(;)@<!/;/g<CR>
-
-" Randomness
-" Generate a single random number from 1-100 and store in @r
-"nmap <Leader><Leader>rn :let @r=RandNumber()<CR>
-" Generate random numbers and store in @r
-"nmap <expr> <Leader><Leader>ri ':let @r=join(RandInts(' . input('lower=') . ', ' . input('upper=') . ', ' . input('count=') . '), "\r")<CR>'
-" Generate a random string and store in @r
-"nmap <expr> <Leader><Leader>rs ':let @r=RandStr(' . input('length=') . ')<CR>'
 " }}}
 
 " Plugin mappings {{{
@@ -494,10 +456,8 @@ iabbrev xmath {{$%align%<CR>}}$<Esc>O
 
 iabbrev <expr> xymd strftime("%Y-%m-%d")
 
-" 15 Sep 2018
-iabbrev <expr> xdate strftime("%d %b %Y")
 " Sat 15 Sep 2018
-iabbrev <expr> xwdate strftime("%a %d %b %Y")
+iabbrev <expr> xdate strftime("%a %d %b %Y")
 
 " 11:31 PM
 iabbrev <expr> xtime strftime("%I:%M %p")
