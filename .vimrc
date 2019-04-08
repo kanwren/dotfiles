@@ -1,5 +1,12 @@
 set nocompatible
 
+" Commands {{{
+" Hex editing
+command! -bar Hexmode call ToggleHex()
+" Force write trick
+command! WS :execute ':silent w !sudo tee % > /dev/null' | :edit!
+" }}}
+
 " Functions {{{
 " Clearing {{{
 function! ClearRegisters()
@@ -35,8 +42,6 @@ endfunction
 " }}}
 
 " Hex editing {{{
-command! -bar Hexmode call ToggleHex()
-
 function! ToggleHex()
     " hex mode should be considered a read-only operation
     " save values for modified and read-only for restoration later,
@@ -134,10 +139,6 @@ if has('autocmd')
     autocmd FileType help wincmd L
     augroup plugin_group
         autocmd!
-        if exists(':RainbowParenthesesToggle')
-            autocmd VimEnter * RainbowParenthesesToggle
-            autocmd Syntax * RainbowParenthesesLoadRound
-        endif
         autocmd StdinReadPre * let s:std_in=1
     augroup END
     augroup haskell_group
@@ -180,14 +181,9 @@ if has('autocmd')
     augroup END
     augroup wiki_group
         autocmd!
-        " D wraps in a MathJax display block
-        " A wraps in a MathJax align block
-        " C wraps in a vimwiki code block
-        autocmd FileType vimwiki
-                    \   setlocal formatoptions+=t
-                    \ | let g:surround_68 = "{{$ \r }}$"
-                    \ | let g:surround_65 = "{{$%align% \r }}$"
-                    \ | let g:surround_67 = "{{{ \r }}}"
+        autocmd BufEnter *.wiki nnoremap <Leader>wa :VimwikiAll2HTML<CR>
+        " Add header row to tables
+        autocmd BufEnter *.wiki nnoremap <Leader>ewh yyp:s/[^\|]/-/g \| nohlsearch<CR>
     augroup END
     augroup tex_group
         autocmd!
@@ -225,9 +221,17 @@ set backupdir=~/.vim/backup
 set directory^=~/.vim/tmp
 " }}}
 
-color default
-
-" set shell=bash
+if !has('gui_running')
+    set term=xterm-256color
+    set t_Co=256
+    let &t_ti.="\e[1 q"
+    let &t_SI.="\e[5 q"
+    let &t_EI.="\e[1 q"
+    let &t_te.="\e[0 q"
+    colorscheme elflord
+else
+    colorscheme elflord
+endif
 
 set encoding=utf-8
 scriptencoding utf-8
@@ -257,7 +261,8 @@ set mouse-=a
 set number relativenumber
 set nocursorline
 set laststatus=2                     " for when Airline isn't available
-set statusline=buf\ %n:\ \"%F\"%<\ \ \ %m%y%h%w%r%=%(col\ %c%)\ \ \ \ \ \ %(%l\ /\ %L%)\ \ \ \ \ \ %p%%
+set statusline=buf\ %n:\ \"%F\"%<\ \ \ %m%y%h%w%r\ \ %(%b\ 0x%B%)%=%(col\ %c%)\ \ \ \ %(%l\ /\ %L%)\ \ \ \ %p%%%(\ %)
+set showtabline=2
 set wildmenu                         " better command-line completion
 set wildmode=longest:list,full       " TODO: decide between this and longest:full,full
 set cmdheight=1
@@ -271,7 +276,7 @@ set incsearch hlsearch
 set noignorecase
 set smartcase
 
-set scrolloff=0                      " TODO: 5? 7?
+set scrolloff=0
 
 set list listchars=tab:>-,eol:¬,extends:>,precedes:<
 set modelines=1
@@ -297,7 +302,7 @@ set ttyfast
 set timeout timeoutlen=500
 
 set nojoinspaces                     " never two spaces after sentence
-set virtualedit=all                  " TODO: block,insert?
+set virtualedit=all                  " Allow editing past the ends of lines
 set splitbelow splitright            " directions for vs/sp
 set backspace=indent,eol,start
 set whichwrap+=<,>,h,l,[,]           " direction key wrapping
@@ -309,18 +314,18 @@ set foldlevelstart=99
 
 " Highlighting {{{
 " Highlight column for folding
-highlight FoldColumn ctermbg=black
-highlight Folded ctermbg=darkblue
+highlight FoldColumn ctermbg=0
+highlight Folded ctermbg=0
 
-highlight ColorColumn ctermbg=darkgray
+highlight ColorColumn ctermbg=8
 set colorcolumn=81
 "call matchadd('ColorColumn', '\%81v\S', 100)
 
-highlight ExtraWhitespace ctermbg=darkcyan
+highlight ExtraWhitespace ctermbg=12
 match ExtraWhitespace /\s\+$/
 
-highlight CursorLineNr ctermbg=darkblue ctermfg=white
-highlight Todo ctermbg=red ctermfg=gray
+highlight CursorLineNr ctermbg=4 ctermfg=15
+highlight Todo ctermbg=1 ctermfg=15
 "}}}
 
 " Mappings {{{
@@ -328,25 +333,12 @@ highlight Todo ctermbg=red ctermfg=gray
 noremap <C-l> :nohlsearch<CR><C-l>
 " }}}
 
-" Bugfix mappings {{{
-" Prevent screen drawing errors when navigating
-nmap <C-f> <C-f><C-l>
-nmap <C-b> <C-b><C-l>
-nmap <C-d> <C-d><C-l>
-nmap <C-u> <C-u><C-l>
-nmap zz zz<C-l>
-nmap zt zt<C-l>
-nmap zb zb<C-l>
-nmap gg gg<C-l>
-nmap G  G<C-l>
-" }}}
-
 " Convenience mappings {{{
 " Work by visual line without a count, but normal when used with one
 noremap <silent> <expr> j (v:count == 0 ? 'gj' : 'j')
 noremap <silent> <expr> k (v:count == 0 ? 'gk' : 'k')
 " Provide easier alternative to escape-hit them at the same time
-inoremap jk <Esc>
+"inoremap jk <Esc>
 " Makes temporary macros faster and more tolerable
 nnoremap Q @q
 " Repeat macros/commands across visual selections
@@ -355,13 +347,13 @@ vnoremap . :norm .<CR>
 " Makes Y consistent with C and D, because I always use yy for Y anyway
 "nnoremap Y y$
 " Exchange operation-delete, highlight target, exchange (made obsolete by exchange.vim)
-vnoremap gx <Esc>`.``gvP``P
+"vnoremap gx <Esc>`.``gvP``P
 " Highlight text that was just inserted (very buggy!)
 "nnoremap gV `[v`]
 " Display registers
 noremap <silent> "" :registers<CR>
 " Insert \%V for search/substitute in selection
-cnoremap <M-s> \%V
+cnoremap <M-s> \\%V
 " }}}
 
 " Leader mappings {{{
@@ -369,13 +361,19 @@ map <Space> <nop>
 map <S-Space> <Space>
 let mapleader=" "
 
-" TODO: fix Perl errors
-" Run selection in Python and output result back into buffer for automatic text generation
-nnoremap <Leader><Leader>p :.!python<CR>
-vnoremap <Leader><Leader>p :!python<CR>
-" Run selection in vimscript
-nnoremap <Leader><Leader>v 0"xy$:@x<CR>
-vnoremap <Leader><Leader>v "xy:@x<CR>
+" Search word underneath cursor/selection but don't jump
+noremap <Leader>* mx*`x
+" Retab and delete trailing whitespace
+noremap <Leader><Tab> mx:%s/\s\+$//ge \| retab<CR>`x
+" Split current line by provided regex (\zs or \ze to preserve separators)
+nnoremap <silent> <expr> <Leader>s ':s/' . input('sp/') . '/\r/g<CR>'
+" Toggle keyboard mappings
+nnoremap <expr> <Leader><Leader>k ':set keymap=' . (&keymap ==? 'dvorak' ? '' : 'dvorak') . '<CR>'
+" Copy contents from one register to another (like MOV, but with arguments reversed)
+noremap <silent> <Leader>r :call CopyRegister()<CR>
+" Expand line by padding visual block selection with spaces
+vnoremap <Leader>e <Esc>:call ExpandSpaces()<CR>
+
 " Global scratch buffer
 noremap <Leader><Leader>es :edit ~/scratch<CR>
 " .vimrc editing/sourcing
@@ -385,6 +383,24 @@ noremap <Leader><Leader>sv :source $MYVIMRC<CR>
 noremap <expr> <Leader><Leader>cd ':cd ' . expand('%:p:h:r') . '<CR>'
 " Modify indent level on the fly
 noremap <expr> <Leader><Leader>i SetIndents()
+
+" Add newline above or below without moving cursor, unlike uninpaired's [/]<Space>
+" TODO: Add commands to pad selection with newlines, just like ExpandSpaces()
+nnoremap <silent> <Leader>o :<C-u>call append(line("."), repeat([''], v:count1)) \| norm <C-r>=v:count1<CR>j<CR>
+nnoremap <silent> <Leader>O :<C-u>call append(line(".") - 1, repeat([''], v:count1)) \| norm <C-r>=v:count1<CR>k<CR>
+" Add newlines around current line or selection
+nnoremap <silent> <Leader>n :<C-u>call append(line('.'), repeat([''], v:count1)) \| call append(line('.') - 1, repeat([''], v:count1))<CR>
+vnoremap <silent> <Leader>n <Esc>:call append(line("'>"), '') \| call append(line("'<") - 1, '')<CR>
+" Add semicolon at end of line(s) without moving cursor
+nnoremap <Leader>; mxg_a;<Esc>`x
+vnoremap <Leader>; :s/\v(\s*$)(;)@<!/;/g<CR>
+
+" Run selection in Python and output result back into buffer for automatic text generation
+nnoremap <Leader><Leader>p :.!python<CR>
+vnoremap <Leader><Leader>p :!python<CR>
+" Run selection in vimscript
+nnoremap <Leader><Leader>v 0"xy$:@x<CR>
+vnoremap <Leader><Leader>v "xy:@x<CR>
 
 " Hex utilities
 nnoremap <Leader>hx :Hexmode<CR>
@@ -396,34 +412,12 @@ nnoremap <Leader>ht "xyiw:echo printf('%x', <C-r>")<CR>
 vnoremap <Leader>ht "xy:echo printf('%x', <C-r>")<CR>
 
 " Binary utilities
-vnoremap <Leader>be :call StrToBinCodes()<CR>
-vnoremap <Leader>bd :call BincodesToStr()<CR>
+"vnoremap <Leader>be :call StrToBinCodes()<CR>
+"vnoremap <Leader>bd :call BincodesToStr()<CR>
 nnoremap <Leader>bs "xyiw:echo 0b<C-r>"<CR>
 vnoremap <Leader>bs "xy:echo 0b<C-r>"<CR>
 nnoremap <Leader>bt "xyiw:echo printf('%b', <C-r>")<CR>
 vnoremap <Leader>bt "xy:echo printf('%b', <C-r>")<CR>
-
-" Search word underneath cursor/selection but don't jump
-noremap <Leader>* mx*`x
-" Copy contents from one register to another (like MOV, but with arguments reversed)
-noremap <silent> <Leader>r :call CopyRegister()<CR>
-
-" Retab and delete trailing whitespace
-noremap <Leader><Tab> mx:%s/\s\+$//ge \| retab<CR>`x
-" Split current line by provided regex (\zs or \ze to preserve separators)
-nnoremap <silent> <expr> <Leader>sp ':s/' . input('sp/') . '/\r/g<CR>'
-" Expand line by padding visual block selection with spaces
-vnoremap <Leader>e <Esc>:call ExpandSpaces()<CR>
-" Add newline above or below without moving cursor, unlike uninpaired's [/]<Space>
-" TODO: Add commands to pad selection with newlines, just like ExpandSpaces()
-nnoremap <silent> <Leader>o :<C-u>call append(line("."), repeat([''], v:count1)) \| norm <C-r>=v:count1<CR>j<CR>
-nnoremap <silent> <Leader>O :<C-u>call append(line(".") - 1, repeat([''], v:count1)) \| norm <C-r>=v:count1<CR>k<CR>
-" Add newlines around current line or selection
-nnoremap <silent> <Leader>n :<C-u>call append(line('.'), repeat([''], v:count1)) \| call append(line('.') - 1, repeat([''], v:count1))<CR>
-vnoremap <silent> <Leader>n <Esc>:call append(line("'>"), '') \| call append(line("'<") - 1, '')<CR>
-" Add semicolon at end of line(s) without moving cursor
-nnoremap <Leader>; mxg_a;<Esc>`x
-vnoremap <Leader>; :s/\v(\s*$)(;)@<!/;/g<CR>
 " }}}
 
 " Plugin mappings {{{
@@ -438,10 +432,6 @@ vmap <expr> D DVB_Duplicate()
 " Tabular
 " Prompt for regular expression on which to tabularize
 noremap <silent> <expr> <Leader>a ':Tabularize /' . input('tab/') . '<CR>'
-" Vimwiki
-map <Leader>wa :VimwikiAll2HTML<CR>
-" Add header row to tables
-nnoremap <Leader>ewh yyp:s/[^\|]/-/g \| nohlsearch<CR>
 "}}}
 "}}}
 
@@ -484,7 +474,6 @@ set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin('~/.vim/bundle/')
 
 " Plugins to try out:
-" itchyny/lightline
 " romainl/vim-cool
 " svermeulen/vim-subversive
 " inkarkat/vim-UnconditionalPaste
@@ -498,9 +487,8 @@ Plugin 'gmarik/Vundle.vim'                 " Plugin installer
 Plugin 'vimwiki/vimwiki'                   " Personal wiki for Vim
 
 " Interface
-Plugin 'vim-airline/vim-airline'           " Better status bar and tabline for Vim
-Plugin 'vim-airline/vim-airline-themes'    " Supports airline
-Plugin 'powerline/fonts'                   " Supports airline
+Plugin 'itchyny/lightline.vim'
+" TODO: colorschemes!
 
 " Fuzzy Finder
 Plugin 'junegunn/fzf'
@@ -512,13 +500,12 @@ Plugin 'sheerun/vim-polyglot'              " Collection of language packs to rul
 Plugin 'scrooloose/nerdtree'               " File explorer/interface
 Plugin 'tpope/vim-eunuch'                  " File operations
 Plugin 'tpope/vim-fugitive'                " Git integration
-Plugin 'kien/rainbow_parentheses.vim'      " Highlight matching punctuation pairs in color
+"Plugin 'kien/rainbow_parentheses.vim'      " Highlight matching punctuation pairs in color
 
 " Utility plugins
 Plugin 'tpope/vim-surround'                " Mappings for inserting/changing/deleting surrounding characters/elements
 Plugin 'tpope/vim-repeat'                  " Repeating more actions with .
 Plugin 'tpope/vim-unimpaired'              " Quickfix/location list/buffer navigation, paired editor commands, etc.
-"Plugin 'tpope/vim-abolish'                 " Subvert and coercion
 Plugin 'tpope/vim-speeddating'             " Fix negative problem when incrementing dates
 Plugin 'tommcdo/vim-exchange'              " Text exchanging operators
 Plugin 'godlygeek/tabular'                 " Tabularize
@@ -534,12 +521,6 @@ Plugin 'Shougo/vimproc.vim'
 " Text objects
 Plugin 'kana/vim-textobj-user'
 Plugin 'kana/vim-textobj-function'
-
-" Snippets
-Plugin 'tomtom/tlib_vim'
-Plugin 'MarcWeber/vim-addon-mw-utils'
-Plugin 'garbas/vim-snipmate'
-Plugin 'honza/vim-snippets'
 
 " Language-specific
 Plugin 'neovimhaskell/haskell-vim'
@@ -580,6 +561,35 @@ let g:vimwiki_listsyms = ' .○●✓'
 let g:vimwiki_listsym_rejected = '✗'
 let g:vimwiki_dir_link = 'index'
 
+function! LightlineKeymapName()
+    return &keymap
+endfunction
+let g:lightline = {
+      \ }
+
+function! LightlineBufferline()
+  call bufferline#refresh_status()
+  return [ g:bufferline_status_info.before, g:bufferline_status_info.current, g:bufferline_status_info.after]
+endfunction
+
+let g:lightline = {
+            \ 'colorscheme': 'powerline',
+            \ 'active': {
+            \   'left': [ [ 'mode', 'paste' ],
+            \             [ 'readonly', 'buffilename', 'modified', 'keymapname', 'charvalue' ] ]
+            \ },
+            \ 'enable': {
+            \   'statusline': 1,
+            \ },
+            \ 'component': {
+            \   'buffilename': '[%n] %f',
+            \   'charvalue': '0x%B %b',
+            \ },
+            \ 'component_function': {
+            \   'keymapname': 'LightlineKeymapName',
+            \ },
+            \ }
+
 " ALE
 let g:ale_lint_on_enter = 0
 let g:ale_lint_on_filetype_changed = 1
@@ -594,8 +604,6 @@ let g:ale_linters = {
 let g:ale_java_checkstyle_options = '-c C:/tools/checkstyle/cs1331-checkstyle.xml'
 let g:ale_java_javac_classpath = '.;C:/tools/jh61b.jar;C:/Users/nprin/cs1331/assignments/autograder_components/lib/*;C:/tools/javafx-sdk-11.0.2/lib/*'
 let g:ale_python_pylint_options = '--disable=C0103,C0111,C0301,C0305,W0621,R0902,R0903'
-" let g:ale_python_flake8_options = '--ignore=E501'
-" let g:ale_python_pycodestyle_options = '--ignore='
 
 " Haskell-vim
 let g:haskell_enable_quantification = 1   " to enable highlighting of `forall`
@@ -608,82 +616,5 @@ let g:haskell_backpack = 1                " to enable highlighting of backpack k
 
 " DragVisuals
 let g:DVB_TrimWS = 1
-
-" Airline
-" TODO: exists condition
-let g:airline_powerline_fonts = 1
-let g:airline_left_alt_sep = '»'
-let g:airline_right_alt_sep = '«'
-if !exists('g:airline_symbols')
-    let g:airline_symbols = {}
-endif
-let g:airline_symbols.maxlinenr = '㏑'
-let g:airline_symbols.branch = 'ᚠ'
-let g:airline_symbols.readonly = 'RO'
-let g:airline_symbols.spell = 'S'
-let g:airline#extensions#tabline#enabled = 1
-
-" RainbowParentheses
-let g:rbpt_max = 15
-let g:rbpt_loadcmd_toggle = 0
-let g:rbpt_colorpairs = [
-            \ ['blue',      'RoyalBlue3'],
-            \ ['green',     'SeaGreen3'],
-            \ ['red',       'firebrick3'],
-            \ ]
-" }}}
-
-" Old Settings {{{
-" Old EasyMotion settings
-"map <Leader><Leader> <Plug>(easymotion-prefix)
-"nmap <Leader>s <Plug>(easymotion-s2)
-"map <Leader>l <Plug>(easymotion-bd-jk)
-"nmap <Leader>l <Plug>(easymotion-overwin-line)
-"let g:EasyMotion_use_upper = 0
-"let g:EasyMotion_smartcase = 1
-
-
-" Old cool mappings
-" - Swap word with the next full word, even across punctuation or newlines.
-"nnoremap <silent> gw "_yiw:s/\(\%#\w\+\)\(\_W\+\)\(\w\+\)/\3\2\1/<CR><c-o><c-l>:nohlsearch<CR>
-" - Push words 'right' or 'left', keeping cursor position constant
-"nnoremap <silent> <C-Right> "_yiw:s/\(\%#\w\+\)\(\_W\+\)\(\w\+\)/\3\2\1/<CR><C-o>/\w\+\_W\+<CR><C-l>:nohlsearch<CR>
-"nnoremap <silent> <C-Left> "_yiw?\w\+\_W\+\%#<CR>:s/\(\%#\w\+\)\(\_W\+\)\(\w\+\)/\3\2\1/<CR><C-o><C-l>:nohlsearch<CR>
-" - Insertion of single characters before or after cursor
-"nnoremap <silent> <Space> :exec "normal i".nr2char(getchar())."\e"<CR>
-"nnoremap <silent> <S-Space> :exec "normal a".nr2char(getchar())."\e"<CR>
-
-
-"set diffexpr=MyDiff()
-"function! MyDiff()
-"    let opt = '-a --binary '
-"    if &diffopt =~ 'icase'  | let opt = opt . '-i ' | endif
-"    if &diffopt =~ 'iwhite' | let opt = opt . '-b ' | endif
-"    let arg1 = v:fname_in
-"    if arg1 =~ ' ' | let arg1 = '"' . arg1 . '"' | endif
-"    let arg2 = v:fname_new
-"    if arg2 =~ ' ' | let arg2 = '"' . arg2 . '"' | endif
-"    let arg3 = v:fname_out
-"    if arg3 =~ ' ' | let arg3 = '"' . arg3 . '"' | endif
-"    if $VIMRUNTIME =~ ' '
-"        if &sh =~ '\<cmd'
-"            if empty(&shellxquote)
-"                let l:shxq_sav = ''
-"                set shellxquote&
-"            endif
-"            let cmd = '"' . $VIMRUNTIME . '\diff"'
-"        else
-"            let cmd = substitute($VIMRUNTIME, ' ', '" ', '') . '\diff"'
-"        endif
-"    else
-"        let cmd = $VIMRUNTIME . '\diff'
-"    endif
-"    silent execute '!' . cmd . ' ' . opt . arg1 . ' ' . arg2 . ' > ' . arg3
-"    if exists('l:shxq_sav')
-"        let &shellxquote=l:shxq_sav
-"    endif
-"endfunction
-
-" }}}
 
 " vim:foldmethod=marker:foldlevel=0
