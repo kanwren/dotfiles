@@ -1,3 +1,4 @@
+#!/bin/bash
 cat manifests.txt | tr -d '\r' |
 while read -r line; do
     if [[ $line =~ ^(.+/)* ]]; then
