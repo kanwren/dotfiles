@@ -1,5 +1,3 @@
-Chocolatey
-androidstudio
 audacity
 binroot
 ccleaner
@@ -47,8 +45,6 @@ mingw
 musescore
 nodejs
 nodejs.install
-notepadplusplus
-notepadplusplus.install
 okular
 paint.net
 pandoc
