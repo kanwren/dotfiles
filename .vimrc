@@ -353,7 +353,7 @@ vnoremap . :norm .<CR>
 " Display registers
 noremap <silent> "" :registers<CR>
 " Insert \%V for search/substitute in selection
-cnoremap <M-s> \\%V
+cnoremap <Tab> \%V
 " }}}
 
 " Leader mappings {{{
