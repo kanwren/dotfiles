@@ -25,4 +25,3 @@ Instructions for using qute's `config.py` after installing qutebrowser:
 2. Run `:config-edit`
 3. Clear the file if it is already generated
 4. Add the line `config.source('path/to/config.py')`
-
