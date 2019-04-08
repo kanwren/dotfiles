@@ -196,7 +196,6 @@ vnoremap Q :norm @q<CR>
 vnoremap . :norm .<CR>
 vnoremap gx <Esc>`.``gvP``P
 noremap <silent> "" :registers<CR>
-cnoremap <Tab> \%V
 
 map <Space> <nop>
 map <S-Space> <Space>
