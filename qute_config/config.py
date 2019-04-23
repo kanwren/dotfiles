@@ -115,4 +115,4 @@ c.url.start_pages = 'https://start.duckduckgo.com/'
 
 # Bindings for normal mode
 config.bind('Q', 'run-macro q')
-config.bind('z', 'open file:///C:/users/nprin/wiki_html/index.html')
+config.bind('z', 'open file:///C:/users/nprin/wiki-gl/index.html')
