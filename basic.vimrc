@@ -197,6 +197,9 @@ vnoremap . :norm .<CR>
 vnoremap gx <Esc>`.``gvP``P
 noremap <silent> "" :registers<CR>
 
+nnoremap <Right> :bnext<CR>
+nnoremap <Left> :bprev<CR>
+
 map <Space> <nop>
 map <S-Space> <Space>
 let mapleader=" "
@@ -205,7 +208,7 @@ noremap <Leader>* mx*`x
 " Retab and delete trailing whitespace
 noremap <Leader><Tab> mx:%s/\s\+$//ge \| retab<CR>`x
 " Split line on regex
-nnoremap <silent> <expr> <Leader>s ':s/' . input('sp/') . '/\r/g<CR>'
+nnoremap <silent> <expr> <Leader>s ':s/' . input('split/') . '/\r/g<CR>'
 " Toggle Dvorak keyboard
 nnoremap <expr> <Leader><Leader>k ':set keymap=' . (&keymap ==? 'dvorak' ? '' : 'dvorak') . '<CR>'
 " Quickly copy from first to second register
