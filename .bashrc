@@ -3,8 +3,8 @@ TERM=xterm-256color
 set -o vi
 
 bak() {
-    if (( $# == 1 )); then
-        if [[ -f "$1" ]]; then
+    if [ $# -eq 1 ]; then
+        if [ -f "$1" ]; then
             cp "$1" "$1.bak"
             echo "Copied $1 to $1.bak"
         else
