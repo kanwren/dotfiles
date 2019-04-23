@@ -1,10 +1,10 @@
 set nocompatible
 
 " Commands {{{
-" Hex editing
-command! -bar Hexmode call ToggleHex()
 " Force write trick
 command! WS :execute ':silent w !sudo tee % > /dev/null' | :edit!
+" Hex editing
+command! -bar Hexmode call ToggleHex()
 " }}}
 
 " Functions {{{
@@ -140,62 +140,6 @@ if has('autocmd')
     augroup plugin_group
         autocmd!
         autocmd StdinReadPre * let s:std_in=1
-    augroup END
-    augroup haskell_group
-        autocmd!
-        autocmd FileType haskell
-                    \   call SetIndents(2)
-    augroup END
-    augroup java_group
-        autocmd!
-        " S wraps in System.out.println()
-        autocmd FileType java
-                    \   setlocal foldmethod=syntax
-                    \ | set makeprg=javac\ %
-                    \ | set errorformat=%A%f:%l:\ %m,%-Z%p^,%-C%.%#
-                    \ | let g:surround_83 = "System.out.println(\r)"
-        " Compile and run
-        autocmd FileType java noremap <F8> :execute '!java %'<CR>
-        " Compile and open error window
-        autocmd FileType java noremap <F9> :make \| copen<CR><C-w>w
-        " Just run
-        autocmd FileType java noremap <F10> :execute '!java %<'<CR>
-    augroup END
-    augroup scala_group
-        autocmd!
-        autocmd FileType scala
-                    \   call SetIndents(2)
-        autocmd FileType sc
-                    \   call SetIndents(2)
-    augroup END
-    augroup python_group
-        autocmd!
-        autocmd FileType python
-                    \   setlocal nosmartindent
-                    \ | setlocal foldmethod=indent
-    augroup END
-    augroup javascript_group
-        autocmd!
-        autocmd FileType javascript
-                    \   call SetIndents(2)
-    augroup END
-    augroup wiki_group
-        autocmd!
-        autocmd BufEnter *.wiki nnoremap <Leader>wa :VimwikiAll2HTML<CR>
-        " Add header row to tables
-        autocmd BufEnter *.wiki nnoremap <Leader>ewh yyp:s/[^\|]/-/g \| nohlsearch<CR>
-    augroup END
-    augroup tex_group
-        autocmd!
-        autocmd FileType tex
-                    \   setlocal formatoptions+=t
-        autocmd FileType tex noremap <F9> :w \| ! pdflatex %<CR><CR>
-        autocmd FileType tex inoremap <F9> <Esc>:w \| ! pdflatex %<CR><CR>gi
-        autocmd FileType tex noremap <F10> :! okular %<.pdf<CR><CR>
-    augroup END
-    augroup pug_group
-        autocmd!
-        autocmd FileType pug call SetIndents(2)
     augroup END
     augroup general_group
         " Return to last edit position when opening files
@@ -344,14 +288,13 @@ nnoremap Q @q
 " Repeat macros/commands across visual selections
 vnoremap Q :norm @q<CR>
 vnoremap . :norm .<CR>
-" Makes Y consistent with C and D, because I always use yy for Y anyway
-"nnoremap Y y$
 " Exchange operation-delete, highlight target, exchange (made obsolete by exchange.vim)
 "vnoremap gx <Esc>`.``gvP``P
-" Highlight text that was just inserted (very buggy!)
-"nnoremap gV `[v`]
 " Display registers
 noremap <silent> "" :registers<CR>
+
+nnoremap <Right> :bnext<CR>
+nnoremap <Left> :bprev<CR>
 " }}}
 
 " Leader mappings {{{
@@ -364,7 +307,7 @@ noremap <Leader>* mx*`x
 " Retab and delete trailing whitespace
 noremap <Leader><Tab> mx:%s/\s\+$//ge \| retab<CR>`x
 " Split current line by provided regex (\zs or \ze to preserve separators)
-nnoremap <silent> <expr> <Leader>s ':s/' . input('sp/') . '/\r/g<CR>'
+nnoremap <silent> <expr> <Leader>s ':s/' . input('split/') . '/\r/g<CR>'
 " Toggle keyboard mappings
 nnoremap <expr> <Leader><Leader>k ':set keymap=' . (&keymap ==? 'dvorak' ? '' : 'dvorak') . '<CR>'
 " Copy contents from one register to another (like MOV, but with arguments reversed)
@@ -455,13 +398,6 @@ iabbrev <expr> xmtime strftime("%H:%M")
 " 2018-09-15T23:31:54
 iabbrev <expr> xiso strftime("%Y-%m-%dT%H:%M:%S")
 
-" Wiki date header with YMD date annotation and presentable date in italics
-iabbrev xheader %date <C-r>=strftime("%Y-%m-%d")<CR><CR>_<C-r>=strftime("%a %d %b %Y")<CR>_
-" Diary header with navigation and date header
-iabbrev xdiary <C-r>=expand('%:t:r')<CR><Esc><C-x>+f]i\|< prev<Esc>odiary<Esc>+f]i\|index<Esc>o<C-r>=expand('%:t:r')<CR><Esc><C-a>+f]i\|next ><Esc>o<CR>%date <C-r>=strftime("%Y-%m-%d")<CR><CR><C-r>=strftime("%a %d %b %Y")<CR><Esc>yss_o<CR>
-" Lecture header with navigation and date header
-iabbrev xlecture %date <C-r>=strftime("%Y-%m-%d")<CR><CR>_<C-r>=strftime("%a %d %b %Y")<CR>_<CR><CR><C-r>=expand('%:t:r')<CR><Esc><C-x>V<CR>0f]i\|< prev<Esc>oindex<Esc>V<CR>o<C-r>=expand('%:t:r')<CR><Esc><C-a>V<CR>0f]i\|next ><Esc>o<CR><C-r>=expand('%:p:r')<CR><Esc>F\r F_r bgUiwd0I= <Esc>A =<CR>== - ==<CR>----<CR><CR>
-iabbrev xmlecture %date <C-r>=strftime("%Y-%m-%d")<CR><CR>_<C-r>=strftime("%a %d %b %Y")<CR>_<CR><CR>%template math<CR><CR><C-r>=expand('%:t:r')<CR><Esc><C-x>V<CR>0f]i\|< prev<Esc>oindex<Esc>V<CR>o<C-r>=expand('%:t:r')<CR><Esc><C-a>V<CR>0f]i\|next ><Esc>o<CR><C-r>=expand('%:p:r')<CR><Esc>F\r F_r bgUiwd0I= <Esc>A =<CR>== - ==<CR>----<CR><CR>
 
 " This is so sad, Vim play Despacito
 iabbrev Despacito <Esc>:!C:/Program\ Files\ \(x86\)/Google/Chrome/Application/chrome "https://youtu.be/kJQP7kiw5Fk?t=83"<CR>
@@ -503,13 +439,13 @@ Plugin 'tpope/vim-fugitive'                " Git integration
 " Utility plugins
 Plugin 'tpope/vim-surround'                " Mappings for inserting/changing/deleting surrounding characters/elements
 Plugin 'tpope/vim-repeat'                  " Repeating more actions with .
-Plugin 'tpope/vim-unimpaired'              " Quickfix/location list/buffer navigation, paired editor commands, etc.
+"Plugin 'tpope/vim-unimpaired'              " Quickfix/location list/buffer navigation, paired editor commands, etc.
 Plugin 'tpope/vim-speeddating'             " Fix negative problem when incrementing dates
 Plugin 'tommcdo/vim-exchange'              " Text exchanging operators
 Plugin 'godlygeek/tabular'                 " Tabularize
 Plugin 'vim-scripts/tComment'              " Easy commenting
 Plugin 'jiangmiao/auto-pairs'              " Automatically insert matching punctuation pair, etc.
-Plugin 'shinokada/dragvisuals.vim'         " Add ability to drag visual blocks
+"Plugin 'shinokada/dragvisuals.vim'         " Add ability to drag visual blocks
 Plugin 'vim-scripts/matchit.zip'
 
 " Run the following command in the installed directory of vimproc.vim (Windows):
@@ -531,16 +467,16 @@ call vundle#end()
 " Plugin settings {{{
 " Vimwiki
 highlight VimwikiLink ctermbg=black ctermfg=2
-highlight VimwikiBold ctermfg=cyan
-highlight VimwikiItalic ctermfg=yellow
-highlight VimwikiBoldItalic ctermfg=darkyellow
+"highlight VimwikiBold ctermfg=cyan
+"highlight VimwikiItalic ctermfg=yellow
+"highlight VimwikiBoldItalic ctermfg=darkyellow
 highlight VimwikiHeader1 ctermfg=magenta
 highlight VimwikiHeader2 ctermfg=blue
 highlight VimwikiHeader3 ctermfg=green
 let wiki = {}
-let wiki.path = '~/Dropbox/wiki'
-let wiki.path_html = '~/wiki_html'
-let wiki.template_path = '~/Dropbox/wiki/templates/'
+let wiki.path = '~/wiki/'
+let wiki.path_html = '~/wiki-gl/'
+let wiki.template_path = wiki.path . 'templates/'
 let wiki.template_ext = '.tpl'
 let wiki.nested_syntaxes = {
             \ 'haskell':     'haskell',
@@ -562,8 +498,6 @@ let g:vimwiki_dir_link = 'index'
 function! LightlineKeymapName()
     return &keymap
 endfunction
-let g:lightline = {
-      \ }
 
 function! LightlineBufferline()
   call bufferline#refresh_status()
@@ -582,6 +516,7 @@ let g:lightline = {
             \ 'component': {
             \   'buffilename': '[%n] %f',
             \   'charvalue': '0x%B %b',
+            \   'lineinfo': "%l/%L | %c%V",
             \ },
             \ 'component_function': {
             \   'keymapname': 'LightlineKeymapName',
