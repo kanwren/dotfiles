@@ -319,6 +319,8 @@ vnoremap <Leader>e <Esc>:call ExpandSpaces()<CR>
 
 " Global scratch buffer
 noremap <Leader><Leader>es :edit ~/scratch<CR>
+" Vimwiki quick notes
+noremap <Leader>wq :e ~/wiki/quick/index.wiki<CR>
 " .vimrc editing/sourcing
 noremap <Leader><Leader>ev :edit ~/dotfiles/.vimrc<CR>
 noremap <Leader><Leader>sv :source $MYVIMRC<CR>
