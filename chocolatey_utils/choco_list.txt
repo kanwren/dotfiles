@@ -20,7 +20,6 @@ dotnet4.7.1
 dotnetfx
 dropbox
 filezilla
-fzf
 gimp
 git
 git.install
@@ -42,7 +41,9 @@ KB3035131
 lame
 make
 mingw
+mupdf
 musescore
+nano
 nodejs
 nodejs.install
 okular
@@ -50,8 +51,6 @@ paint.net
 pandoc
 python
 python3
-qutebrowser
-qutebrowser.install
 r
 R.Project
 R.Studio
@@ -61,5 +60,6 @@ slack
 strawberryperl
 vcredist140
 vcredist2010
+vifm
 vim
 Wget
