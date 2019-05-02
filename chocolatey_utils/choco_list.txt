@@ -1,3 +1,4 @@
+anki
 audacity
 binroot
 ccleaner
