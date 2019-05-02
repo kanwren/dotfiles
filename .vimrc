@@ -534,8 +534,8 @@ let g:ale_linters = {
             \ 'python': ['pylint'],
             \ 'java': ['javac', 'checkstyle']
             \ }
-let g:ale_java_checkstyle_options = '-c C:/tools/checkstyle/cs1331-checkstyle.xml'
-let g:ale_java_javac_classpath = '.;~/bin/jh61b.jar;~/cs1331/assignments/autograder_components/lib/*;~/bin/javafx-sdk-11.0.2/lib/*'
+let g:ale_java_checkstyle_options = '-c /c/tools/checkstyle/cs1331-checkstyle.xml'
+"let g:ale_java_javac_classpath = '.;~/bin/jh61b.jar;~/cs1331/assignments/autograder_components/lib/*;~/bin/javafx-sdk-11.0.2/lib/*'
 let g:ale_python_pylint_options = '--disable=C0103,C0111,C0301,C0305,W0621,R0902,R0903'
 
 " Haskell-vim
