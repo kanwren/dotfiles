@@ -368,15 +368,9 @@ vnoremap <Leader>ht "xy:echo printf('%x', <C-r>")<CR>
 " Plugin mappings {{{
 " NERDTree
 map <F2> :NERDTreeToggle<CR>
-" DragVisuals
-vmap <expr> <Left> DVB_Drag('left')
-vmap <expr> <Right> DVB_Drag('right')
-vmap <expr> <Down> DVB_Drag('down')
-vmap <expr> <Up> DVB_Drag('up')
-vmap <expr> D DVB_Duplicate()
 " Tabular
 " Prompt for regular expression on which to tabularize
-noremap <silent> <expr> <Leader>a ':Tabularize /' . input('tab/') . '<CR>'
+noremap <silent> <expr> <Leader>a ":let p = input('tab/') \| execute ':Tabularize' . (empty(p) ? '' : ' /' . p)<CR>"
 "}}}
 "}}}
 
@@ -445,7 +439,6 @@ Plugin 'tommcdo/vim-exchange'              " Text exchanging operators
 Plugin 'godlygeek/tabular'                 " Tabularize
 Plugin 'vim-scripts/tComment'              " Easy commenting
 Plugin 'jiangmiao/auto-pairs'              " Automatically insert matching punctuation pair, etc.
-"Plugin 'shinokada/dragvisuals.vim'         " Add ability to drag visual blocks
 Plugin 'vim-scripts/matchit.zip'
 
 " Run the following command in the installed directory of vimproc.vim (Windows):
@@ -546,8 +539,5 @@ let g:haskell_enable_pattern_synonyms = 1 " to enable highlighting of `pattern`
 let g:haskell_enable_typeroles = 1        " to enable highlighting of type roles
 let g:haskell_enable_static_pointers = 1  " to enable highlighting of `static`
 let g:haskell_backpack = 1                " to enable highlighting of backpack keywords
-
-" DragVisuals
-let g:DVB_TrimWS = 1
 
 " vim:foldmethod=marker:foldlevel=0
