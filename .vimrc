@@ -179,7 +179,7 @@ endif
 
 set encoding=utf-8
 scriptencoding utf-8
-set ffs=dos,unix,mac
+set ffs=unix,dos,mac
 let $LANG='en'
 set nospell spelllang=en_us
 set clipboard=unnamed                " copy unnamed register to clipboard
