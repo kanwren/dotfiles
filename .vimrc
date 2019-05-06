@@ -451,7 +451,7 @@ Plugin 'kana/vim-textobj-function'
 
 " Language-specific
 Plugin 'neovimhaskell/haskell-vim'
-"Plugin 'eagletmt/ghcmod-vim'              " Waiting on newer base support
+Plugin 'eagletmt/ghcmod-vim'
 Plugin 'bps/vim-textobj-python'
 
 call vundle#end()
