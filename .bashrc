@@ -1,5 +1,3 @@
-TERM=xterm-256color
-
 export VISUAL=vim
 export EDITOR="$VISUAL"
 set -o vi
@@ -22,9 +20,3 @@ lsd() {
         echo $d
     done
 }
-
-# winpty fixes for git bash
-alias python='winpty python'
-alias vifm='winpty vifm'
-# make a new git-bash window
-alias nw='/git-bash.exe & > /dev/null 2>&1'
