@@ -182,7 +182,7 @@ scriptencoding utf-8
 set ffs=unix,dos,mac
 let $LANG='en'
 set nospell spelllang=en_us
-set clipboard=unnamed                " copy unnamed register to clipboard
+"set clipboard=unnamed                " copy unnamed register to clipboard
 
 set shortmess+=I                     " Disable Vim intro screen
 
@@ -244,6 +244,7 @@ set noshiftround
 
 set ttyfast
 set timeout timeoutlen=500
+set ttimeoutlen=0
 
 set nojoinspaces                     " never two spaces after sentence
 set virtualedit=all                  " Allow editing past the ends of lines
@@ -288,6 +289,7 @@ nnoremap Q @q
 " Repeat macros/commands across visual selections
 vnoremap Q :norm @q<CR>
 vnoremap . :norm .<CR>
+noremap Y y$
 " Exchange operation-delete, highlight target, exchange (made obsolete by exchange.vim)
 "vnoremap gx <Esc>`.``gvP``P
 " Display registers
@@ -303,7 +305,7 @@ map <S-Space> <Space>
 let mapleader=" "
 
 " Fast buffer navigation
-noremap <Leader>b :ls<CR>:
+noremap <Leader>b :ls<CR>:b
 " Search word underneath cursor/selection but don't jump
 noremap <Leader>* mx*`x
 " Retab and delete trailing whitespace
@@ -370,7 +372,8 @@ vnoremap <Leader>ht "xy:echo printf('%x', <C-r>")<CR>
 map <F2> :NERDTreeToggle<CR>
 " Tabular
 " Prompt for regular expression on which to tabularize
-noremap <silent> <expr> <Leader>a ":let p = input('tab/') \| execute ':Tabularize' . (empty(p) ? '' : ' /' . p)<CR>"
+nnoremap <silent> <expr> <Leader>a ":let p = input('tab/') \| execute ':Tabularize' . (empty(p) ? '' : ' /' . p)<CR>"
+vnoremap <silent> <Leader>a <Esc>:let p = input('tab/') \| execute ":'<,'>Tabularize" . (empty(p) ? '' : ' /' . p)<CR>
 "}}}
 "}}}
 
@@ -441,9 +444,8 @@ Plugin 'vim-scripts/tComment'              " Easy commenting
 Plugin 'jiangmiao/auto-pairs'              " Automatically insert matching punctuation pair, etc.
 Plugin 'vim-scripts/matchit.zip'
 
-" Run the following command in the installed directory of vimproc.vim (Windows):
-" mingw32-make -f make_mingw64.mak
-Plugin 'Shougo/vimproc.vim'
+" Additional installation required--see README on GitHub for details
+"Plugin 'Shougo/vimproc.vim'
 
 " Text objects
 Plugin 'kana/vim-textobj-user'
@@ -451,7 +453,7 @@ Plugin 'kana/vim-textobj-function'
 
 " Language-specific
 Plugin 'neovimhaskell/haskell-vim'
-Plugin 'eagletmt/ghcmod-vim'
+"Plugin 'eagletmt/ghcmod-vim'
 Plugin 'bps/vim-textobj-python'
 
 call vundle#end()
@@ -474,6 +476,7 @@ let wiki.template_ext = '.tpl'
 let wiki.nested_syntaxes = {
             \ 'haskell':     'haskell',
             \ 'hs':          'haskell',
+            \ 'c':           'c',
             \ 'c++':         'cpp',
             \ 'cpp':         'cpp',
             \ 'java':        'java',
