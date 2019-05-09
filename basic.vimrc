@@ -168,6 +168,7 @@ set noshiftround
 
 set ttyfast
 set timeout timeoutlen=500
+set ttimeoutlen=0
 
 set nojoinspaces
 set virtualedit=all
@@ -242,10 +243,10 @@ vnoremap <Leader>hs "xy:echo 0x<C-r>"<CR>
 nnoremap <Leader>ht "xyiw:echo printf('%x', <C-r>")<CR>
 vnoremap <Leader>ht "xy:echo printf('%x', <C-r>")<CR>
 " Binary utilities
-nnoremap <Leader>bs "xyiw:echo 0b<C-r>"<CR>
-vnoremap <Leader>bs "xy:echo 0b<C-r>"<CR>
-nnoremap <Leader>bt "xyiw:echo printf('%b', <C-r>")<CR>
-vnoremap <Leader>bt "xy:echo printf('%b', <C-r>")<CR>
+"nnoremap <Leader>bs "xyiw:echo 0b<C-r>"<CR>
+"vnoremap <Leader>bs "xy:echo 0b<C-r>"<CR>
+"nnoremap <Leader>bt "xyiw:echo printf('%b', <C-r>")<CR>
+"vnoremap <Leader>bt "xy:echo printf('%b', <C-r>")<CR>
 
 iabbrev xaz <C-r>='abcdefghijklmnopqrstuvwxyz'<CR>
 iabbrev xAZ <C-r>='ABCDEFGHIJKLMNOPQRSTUVWXYZ'<CR>
