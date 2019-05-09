@@ -131,6 +131,24 @@ function! ExpandSpaces()
     execute com
 endfunction
 " }}}
+
+" Testing {{{
+function! ColorList()
+    let paths = split(globpath(&runtimepath, 'colors/*.vim'), "\n")
+    return map(paths, 'fnamemodify(v:val, ":t:r")')
+endfunction
+
+let g:colors = ColorList()
+let g:cur_color = -1
+function! NextColor()
+    let g:cur_color += 1
+    let g:cur_color = g:cur_color % len(g:colors)
+    execute ':colorscheme ' . g:colors[g:cur_color]
+    set background=dark
+    redraw
+    echo 'Switched to: ' . g:colors[g:cur_color] . ' (' . (g:cur_color + 1) . ')'
+endfunction
+" }}}
 " }}}
 
 " Autocommands {{{
@@ -166,14 +184,16 @@ set directory^=~/.vim/tmp
 " }}}
 
 if !has('gui_running')
-    "set term=xterm-256color
-    "set t_Co=256
+    set term=xterm-256color
+    set t_Co=256
     let &t_ti.="\e[1 q"
     let &t_SI.="\e[5 q"
     let &t_EI.="\e[1 q"
     let &t_te.="\e[0 q"
+    set background=dark
     colorscheme elflord
 else
+    set background=dark
     colorscheme elflord
 endif
 
@@ -182,7 +202,7 @@ scriptencoding utf-8
 set ffs=unix,dos,mac
 let $LANG='en'
 set nospell spelllang=en_us
-"set clipboard=unnamed                " copy unnamed register to clipboard
+set clipboard=unnamed                " copy unnamed register to clipboard
 
 set shortmess+=I                     " Disable Vim intro screen
 
@@ -423,7 +443,6 @@ Plugin 'vimwiki/vimwiki'                   " Personal wiki for Vim
 
 " Interface
 Plugin 'itchyny/lightline.vim'
-" TODO: colorschemes!
 
 " Functionality
 Plugin 'w0rp/ale'                          " Async linting tool
