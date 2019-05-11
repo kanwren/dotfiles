@@ -166,6 +166,7 @@ if has('autocmd')
                     \ |     exe "normal! g'\""
                     \ | endif
     augroup END
+    au BufNewFile,BufRead *.nix setf nix
 endif
 " }}}
 
@@ -202,7 +203,7 @@ scriptencoding utf-8
 set ffs=unix,dos,mac
 let $LANG='en'
 set nospell spelllang=en_us
-set clipboard=unnamed                " copy unnamed register to clipboard
+"set clipboard=unnamed                " copy unnamed register to clipboard
 
 set shortmess+=I                     " Disable Vim intro screen
 
@@ -450,7 +451,7 @@ Plugin 'sheerun/vim-polyglot'              " Collection of language packs to rul
 Plugin 'scrooloose/nerdtree'               " File explorer/interface
 Plugin 'tpope/vim-eunuch'                  " File operations
 Plugin 'tpope/vim-fugitive'                " Git integration
-"Plugin 'kien/rainbow_parentheses.vim'      " Highlight matching punctuation pairs in color
+Plugin 'kien/rainbow_parentheses.vim'      " Highlight matching punctuation pairs in color
 
 " Utility plugins
 Plugin 'tpope/vim-surround'                " Mappings for inserting/changing/deleting surrounding characters/elements
@@ -539,6 +540,7 @@ let g:lightline = {
             \ }
 
 " ALE
+let g:ale_enabled = 0
 let g:ale_lint_on_enter = 0
 let g:ale_lint_on_filetype_changed = 1
 let g:ale_lint_on_insert_leave = 1
