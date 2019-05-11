@@ -15,8 +15,17 @@ bak() {
     fi
 }
 
-lsd() {
-    for d in */; do
-        echo $d
-    done
+gw() {
+  nix-shell -p "haskell.packages.${1:-ghc864}.ghcWithPackages (pkgs: with pkgs; [ ${@:2} ])"
 }
+
+alias lsd='for d in */; do echo $d; done'
+alias .1="cd .."
+alias .2="cd ../.."
+alias .3="cd ../../.."
+alias .4="cd ../../../.."
+alias .5="cd ../../../../.."
+alias .6="cd ../../../../../.."
+alias .7="cd ../../../../../../.."
+alias .8="cd ../../../../../../../.."
+alias .9="cd ../../../../../../../../.."
