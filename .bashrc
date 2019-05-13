@@ -16,7 +16,9 @@ bak() {
 }
 
 gw() {
-  nix-shell -p "haskell.packages.${1:-ghc864}.ghcWithPackages (pkgs: with pkgs; [ ${@:2} ])"
+  compiler="${1:-ghc864}"
+  packages="${@:2}"
+  nix-shell -p "haskell.packages.$compiler.ghcWithPackages (pkgs: with pkgs; [ $packages ])"
 }
 
 alias lsd='for d in */; do echo $d; done'
