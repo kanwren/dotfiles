@@ -21,7 +21,12 @@ gw() {
   nix-shell -p "haskell.packages.$compiler.ghcWithPackages (pkgs: with pkgs; [ $packages ])"
 }
 
-alias lsd='for d in */; do echo $d; done'
+alias l='ls -CF'
+alias la='ls -A'
+alias ll='ls -alF'
+alias l1='l1 -1'
+alias lsd='ls -d */'
+
 alias .1="cd .."
 alias .2="cd ../.."
 alias .3="cd ../../.."
