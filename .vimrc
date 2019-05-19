@@ -325,6 +325,12 @@ map <Space> <nop>
 map <S-Space> <Space>
 let mapleader=" "
 
+" More convenient delete/put
+noremap <Leader>d "_d
+noremap <Leader>D "_D
+noremap <Leader>p "0p
+noremap <Leader>P "0P
+
 " Fast buffer navigation
 noremap <Leader>b :ls<CR>:b
 " Search word underneath cursor/selection but don't jump
