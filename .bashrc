@@ -22,14 +22,19 @@ gw() {
 }
 
 xkcd() {
-  if [[ $1 =~ rand(om)? ]]; then
-    xdg-open https://c.xkcd.com/random/comic/
+  if [[ "$1" =~ rand(om)? ]]; then
+    xdg-open "https://c.xkcd.com/random/comic/" &>/dev/null
   else
-    xdg-open https://xkcd.com/$1/
+    xdg-open "https://xkcd.com/$1/" &>/dev/null
   fi
 }
 
-alias puzzle="xdg-open https://lichess.org/training"
+google() {
+  query="$(echo $1 | sed -e 's/ /%20/g')"
+  xdg-open "https://google.com/search?q=$query" &>/dev/null
+}
+
+alias puzzle='xdg-open "https://lichess.org/training" >/dev/null'
 
 alias l='ls -CF'
 alias la='ls -A'
@@ -39,12 +44,12 @@ alias lsd='ls -d */'
 
 alias xsc='xclip -sel clip'
 
-alias .1="cd .."
-alias .2="cd ../.."
-alias .3="cd ../../.."
-alias .4="cd ../../../.."
-alias .5="cd ../../../../.."
-alias .6="cd ../../../../../.."
-alias .7="cd ../../../../../../.."
-alias .8="cd ../../../../../../../.."
-alias .9="cd ../../../../../../../../.."
+alias .1='cd ..'
+alias .2='cd ../..'
+alias .3='cd ../../..'
+alias .4='cd ../../../..'
+alias .5='cd ../../../../..'
+alias .6='cd ../../../../../..'
+alias .7='cd ../../../../../../..'
+alias .8='cd ../../../../../../../..'
+alias .9='cd ../../../../../../../../..'
