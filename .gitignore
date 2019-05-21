@@ -1,17 +1,5 @@
-# Ignore all
-*
-
-# Unignore all files with extensions
-!*.*
-
-# Unignore all directories
-!*/
-
 # Ignore Windows executables
 *.exe
 
 # Ignore manifest lists
 prefer_external_manifest/manifests.txt
-
-# Ignore XMonad build errors
-.xmonad/xmonad.errors
