@@ -37,11 +37,11 @@ bindsym $mod+Shift+w exec chromium-browser
 # Start ranger
 bindsym $mod+Shift+Return exec i3-sensible-terminal -e ranger
 # Run i3 command on the fly
-bindsym $mod+i exec i3-input
+bindsym $mod+i exec i3-input -f pango:monospace 12
 # Start i3lock
 bindsym $mod+Shift+i exec i3lock
-# Adjust brightness (TODO)
-# bindsym $mod+b exec
+# Run bash command on prompt
+bindsym $mod+b exec "bash -c 'source ~/.bashrc; source ~/dotfiles/.bashrc; dmenu -p \\"Command:\\" <&- | xargs -I {} bash -c \\"{}\\"'"
 
 # start a terminal
 bindsym $mod+Return exec i3-sensible-terminal
@@ -73,8 +73,8 @@ bindsym $mod+Shift+l move right
 bindsym $mod+Left workspace prev
 bindsym $mod+Right workspace next
 
-bindsym $mod+Shift+Left workspace first
-bindsym $mod+Shift+Right workspace last
+# bindsym $mod+Shift+Left workspace first
+# bindsym $mod+Shift+Right workspace last
 
 # split in horizontal orientation
 # This means the opposite thing in Vim, so it is swapped with v
