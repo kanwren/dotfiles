@@ -6,6 +6,6 @@ configure_night_mode() {
 }
 
 case $1 in
-  off) configure_night_mode 1:1:1 1.0 ;;
-  *) configure_night_mode 1:1:0.5 0.7 ;;
+  off) echo "Night mode off" && configure_night_mode 1:1:1 1.0 ;;
+  *) echo "Night mode on" && configure_night_mode 1:1:0.5 0.7 ;;
 esac
