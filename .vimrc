@@ -154,7 +154,7 @@ endfunction
 " Autocommands {{{
 " TODO: hex editing as per https://vim.fandom.com/wiki/Improved_hex_editing
 if has('autocmd')
-    autocmd FileType help wincmd L
+    " autocmd FileType help wincmd L
     augroup plugin_group
         autocmd!
         autocmd StdinReadPre * let s:std_in=1
@@ -247,11 +247,12 @@ set list listchars=tab:>-,eol:¬,extends:>,precedes:<
 set modelines=1
 set textwidth=80
 set nrformats=bin,hex                " Don't increment octal numbers
-set formatoptions=croqln
+set formatoptions=croqjln
 " c=wrap comments
 " r=insert comment on enter
 " o=insert comment on o/O
 " q=allow formatting of comments with gq
+" j=remove comment marker when joining lines
 " l=don't break lines longer than textwidth before insert started
 " n=recognize numbered lists
 

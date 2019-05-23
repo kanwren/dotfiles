@@ -1,4 +1,4 @@
-setlocal formatoptions=croqlnt
+setlocal formatoptions=croqjlnt
 
 function! DrawImage()
     let name = input('Name of image: ', '')

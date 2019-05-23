@@ -156,7 +156,7 @@ set list listchars=tab:>-,eol:¬,extends:>,precedes:<
 set modelines=0
 set textwidth=80
 set nrformats=bin,hex
-set formatoptions=croqln
+set formatoptions=croqjln
 
 set autoindent smartindent
 set tabstop=4
