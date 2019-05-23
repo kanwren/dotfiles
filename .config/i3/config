@@ -41,7 +41,7 @@ bindsym $mod+i exec i3-input -f pango:monospace 12
 # Start i3lock
 bindsym $mod+Shift+i exec i3lock
 # Run bash command on prompt
-bindsym $mod+b exec "bash -c 'source ~/.bashrc; source ~/dotfiles/.bashrc; dmenu -p \\"Command:\\" <&- | xargs -I {} bash -c \\"{}\\"'"
+bindsym $mod+b exec "bash -c 'source ~/.bashrc; source ~/dotfiles/.bashrc; dmenu -p \\"bash:\\" <&- | xargs -I {} bash -c \\"{}\\"'"
 
 # start a terminal
 bindsym $mod+Return exec i3-sensible-terminal
@@ -57,8 +57,7 @@ bindsym $mod+d exec dmenu_run
 # bindsym $mod+d exec --no-startup-id i3-dmenu-desktop
 
 # change focus
-# Shifted to the Vim bindings instead of the default ($mod+h moved to
-# $mod+Shift+h)
+# Shifted to the Vim bindings instead of the default
 bindsym $mod+h focus left
 bindsym $mod+j focus down
 bindsym $mod+k focus up
