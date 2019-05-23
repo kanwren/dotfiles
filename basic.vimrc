@@ -95,24 +95,15 @@ filetype on
 filetype indent on
 filetype plugin on
 
-if !has('gui_running')
-    set term=xterm-256color
-    set t_Co=256
-    let &t_ti.="\e[1 q"
-    let &t_SI.="\e[5 q"
-    let &t_EI.="\e[1 q"
-    let &t_te.="\e[0 q"
-    colorscheme elflord
-else
-    colorscheme elflord
-endif
+colorscheme elflord
 
 set encoding=utf-8
 scriptencoding utf-8
-set ffs=dos,unix,mac
+set ffs=unix,dos,mac
 let $LANG='en'
 set nospell spelllang=en_us
-set clipboard=unnamed
+"set clipboard=unnamed
+set clipboard=unnamedplus
 
 set shortmess+=I
 

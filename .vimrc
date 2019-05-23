@@ -106,12 +106,6 @@ function! HexCodesToStr()
     let @" = str
     normal gv"0P
 endfunction
-
-function! StrToBinCodes()
-endfunction
-
-function! BincodesToStr()
-endfunction
 " }}}
 
 " Utility {{{
@@ -216,7 +210,8 @@ scriptencoding utf-8
 set ffs=unix,dos,mac
 let $LANG='en'
 set nospell spelllang=en_us
-"set clipboard=unnamed                " copy unnamed register to clipboard
+"set clipboard=unnamed
+set clipboard=unnamedplus            " + register point to system clipboard
 
 set shortmess+=I                     " Disable Vim intro screen
 
