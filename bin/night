@@ -1,0 +1,11 @@
+configure_night_mode() {
+  for disp in $(xrandr | grep " connected" | cut -f1 -d " "); do
+    echo "Configuring $disp..."
+    xrandr --output $disp --gamma $1 --brightness $2
+  done
+}
+
+case $1 in
+  off) configure_night_mode 1:1:1 1.0 ;;
+  *) configure_night_mode 1:1:0.5 0.7 ;;
+esac
