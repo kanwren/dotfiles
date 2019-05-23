@@ -5,6 +5,8 @@ set nocompatible
 command! WS :execute ':silent w !sudo tee % > /dev/null' | :edit!
 " Hex editing
 command! -bar Hexmode call ToggleHex()
+" nix-prefetch-git shortcut
+command! -nargs=+ NPG call Nix_Prefetch_Git(<f-args>)
 " }}}
 
 " Functions {{{
@@ -131,6 +133,11 @@ function! ExpandSpaces()
     execute com
 endfunction
 " }}}
+
+function! Nix_Prefetch_Git(owner, repo)
+    let command='nix-prefetch-git git@github.com:' . a:owner . '/' . a:repo . ' 2>/dev/null | grep -E "rev|sha256" | sed -E "s/\s*\"(.+)\": \"(.+)\",/\1 = \"\2\";/g"'
+    execute('read! ' . command)
+endfunction
 
 " Testing {{{
 function! ColorList()
