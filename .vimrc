@@ -134,8 +134,14 @@ function! ExpandSpaces()
 endfunction
 " }}}
 
-function! Nix_Prefetch_Git(owner, repo)
-    let command='nix-prefetch-git git@github.com:' . a:owner . '/' . a:repo . ' 2>/dev/null | grep -E "rev|sha256" | sed -E "s/\s*\"(.+)\": \"(.+)\",/\1 = \"\2\";/g"'
+function! Nix_Prefetch_Git(owner, repo, ...)
+    " Also url, date, and fetchSubmodules
+    let fields=['rev', 'sha256']
+    let command='nix-prefetch-git git@github.com:' . a:owner . '/' . a:repo
+    if a:0 > 0
+        let command.=' --rev ' . a:1
+    end
+    let command.=' 2>/dev/null | grep -E "' . join(fields, '|') . '" | sed -E "s/\s*\"(.+)\": \"(.+)\",/\1 = \"\2\";/g"'
     execute('read! ' . command)
 endfunction
 
