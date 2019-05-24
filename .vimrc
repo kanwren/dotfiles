@@ -129,13 +129,13 @@ endfunction
 " }}}
 
 function! Nix_Prefetch_Git(owner, repo, ...)
-    " Also url, date, and fetchSubmodules
+    " Other fields: url, date, fetchSubmodules
     let fields=['rev', 'sha256']
     let command='nix-prefetch-git git@github.com:' . a:owner . '/' . a:repo
     if a:0 > 0
         let command.=' --rev ' . a:1
     end
-    let command.=' 2>/dev/null | grep -E "' . join(fields, '|') . '" | sed -E "s/\s*\"(.+)\": \"(.+)\",/\1 = \"\2\";/g"'
+    let command.=' --quiet | grep -E "' . join(fields, '|') . '" | sed -E "s/\s*\"(.+)\": \"(.+)\",/\1 = \"\2\";/g"'
     execute('read! ' . command)
 endfunction
 
@@ -211,7 +211,7 @@ set ffs=unix,dos,mac
 let $LANG='en'
 set nospell spelllang=en_us
 "set clipboard=unnamed
-set clipboard=unnamedplus            " + register point to system clipboard
+"set clipboard=unnamedplus            " + register point to system clipboard
 
 set shortmess+=I                     " Disable Vim intro screen
 
