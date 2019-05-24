@@ -337,7 +337,7 @@ noremap <Leader>b :ls<CR>:b
 " Search word underneath cursor/selection but don't jump
 noremap <Leader>* mx*`x
 " Retab and delete trailing whitespace
-noremap <Leader><Tab> mx:%s/\s\+$//ge \| retab<CR>`x
+noremap <Leader><Tab> mx:%s/\s\+$//e \| retab<CR>`x
 " Split current line by provided regex (\zs or \ze to preserve separators)
 nnoremap <silent> <expr> <Leader>s ':s/' . input('split/') . '/\r/g<CR>'
 " Toggle keyboard mappings
@@ -456,7 +456,6 @@ Plugin 'sheerun/vim-polyglot'              " Collection of language packs to rul
 Plugin 'scrooloose/nerdtree'               " File explorer/interface
 Plugin 'tpope/vim-eunuch'                  " File operations
 Plugin 'tpope/vim-fugitive'                " Git integration
-Plugin 'kien/rainbow_parentheses.vim'      " Highlight matching punctuation pairs in color
 
 " Utility plugins
 Plugin 'tpope/vim-surround'                " Mappings for inserting/changing/deleting surrounding characters/elements
