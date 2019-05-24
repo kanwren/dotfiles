@@ -1,5 +1,2 @@
 # Ignore Windows executables
 *.exe
-
-# Ignore manifest lists
-prefer_external_manifest/manifests.txt
