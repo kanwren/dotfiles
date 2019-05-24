@@ -16,7 +16,7 @@ bak() {
 }
 
 gw() {
-  compiler="${1:-ghc864}"
+  compiler="${1:-ghc865}"
   packages="${@:2}"
   nix-shell -p "haskell.packages.$compiler.ghcWithPackages (pkgs: with pkgs; [ $packages ])"
 }
