@@ -138,8 +138,7 @@ set nowrap
 set magic
 set showmatch
 set incsearch hlsearch
-set ignorecase
-set smartcase
+set ignorecase smartcase
 
 set scrolloff=0
 
@@ -151,11 +150,11 @@ set formatoptions=croqjln
 
 set autoindent smartindent
 set tabstop=4
-set cinoptions+=:0L0g0j1J1
 set expandtab softtabstop=4
 set shiftwidth=4
 set smarttab
 set noshiftround
+set cinoptions+=:0L0g0j1J1
 
 set ttyfast
 set timeout timeoutlen=500
@@ -195,6 +194,13 @@ nnoremap <Left> :bprev<CR>
 map <Space> <nop>
 map <S-Space> <Space>
 let mapleader=" "
+" More convenient delete/put
+noremap <Leader>d "_d
+noremap <Leader>D "_D
+noremap <Leader>p "0p
+noremap <Leader>P "0P
+" Fast buffer navigation/editing
+noremap <Leader>b :ls<CR>:b
 " Search for word under cursor without jumping
 noremap <Leader>* mx*`x
 " Retab and delete trailing whitespace
@@ -233,11 +239,6 @@ nnoremap <Leader>hs "xyiw:echo 0x<C-r>"<CR>
 vnoremap <Leader>hs "xy:echo 0x<C-r>"<CR>
 nnoremap <Leader>ht "xyiw:echo printf('%x', <C-r>")<CR>
 vnoremap <Leader>ht "xy:echo printf('%x', <C-r>")<CR>
-" Binary utilities
-"nnoremap <Leader>bs "xyiw:echo 0b<C-r>"<CR>
-"vnoremap <Leader>bs "xy:echo 0b<C-r>"<CR>
-"nnoremap <Leader>bt "xyiw:echo printf('%b', <C-r>")<CR>
-"vnoremap <Leader>bt "xy:echo printf('%b', <C-r>")<CR>
 
 iabbrev xaz <C-r>='abcdefghijklmnopqrstuvwxyz'<CR>
 iabbrev xAZ <C-r>='ABCDEFGHIJKLMNOPQRSTUVWXYZ'<CR>
