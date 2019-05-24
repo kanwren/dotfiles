@@ -1,16 +1,10 @@
 set nocompatible
 
-" Commands {{{
+" Functions And Commands {{{
 " Force write trick
 command! WS :execute ':silent w !sudo tee % > /dev/null' | :edit!
-" Hex editing
-command! -bar Hexmode call ToggleHex()
-" nix-prefetch-git shortcut
-command! -nargs=+ NPG call Nix_Prefetch_Git(<f-args>)
-" }}}
 
-" Functions {{{
-" Clearing {{{
+" Utility {{{
 function! ClearRegisters()
     let regs='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/-*+"'
     let i = 0
@@ -41,9 +35,41 @@ function! SetIndents(...)
                     \ . ', et='  . &expandtab
     endif
 endfunction
+
+function! CopyRegister()
+    " Provide ' as an easier-to-type alias for "
+    let r1 = substitute(nr2char(getchar()), "'", "\"", "")
+    let r2 = substitute(nr2char(getchar()), "'", "\"", "")
+    execute 'let @' . r2 . '=@' . r1
+    echo "Copied @" . r1 . " to @" . r2
+endfunction
+
+function! ExpandSpaces()
+    let [start, startv] = getpos("'<")[2:3]
+    let [end, endv]     = getpos("'>")[2:3]
+    " Index 3 includes overflow information for virtualedit
+    let cols = abs(end + endv - start - startv) + 1
+    let com  = 'normal ' . cols . 'I '
+    normal gv
+    execute com
+endfunction
+
+" nix-prefetch-git shortcut
+command! -nargs=+ NPG call Nix_Prefetch_Git(<f-args>)
+function! Nix_Prefetch_Git(owner, repo, ...)
+    " Other fields: url, date, fetchSubmodules
+    let fields=['rev', 'sha256']
+    let command='nix-prefetch-git git@github.com:' . a:owner . '/' . a:repo
+    if a:0 > 0
+        let command.=' --rev ' . a:1
+    end
+    let command.=' --quiet | grep -E "' . join(fields, '|') . '" | sed -E "s/\s*\"(.+)\": \"(.+)\",/\1 = \"\2\";/g"'
+    execute('read! ' . command)
+endfunction
 " }}}
 
 " Hex editing {{{
+command! -bar Hexmode call ToggleHex()
 function! ToggleHex()
     " hex mode should be considered a read-only operation
     " save values for modified and read-only for restoration later,
@@ -108,37 +134,6 @@ function! HexCodesToStr()
 endfunction
 " }}}
 
-" Utility {{{
-function! CopyRegister()
-    " Provide ' as an easier-to-type alias for "
-    let r1 = substitute(nr2char(getchar()), "'", "\"", "")
-    let r2 = substitute(nr2char(getchar()), "'", "\"", "")
-    execute 'let @' . r2 . '=@' . r1
-    echo "Copied @" . r1 . " to @" . r2
-endfunction
-
-function! ExpandSpaces()
-    let [start, startv] = getpos("'<")[2:3]
-    let [end, endv]     = getpos("'>")[2:3]
-    " Index 3 includes overflow information for virtualedit
-    let cols = abs(end + endv - start - startv) + 1
-    let com  = 'normal ' . cols . 'I '
-    normal gv
-    execute com
-endfunction
-" }}}
-
-function! Nix_Prefetch_Git(owner, repo, ...)
-    " Other fields: url, date, fetchSubmodules
-    let fields=['rev', 'sha256']
-    let command='nix-prefetch-git git@github.com:' . a:owner . '/' . a:repo
-    if a:0 > 0
-        let command.=' --rev ' . a:1
-    end
-    let command.=' --quiet | grep -E "' . join(fields, '|') . '" | sed -E "s/\s*\"(.+)\": \"(.+)\",/\1 = \"\2\";/g"'
-    execute('read! ' . command)
-endfunction
-
 " Testing {{{
 function! ColorList()
     let paths = split(globpath(&runtimepath, 'colors/*.vim'), "\n")
@@ -159,7 +154,6 @@ endfunction
 " }}}
 
 " Autocommands {{{
-" TODO: hex editing as per https://vim.fandom.com/wiki/Improved_hex_editing
 if has('autocmd')
     " autocmd FileType help wincmd L
     augroup plugin_group
@@ -246,8 +240,7 @@ set nowrap
 set magic
 set showmatch                        " matching brace/parens/etc.
 set incsearch hlsearch
-set noignorecase
-set smartcase
+set ignorecase smartcase
 
 set scrolloff=0
 
@@ -266,11 +259,11 @@ set formatoptions=croqjln
 
 set autoindent smartindent
 set tabstop=4                        " treat tabs as 4 spaces wide
-set cinoptions+=:0L0g0j1J1           " indent distance for case, jumps, scope declarations
 set expandtab softtabstop=4          " expand tabs to 4 spaces
 set shiftwidth=4                     " use 4 spaces when using > or <
 set smarttab
 set noshiftround
+set cinoptions+=:0L0g0j1J1           " indent distance for case, jumps, scope declarations
 
 set ttyfast
 set timeout timeoutlen=500
@@ -304,9 +297,7 @@ highlight Todo ctermbg=1 ctermfg=15
 "}}}
 
 " Mappings {{{
-" Display mappings {{{
 noremap <C-l> :nohlsearch<CR><C-l>
-" }}}
 
 " Convenience mappings {{{
 " Work by visual line without a count, but normal when used with one
@@ -314,11 +305,12 @@ noremap <silent> <expr> j (v:count == 0 ? 'gj' : 'j')
 noremap <silent> <expr> k (v:count == 0 ? 'gk' : 'k')
 " Provide easier alternative to escape-hit them at the same time
 "inoremap jk <Esc>
-" Makes temporary macros faster and more tolerable
+" Makes temporary macros faster
 nnoremap Q @q
 " Repeat macros/commands across visual selections
 vnoremap Q :norm @q<CR>
 vnoremap . :norm .<CR>
+" Make Y more analogous with C and D
 noremap Y y$
 " Exchange operation-delete, highlight target, exchange (made obsolete by exchange.vim)
 "vnoremap gx <Esc>`.``gvP``P
@@ -340,7 +332,7 @@ noremap <Leader>D "_D
 noremap <Leader>p "0p
 noremap <Leader>P "0P
 
-" Fast buffer navigation
+" Fast buffer navigation/editing
 noremap <Leader>b :ls<CR>:b
 " Search word underneath cursor/selection but don't jump
 noremap <Leader>* mx*`x
@@ -357,14 +349,12 @@ vnoremap <Leader>e <Esc>:call ExpandSpaces()<CR>
 
 " Global scratch buffer
 noremap <Leader><Leader>es :edit ~/scratch<CR>
-" Vimwiki quick notes
-noremap <Leader>wq :e ~/wiki/quick/index.wiki<CR>
 " .vimrc editing/sourcing
 noremap <Leader><Leader>ev :edit ~/dotfiles/.vimrc<CR>
 noremap <Leader><Leader>sv :source $MYVIMRC<CR>
 " Change working directory to directory of current file
 noremap <expr> <Leader><Leader>cd ':cd ' . expand('%:p:h:r') . '<CR>'
-" Modify indent level on the fly
+" Change indent level on the fly
 noremap <expr> <Leader><Leader>i SetIndents()
 
 " Add newline above or below without moving cursor, unlike uninpaired's [/]<Space>
@@ -410,6 +400,9 @@ map <F2> :NERDTreeToggle<CR>
 " Prompt for regular expression on which to tabularize
 nnoremap <silent> <expr> <Leader>a ":let p = input('tab/') \| execute ':Tabularize' . (empty(p) ? '' : ' /' . p)<CR>"
 vnoremap <silent> <Leader>a <Esc>:let p = input('tab/') \| execute ":'<,'>Tabularize" . (empty(p) ? '' : ' /' . p)<CR>
+" Vimwiki
+" Quick notes
+noremap <Leader>wq :e ~/wiki/quick/index.wiki<CR>
 "}}}
 "}}}
 
@@ -426,18 +419,15 @@ iabbrev <expr> xymd strftime("%Y-%m-%d")
 
 " Sat 15 Sep 2018
 iabbrev <expr> xdate strftime("%a %d %b %Y")
-
 " 11:31 PM
 iabbrev <expr> xtime strftime("%I:%M %p")
 " 23:31
 iabbrev <expr> xmtime strftime("%H:%M")
-
 " 2018-09-15T23:31:54
 iabbrev <expr> xiso strftime("%Y-%m-%dT%H:%M:%S")
 
-
 " This is so sad, Vim play Despacito
-iabbrev Despacito <Esc>:!C:/Program\ Files\ \(x86\)/Google/Chrome/Application/chrome "https://youtu.be/kJQP7kiw5Fk?t=83"<CR>
+iabbrev Despacito <Esc>:!xdg-open https://youtu.be/kJQP7kiw5Fk?t=83<CR>
 " }}}
 
 " Vundle plugins {{{
@@ -471,7 +461,6 @@ Plugin 'kien/rainbow_parentheses.vim'      " Highlight matching punctuation pair
 " Utility plugins
 Plugin 'tpope/vim-surround'                " Mappings for inserting/changing/deleting surrounding characters/elements
 Plugin 'tpope/vim-repeat'                  " Repeating more actions with .
-"Plugin 'tpope/vim-unimpaired'              " Quickfix/location list/buffer navigation, paired editor commands, etc.
 Plugin 'tpope/vim-speeddating'             " Fix negative problem when incrementing dates
 Plugin 'tommcdo/vim-exchange'              " Text exchanging operators
 Plugin 'godlygeek/tabular'                 " Tabularize
@@ -479,17 +468,12 @@ Plugin 'vim-scripts/tComment'              " Easy commenting
 Plugin 'jiangmiao/auto-pairs'              " Automatically insert matching punctuation pair, etc.
 Plugin 'vim-scripts/matchit.zip'
 
-" Additional installation required--see README on GitHub for details
-"Plugin 'Shougo/vimproc.vim'
-
 " Text objects
 Plugin 'kana/vim-textobj-user'
 Plugin 'kana/vim-textobj-function'
 
 " Language-specific
 Plugin 'neovimhaskell/haskell-vim'
-"Plugin 'eagletmt/ghcmod-vim'
-Plugin 'bps/vim-textobj-python'
 
 call vundle#end()
 " }}}
@@ -497,9 +481,6 @@ call vundle#end()
 " Plugin settings {{{
 " Vimwiki
 highlight VimwikiLink ctermbg=black ctermfg=2
-"highlight VimwikiBold ctermfg=cyan
-"highlight VimwikiItalic ctermfg=yellow
-"highlight VimwikiBoldItalic ctermfg=darkyellow
 highlight VimwikiHeader1 ctermfg=magenta
 highlight VimwikiHeader2 ctermfg=blue
 highlight VimwikiHeader3 ctermfg=green
