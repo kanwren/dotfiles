@@ -4,7 +4,7 @@ setlocal formatoptions+=t
 " Compile
 noremap <buffer> <leader>c :w \| !pdflatex %<CR><CR>
 " View PDF
-noremap <buffer> <C-p> :! zathura %<.pdf<CR><CR>
+noremap <buffer> <C-p> :! zathura %<.pdf &<CR><CR>
 
 " function! Eatchar(pat)
 "   let c = nr2char(getchar(0))
