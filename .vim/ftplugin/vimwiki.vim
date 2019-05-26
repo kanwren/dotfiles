@@ -31,6 +31,6 @@ iabbrev <buffer> xlecture %date <C-r>=strftime("%Y-%m-%d")<CR><CR>_<C-r>=strftim
 let b:surround_indent = 0
 let b:surround_109 = "{{$ \r }}$"
 let b:surround_99 = "{{{ \r }}}"
-iabbrev <buffer> ,code {{{<CR>}}}<Esc>O
-iabbrev <buffer> ,mj {{$%align%<CR>}}$<Esc>O
+iabbrev <buffer> xcode {{{<CR>}}}<Esc>O
+iabbrev <buffer> xmj {{$%align%<CR>}}$<Esc>O
 
