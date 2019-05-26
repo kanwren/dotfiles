@@ -1,3 +1,6 @@
+# Set a desktop background
+exec sh ~/.fehbg
+
 exec --no-startup-id /usr/lib/gnome-settings-daemon/gnome-settings-daemon
 exec --no-startup-id compton
 
