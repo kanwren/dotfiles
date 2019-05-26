@@ -310,6 +310,9 @@ endif
     vnoremap . :norm .<CR>
     " Make Y more analogous with C and D
     noremap Y y$
+    " Swap ` and '
+    noremap ' `
+    noremap ` '
     " Redraw page and clear highlights
     noremap <C-l> :nohlsearch<CR><C-l>
 
