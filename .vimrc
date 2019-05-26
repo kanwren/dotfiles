@@ -322,19 +322,24 @@ endif
     noremap <Leader>p "0p
     noremap <Leader>P "0P
 
+" Editing
+    " Exchange operation-delete, highlight target, exchange (made obsolete by exchange.vim)
+    "vnoremap gx <Esc>`.``gvP``P
+    " Split current line by provided regex (\zs or \ze to preserve separators)
+    nnoremap <silent> <expr> <Leader>s ':s/' . input('split/') . '/\r/g<CR>'
+    " Align; prompt for regular expression on which to tabularize
+    nnoremap <silent> <expr> <Leader>a ":let p = input('tab/') \| execute ':Tabularize' . (empty(p) ? '' : ' /' . p)<CR>"
+    vnoremap <silent> <Leader>a <Esc>:let p = input('tab/') \| execute ":'<,'>Tabularize" . (empty(p) ? '' : ' /' . p)<CR>
+    " Sort lines in visual selection
+    vnoremap <silent> <Leader><Leader>s :sort<CR>
+    " Toggle Dvorak insert mode keyboard mapping
+    nnoremap <expr> <Leader><Leader>k ':set keymap=' . (&keymap ==? 'dvorak' ? '' : 'dvorak') . '<CR>'
+
 " Registers
     " Display registers
     noremap <silent> "" :registers<CR>
     " Copy contents from one register to another (like MOV, but with arguments reversed)
     noremap <silent> <Leader>r :call CopyRegister()<CR>
-
-" Editing
-    " Split current line by provided regex (\zs or \ze to preserve separators)
-    nnoremap <silent> <expr> <Leader>s ':s/' . input('split/') . '/\r/g<CR>'
-    " Toggle keyboard mappings
-    nnoremap <expr> <Leader><Leader>k ':set keymap=' . (&keymap ==? 'dvorak' ? '' : 'dvorak') . '<CR>'
-    " Exchange operation-delete, highlight target, exchange (made obsolete by exchange.vim)
-    "vnoremap gx <Esc>`.``gvP``P
 
 " Whitespace
     " Add blank line below/above current line, cursor in same column
@@ -347,9 +352,6 @@ endif
     vnoremap <Leader>e <Esc>:call ExpandSpaces()<CR>
     " Delete trailing whitespace and retab
     noremap <Leader><Tab> mx:%s/\s\+$//e \| retab<CR>`x
-    " Align; prompt for regular expression on which to tabularize
-    nnoremap <silent> <expr> <Leader>a ":let p = input('tab/') \| execute ':Tabularize' . (empty(p) ? '' : ' /' . p)<CR>"
-    vnoremap <silent> <Leader>a <Esc>:let p = input('tab/') \| execute ":'<,'>Tabularize" . (empty(p) ? '' : ' /' . p)<CR>
 
 " Navigation
     " Fast buffer navigation/editing
@@ -357,6 +359,11 @@ endif
     " Search word underneath cursor/selection but don't jump
     noremap <Leader>* mx*`x
     " Matching navigation commands, like in unimpaired
+    nnoremap ]b :bnext<CR>
+    nnoremap [b :bprevious<CR>
+    nnoremap ]B :blast<CR>
+    nnoremap [B :bfirst<CR>
+
     nnoremap ]t :tnext<CR>
     nnoremap [t :tprevious<CR>
     nnoremap ]T :tlast<CR>
@@ -372,11 +379,6 @@ endif
     nnoremap ]L :llast<CR>
     nnoremap [L :lfirst<CR>
 
-    nnoremap ]b :bnext<CR>
-    nnoremap [b :bprevious<CR>
-    nnoremap ]B :blast<CR>
-    nnoremap [B :bfirst<CR>
-
 " Quick notes
     " Global scratch buffer
     noremap <Leader><Leader>es :edit ~/scratch<CR>
@@ -384,7 +386,7 @@ endif
     noremap <Leader>wq :e ~/wiki/quick/index.wiki<CR>
 
 " Change working directory to directory of current file
-    noremap <expr> <Leader><Leader>cd ':cd ' . expand('%:p:h:r') . '<CR>'
+    noremap <Leader><Leader>cd :cd %:p:h:r<CR>
 
 " Quick settings changes
     " .vimrc editing/sourcing
@@ -398,7 +400,7 @@ endif
     vnoremap <Leader>; :s/\v(\s*$)(;)@<!/;/g<CR>
 
 " Inline execution
-    " Run selection in Python and output result back into buffer for automatic text generation
+    " Replace selection with output when run in python for programmatic text generation
     nnoremap <Leader><Leader>p :.!python<CR>
     vnoremap <Leader><Leader>p :!python<CR>
     " Run selection in vimscript
