@@ -2,7 +2,7 @@ export VISUAL=vim
 export EDITOR="$VISUAL"
 set -o vi
 
-alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
+# alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 
 bak() {
   if [ $# -eq 1 ]; then
