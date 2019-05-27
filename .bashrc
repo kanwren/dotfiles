@@ -160,6 +160,11 @@ alias .7='cd ../../../../../../..'
 alias .8='cd ../../../../../../../..'
 alias .9='cd ../../../../../../../../..'
 
+# Replace default handle that suggest apt-getting everything
+command_not_found_handle() {
+  echo "$1: command not found"
+}
+
 # File for when private aliases/functions are needed
 [ -f ~/local.bashrc ] && source ~/local.bashrc
 
