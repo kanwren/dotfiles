@@ -33,21 +33,32 @@ font pango:monospace 12
 # font, it doesn’t scale on retina/hidpi displays.
 
 # Window settings
-new_window 1pixel
+for_window [class=".*"] border pixel 0
+# Requires i3-gaps
+hide_edge_borders both
+gaps inner 10
+gaps outer 10
 
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
 
+# Volume controls (requires pulseaudio)
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl -- set-sink-volume 0 +5% # Increase sound volume
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl -- set-sink-volume 0 -5% # Decrease sound volume
+bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle # Mute sound
+
 # Custom bindings
+# TUI wifi manager
+bindsym $mod+Shift+w exec i3-sensible-terminal -e nmtui
 # Start chromium
-bindsym $mod+Shift+w exec chromium-browser
+bindsym $mod+Shift+b exec chromium-browser
 # Start ranger
 bindsym $mod+Shift+Return exec i3-sensible-terminal -e ranger
 # Run i3 command on the fly
 bindsym $mod+i exec i3-input -f pango:monospace 12
 # Start i3lock
 bindsym $mod+Shift+i exec i3lock -i ~/Pictures/bkg/lock.png
-# Run bash command on prompt
+# Prompt to run bash command
 bindsym $mod+b exec "bash -c 'dmenu -p \\"bash:\\" <&- | xargs -I {} bash -c \\"{}\\"'"
 
 # start a terminal
