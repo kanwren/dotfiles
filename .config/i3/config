@@ -48,7 +48,7 @@ bindsym $mod+i exec i3-input -f pango:monospace 12
 # Start i3lock
 bindsym $mod+Shift+i exec i3lock -i ~/Pictures/bkg/lock.png
 # Run bash command on prompt
-bindsym $mod+b exec "bash -c 'source ~/.bashrc; source ~/dotfiles/.bashrc; dmenu -p \\"bash:\\" <&- | xargs -I {} bash -c \\"{}\\"'"
+bindsym $mod+b exec "bash -c 'dmenu -p \\"bash:\\" <&- | xargs -I {} bash -c \\"{}\\"'"
 
 # start a terminal
 bindsym $mod+Return exec i3-sensible-terminal
