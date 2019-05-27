@@ -1,3 +1,5 @@
+[include]
+	path = ~/local.gitconfig
 [gist]
 	private = true
 [merge]
