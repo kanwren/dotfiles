@@ -115,7 +115,7 @@
 
 " Highlighting {{{
     " Left column
-    highlight FoldColumn ctermbg=0
+    highlight FoldColumn ctermbg=16
     highlight Folded ctermbg=0
     highlight CursorLineNr ctermbg=4 ctermfg=15
 
@@ -465,6 +465,7 @@ call vundle#begin('~/.vim/bundle/')
     " Utility
     Plugin 'tpope/vim-surround'                " Mappings for inserting/changing/deleting surrounding characters/elements
     Plugin 'tpope/vim-repeat'                  " Repeating more actions with .
+    Plugin 'tpope/vim-rsi'                     " Readline input
     Plugin 'tpope/vim-speeddating'             " Fix negative problem when incrementing dates
     Plugin 'tommcdo/vim-exchange'              " Text exchanging operators
     Plugin 'godlygeek/tabular'                 " Tabularize
