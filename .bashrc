@@ -140,6 +140,9 @@ gw() {
   nix-shell -p "haskell.packages.$compiler.ghcWithPackages (pkgs: with pkgs; [ $packages ])"
 }
 
+# Search with fzf and edit with vim
+alias se='vim $(fzf)'
+
 alias puzzle='xdg-open "https://lichess.org/training" >/dev/null'
 
 alias l='ls -CF'

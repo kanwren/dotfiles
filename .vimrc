@@ -104,7 +104,7 @@
 
 " Folds
     set foldmethod=manual
-    set foldcolumn=1
+    " set foldcolumn=1
     set foldlevelstart=99
 
 " Timeouts
@@ -115,7 +115,7 @@
 
 " Highlighting {{{
     " Left column
-    highlight FoldColumn ctermbg=16
+    highlight FoldColumn ctermbg=0
     highlight Folded ctermbg=0
     highlight CursorLineNr ctermbg=4 ctermfg=15
 
@@ -379,6 +379,11 @@ endif
     nnoremap ]L :llast<CR>
     nnoremap [L :lfirst<CR>
 
+" FZF mapping
+    nnoremap <Leader>ff :Files<CR>
+    nnoremap <Leader>fg :GFiles<CR>
+    nnoremap <Leader>fl :Lines<CR>
+
 " Quick notes
     " Global scratch buffer
     noremap <Leader><Leader>es :edit ~/scratch<CR>
@@ -462,10 +467,14 @@ call vundle#begin('~/.vim/bundle/')
     Plugin 'tpope/vim-eunuch'                  " File operations
     Plugin 'tpope/vim-fugitive'                " Git integration
 
+    " Fuzzy finding
+    Plugin 'junegunn/fzf'
+    Plugin 'junegunn/fzf.vim'
+
     " Utility
     Plugin 'tpope/vim-surround'                " Mappings for inserting/changing/deleting surrounding characters/elements
     Plugin 'tpope/vim-repeat'                  " Repeating more actions with .
-    Plugin 'tpope/vim-rsi'                     " Readline input
+    "Plugin 'tpope/vim-rsi'                     " Readline input
     Plugin 'tpope/vim-speeddating'             " Fix negative problem when incrementing dates
     Plugin 'tommcdo/vim-exchange'              " Text exchanging operators
     Plugin 'godlygeek/tabular'                 " Tabularize
