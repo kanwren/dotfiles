@@ -17,3 +17,6 @@ call vundle#begin('~/.vim/bundle/')
 " Plugin calls here
 call vundle#end()
 ```
+
+Alternatively, you can just run `curl https://git.io/vundle-install | sh` for
+the same effect.
