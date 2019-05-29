@@ -1,5 +1,5 @@
-:def hoogle \x -> return $ ":!hoogle \"" ++ x ++ "\""
-:def doc \x -> return $ ":!hoogle --info \"" ++ x ++ "\""
+:def hoogle \x -> Control.Applicative.pure (":!hoogle \"" Data.List.++ x Data.List.++ "\"")
+:def doc \x -> Control.Applicative.pure (":!hoogle --info \"" Data.List.++ x Data.List.++ "\"")
 
 :set prompt "\n\x03BB> "
 :set +m
