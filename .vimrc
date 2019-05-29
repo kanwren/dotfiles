@@ -131,9 +131,6 @@
 "}}}
 
 " Functions/commands {{{
-" Force write trick
-    command! WS :execute ':silent w !sudo tee % > /dev/null' | :edit!
-
 " Utility
     function! ClearRegisters()
         let regs='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/-*+"'
@@ -315,6 +312,8 @@ endif
     noremap ` '
     " Redraw page and clear highlights
     noremap <C-l> :nohlsearch<CR><C-l>
+    " Force sudo write trick
+    cnoremap w!! w !sudo tee % > /dev/null
 
 " Convenience
     noremap <Leader>d "_d
