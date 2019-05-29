@@ -378,10 +378,19 @@ endif
     nnoremap ]L :llast<CR>
     nnoremap [L :lfirst<CR>
 
-" FZF mapping
+" fzf mappings
+    " All files
     nnoremap <Leader>ff :Files<CR>
+    " All git ls-files files
     nnoremap <Leader>fg :GFiles<CR>
+    " All lines in loaded buffers
     nnoremap <Leader>fl :Lines<CR>
+    " All lines in current buffer
+    nnoremap <Leader>fb :BLines<CR>
+    " Results of an ag search
+    nnoremap <Leader>fa :Ag<Space>
+    " Tags in project
+    nnoremap <Leader>ft :Tags<Space>
 
 " Quick notes
     " Global scratch buffer
@@ -568,4 +577,9 @@ call vundle#end()
     let g:haskell_enable_static_pointers = 1  " to enable highlighting of `static`
     let g:haskell_backpack = 1                " to enable highlighting of backpack keywords
 " }}}
+
+if !empty(glob('~/local.vimrc'))
+    source ~/local.vimrc
+end
+
 " vim:foldmethod=marker:foldlevel=0
