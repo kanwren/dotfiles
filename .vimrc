@@ -420,6 +420,9 @@ endif
     " Run selection in vimscript
     nnoremap <Leader><Leader>v 0"xy$:@x<CR>
     vnoremap <Leader><Leader>v "xy:@x<CR>
+    " Format selection using python's JSON tool
+    nnoremap <Leader>jt :.!python3 -mjson.tool<CR>
+    vnoremap <Leader>jt :!python3 -mjson.tool<CR>
 
 " Hex utilities
     nnoremap <Leader>hx :Hexmode<CR>
