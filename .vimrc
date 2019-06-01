@@ -326,7 +326,7 @@ endif
     " Exchange operation-delete, highlight target, exchange (made obsolete by exchange.vim)
     "vnoremap gx <Esc>`.``gvP``P
     " Split current line by provided regex (\zs or \ze to preserve separators)
-    nnoremap <silent> <expr> <Leader>s ':s/' . input('split/') . '/\r/g<CR>'
+    nnoremap <silent> <expr> <Leader>s ':s/' . input('split/') . '/\r/g \| nohlsearch<CR>'
     " Align; prompt for regular expression on which to tabularize
     nnoremap <silent> <expr> <Leader>a ":let p = input('tab/') \| execute ':Tabularize' . (empty(p) ? '' : ' /' . p)<CR>"
     vnoremap <silent> <Leader>a <Esc>:let p = input('tab/') \| execute ":'<,'>Tabularize" . (empty(p) ? '' : ' /' . p)<CR>
@@ -334,6 +334,32 @@ endif
     vnoremap <silent> <Leader><Leader>s :sort<CR>
     " Toggle Dvorak insert mode keyboard mapping
     nnoremap <expr> <Leader><Leader>k ':set keymap=' . (&keymap ==? 'dvorak' ? '' : 'dvorak') . '<CR>'
+
+" Changing case
+    function! ChangeCase(vt)
+        if a:vt =~ 'v\|line\|V\|block\|\<C-v>'
+            silent exec 'normal! gvy'
+            let @" = substitute(@", g:case_match, g:case_replace, 'ge')
+            silent exec 'normal! gv"0P'
+        else
+            silent exec 'normal! mx`[v`]y'
+            let @" = substitute(@", g:case_match, g:case_replace, 'ge')
+            silent exec 'normal! gv"0P`x'
+        endif
+        nohlsearch
+    endfunction
+    " Title Case
+    nnoremap <silent> cut :let g:case_match='\v\w+'<CR>:let g:case_replace='\u\L&'<CR>:set operatorfunc=ChangeCase<CR>g@
+    nnoremap <silent> cutc :let g:case_match='\v\w+'<CR>:let g:case_replace='\u\L&'<CR>V:call ChangeCase(visualmode())<CR>
+    vnoremap <silent> cut <Esc>:let g:case_match='\v\w+'<CR>:let g:case_replace='\u\L&'<CR>:call ChangeCase(visualmode())<CR>
+    " Alternating caps (uppercase first)
+    "nnoremap <silent> cua :let g:case_match='\w.\{-}\w'<CR>:let g:case_replace='\u&\l'<CR>:set operatorfunc=ChangeCase<CR>g@
+    "nnoremap <silent> cuac :let g:case_match='\w.\{-}\w'<CR>:let g:case_replace='\u&\l'<CR>V:call ChangeCase(visualmode())<CR>
+    "vnoremap <silent> cua <Esc>:let g:case_match='\w.\{-}\w'<CR>:let g:case_replace='\u&\l'<CR>:call ChangeCase(visualmode())<CR>
+    " Alternating caps (lowercase first)
+    nnoremap <silent> cua :let g:case_match='\v(\w)(.{-})(\w)'<CR>:let g:case_replace='\L\1\2\U\3'<CR>:set operatorfunc=ChangeCase<CR>g@
+    nnoremap <silent> cuac :let g:case_match='\v(\w)(.{-})(\w)'<CR>:let g:case_replace='\L\1\2\U\3'<CR>V:call ChangeCase(visualmode())<CR>
+    vnoremap <silent> cua <Esc>:let g:case_match='\v(\w)(.{-})(\w)'<CR>:let g:case_replace='\L\1\2\U\3'<CR>:call ChangeCase(visualmode())<CR>
 
 " Registers
     " Display registers
