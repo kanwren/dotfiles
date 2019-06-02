@@ -141,7 +141,7 @@ gw() {
 }
 
 # Search with fzf and edit with vim
-alias se='vim $(fzf)'
+alias se='path=$(fzf); [ ! -z "$path" ] && vim "$path"'
 
 alias puzzle='xdg-open "https://lichess.org/training" >/dev/null'
 
