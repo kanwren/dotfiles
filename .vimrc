@@ -334,32 +334,9 @@ endif
     vnoremap <silent> <Leader><Leader>s :sort<CR>
     " Toggle Dvorak insert mode keyboard mapping
     nnoremap <expr> <Leader><Leader>k ':set keymap=' . (&keymap ==? 'dvorak' ? '' : 'dvorak') . '<CR>'
-
-" Changing case
-    function! ChangeCase(vt)
-        if a:vt =~ 'v\|line\|V\|block\|\<C-v>'
-            silent exec 'normal! gvy'
-            let @" = substitute(@", g:case_match, g:case_replace, 'ge')
-            silent exec 'normal! gv"0P'
-        else
-            silent exec 'normal! mx`[v`]y'
-            let @" = substitute(@", g:case_match, g:case_replace, 'ge')
-            silent exec 'normal! gv"0P`x'
-        endif
-        nohlsearch
-    endfunction
-    " Title Case
-    nnoremap <silent> cut :let g:case_match='\v\w+'<CR>:let g:case_replace='\u\L&'<CR>:set operatorfunc=ChangeCase<CR>g@
-    nnoremap <silent> cutc :let g:case_match='\v\w+'<CR>:let g:case_replace='\u\L&'<CR>V:call ChangeCase(visualmode())<CR>
-    vnoremap <silent> cut <Esc>:let g:case_match='\v\w+'<CR>:let g:case_replace='\u\L&'<CR>:call ChangeCase(visualmode())<CR>
-    " Alternating caps (uppercase first)
-    "nnoremap <silent> cua :let g:case_match='\w.\{-}\w'<CR>:let g:case_replace='\u&\l'<CR>:set operatorfunc=ChangeCase<CR>g@
-    "nnoremap <silent> cuac :let g:case_match='\w.\{-}\w'<CR>:let g:case_replace='\u&\l'<CR>V:call ChangeCase(visualmode())<CR>
-    "vnoremap <silent> cua <Esc>:let g:case_match='\w.\{-}\w'<CR>:let g:case_replace='\u&\l'<CR>:call ChangeCase(visualmode())<CR>
-    " Alternating caps (lowercase first)
-    nnoremap <silent> cua :let g:case_match='\v(\w)(.{-})(\w)'<CR>:let g:case_replace='\L\1\2\U\3'<CR>:set operatorfunc=ChangeCase<CR>g@
-    nnoremap <silent> cuac :let g:case_match='\v(\w)(.{-})(\w)'<CR>:let g:case_replace='\L\1\2\U\3'<CR>V:call ChangeCase(visualmode())<CR>
-    vnoremap <silent> cua <Esc>:let g:case_match='\v(\w)(.{-})(\w)'<CR>:let g:case_replace='\L\1\2\U\3'<CR>:call ChangeCase(visualmode())<CR>
+    " Convenient semicolon insertion
+    nnoremap <Leader>; mxg_a;<Esc>`x
+    vnoremap <Leader>; :s/\v(\s*$)(;)@<!/;/g<CR>
 
 " Registers
     " Display registers
@@ -435,9 +412,44 @@ endif
     " Change indent level on the fly
     noremap <expr> <Leader><Leader>i SetIndents()
 
-" Convenient semicolon insertion
-    nnoremap <Leader>; mxg_a;<Esc>`x
-    vnoremap <Leader>; :s/\v(\s*$)(;)@<!/;/g<CR>
+" Changing case
+    function! ChangeCase(vt)
+        if a:vt =~ 'v\|line\|V\|block\|\<C-v>'
+            silent exec 'normal! gvy'
+            let @" = substitute(@", g:change_case[0], g:change_case[1], 'ge')
+            silent exec 'normal! gv"0P'
+        else
+            silent exec 'normal! mx`[v`]y'
+            let @" = substitute(@", g:change_case[0], g:change_case[1], 'ge')
+            silent exec 'normal! gv"0P`x'
+        endif
+        unlet g:change_case
+        nohlsearch
+    endfunction
+    " Title Case
+    let g:change_case_title=['\v\w+', '\u\L&']
+    nnoremap <silent> cut :let g:change_case=g:change_case_title<CR>:set operatorfunc=ChangeCase<CR>g@
+    nnoremap <silent> cutc :let g:change_case=g:change_case_title<CR>V:call ChangeCase(visualmode())<CR>
+    vnoremap <silent> cut <Esc>:let g:change_case=g:change_case_title<CR>:call ChangeCase(visualmode())<CR>
+    " Alternating caps (lowercase first)
+    let g:change_case_alt_low = ['\v(\w)(.{-})(\w)', '\L\1\2\U\3']
+    nnoremap <silent> cua :let g:change_case=g:change_case_alt_low<CR>:set operatorfunc=ChangeCase<CR>g@
+    nnoremap <silent> cuac :let g:change_case=g:change_case_alt_low<CR>V:call ChangeCase(visualmode())<CR>
+    vnoremap <silent> cua <Esc>:let g:change_case=g:change_case_alt_low<CR>:call ChangeCase(visualmode())<CR>
+    " Alternating caps (uppercase first)
+    let g:change_case_alt_up = ['\v(\w)(.{-})(\w)', '\U\1\2\L\3']
+    nnoremap <silent> cuA :let g:change_case=g:change_case_alt_up<CR>:set operatorfunc=ChangeCase<CR>g@
+    nnoremap <silent> cuAc :let g:change_case=g:change_case_alt_up<CR>V:call ChangeCase(visualmode())<CR>
+    vnoremap <silent> cuA <Esc>:let g:change_case=g:change_case_alt_up<CR>:call ChangeCase(visualmode())<CR>
+
+" Conversion
+    " Format selection using python's JSON tool
+    nnoremap <Leader><Leader>jt :.!python3 -mjson.tool<CR>
+    vnoremap <Leader><Leader>jt :!python3 -mjson.tool<CR>
+    " JSON to YAML
+    vnoremap <silent> <Leader><Leader>cjy :!python3 -c 'import sys, yaml, json; yaml.safe_dump(json.load(sys.stdin), sys.stdout, default_flow_style=False)'<CR>
+    " YAML to JSON
+    vnoremap <silent> <Leader><Leader>cyj :!python3 -c 'import sys, yaml, json; json.dump(yaml.safe_load(sys.stdin), sys.stdout)'<CR>
 
 " Inline execution
     " Replace selection with output when run in python for programmatic text generation
@@ -446,9 +458,6 @@ endif
     " Run selection in vimscript
     nnoremap <Leader><Leader>v 0"xy$:@x<CR>
     vnoremap <Leader><Leader>v "xy:@x<CR>
-    " Format selection using python's JSON tool
-    nnoremap <Leader>jt :.!python3 -mjson.tool<CR>
-    vnoremap <Leader>jt :!python3 -mjson.tool<CR>
 
 " Hex utilities
     nnoremap <Leader>hx :Hexmode<CR>
