@@ -58,7 +58,7 @@
     set shortmess+=I                     " disable Vim intro screen
     set number relativenumber            " use Vim properly
     set list listchars=tab:>-,eol:¬,extends:>,precedes:<
-    set nocursorline
+    set nocursorline nocursorcolumn
     " status line (when lightline isn't available)
     set laststatus=2
     "set statusline=[%n]\ %F%<\ \ \ %m%y%h%w%r\ \ %(0x%B\ %b%)%=%(col\ %c%)\ \ \ \ %(%l\ /\ %L%)\ \ \ \ %p%%%(\ %)
@@ -120,13 +120,10 @@
 
 " Autocommands {{{
     if has('autocmd')
-        " autocmd FileType help wincmd L
-        augroup plugin_group
-            autocmd!
-            autocmd StdinReadPre * let s:std_in=1
-        augroup END
         augroup general_group
             autocmd!
+            " Open help window on right by default
+            autocmd FileType help wincmd L
             " Return to last edit position when opening files
             autocmd BufReadPost *
                         \   if line("'\"") > 1 && line("'\"") <= line("$")

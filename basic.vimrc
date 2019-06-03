@@ -33,7 +33,7 @@
     set shortmess+=I
     set number relativenumber
     set list listchars=tab:>-,eol:¬,extends:>,precedes:<
-    set nocursorline
+    set nocursorline nocursorcolumn
     set laststatus=2 showmode statusline=[%n]\ %F%<\ \ \ %m%y%h%w%r\ \ %(0x%B\ %b%)%=%(col\ %c%)\ \ \ \ %(%l\ /\ %L%)\ \ \ \ %p%%%(\ %)
     set cmdheight=1 showcmd
     set wildmenu wildmode=longest:list,full
@@ -75,6 +75,7 @@
     if has('autocmd')
         augroup general_group
             autocmd!
+            autocmd FileType help wincmd L
             autocmd BufReadPost *
                         \   if line("'\"") > 1 && line("'\"") <= line("$")
                         \ |     exe "normal! g'\""
