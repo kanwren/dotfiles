@@ -1,0 +1,12 @@
+:def hoogle \x -> Control.Applicative.pure (":!hoogle \"" Data.List.++ x Data.List.++ "\"")
+:def doc \x -> Control.Applicative.pure (":!hoogle --info \"" Data.List.++ x Data.List.++ "\"")
+
+:set prompt "\n\x03BB> "
+:set +m
+:set +t
+
+:set -fwarn-identities
+:set -fwarn-incomplete-patterns
+:set -fwarn-tabs
+:set -fwarn-unused-imports
+:set -fwarn-unused-matches
