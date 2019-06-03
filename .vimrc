@@ -426,6 +426,16 @@
     " Tags in project
     nnoremap <Leader>ft :Tags<Space>
 
+" Fugitive mappings
+    nnoremap <Leader>gs :Gstatus<CR>
+    nnoremap <Leader>gpu :Gpull<CR>
+    nnoremap <Leader>gps :Gpush<CR>
+    nnoremap <Leader>gl :Glog<CR>
+    nnoremap <Leader>gw :Gwrite<CR>
+    nnoremap <Leader>gd :Gvdiff<CR>
+    nnoremap <Leader>gb :Gblame<CR>
+    nnoremap <Leader>gc :Gcommit<CR>
+
 " Quick settings changes
     " .vimrc editing/sourcing
     noremap <Leader><Leader>ev :edit $MYVIMRC<CR>
