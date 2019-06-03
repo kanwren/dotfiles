@@ -185,6 +185,7 @@
         echo 'ts=' . &tabstop . ', sts=' . &softtabstop . ', sw='  . &shiftwidth . ', et='  . &expandtab
     endfunction
 
+    " Copy one register to another
     function! CopyRegister()
         " Provide ' as an easier-to-type alias for "
         let r1 = substitute(nr2char(getchar()), "'", "\"", "")
@@ -193,6 +194,23 @@
         echo "Copied @" . r1 . " to @" . r2
     endfunction
 
+    " Use the regexes in g:change_case to substitute text. Not strictly limited
+    " to case. Used with operatorfunc in mappings.
+    function! ChangeCase(vt)
+        if a:vt =~ 'v\|line\|V\|block\|\<C-v>'
+            silent exec 'normal! gvy'
+            let @" = substitute(@", g:change_case[0], g:change_case[1], 'ge')
+            silent exec 'normal! gv"0P'
+        else
+            silent exec 'normal! mx`[v`]y'
+            let @" = substitute(@", g:change_case[0], g:change_case[1], 'ge')
+            silent exec 'normal! gv"0P`x'
+        endif
+        unlet g:change_case
+        nohlsearch
+    endfunction
+
+    " Use a visual block selection to pad with spaces
     function! ExpandSpaces()
         " Index 3 includes overflow information for virtualedit
         let [start, startv] = getpos("'<")[2:3]
@@ -316,11 +334,13 @@
     " Repeat macros/commands across visual selections
     vnoremap Q :norm @q<CR>
     vnoremap . :norm .<CR>
-    " Make Y more analogous with C and D
+    " Make Y behave like C and D
     noremap Y y$
     " Swap ` and '
     noremap ' `
     noremap ` '
+    " Make & keep flags
+    nnoremap & :&&<CR>
     " Substitute, but only in selection
     vnoremap g/ :s/\%V
     " Redraw page and clear highlights
@@ -343,6 +363,8 @@
     " Align; prompt for regular expression on which to tabularize
     nnoremap <silent> <expr> <Leader>a ":let p = input('tab/') \| execute ':Tabularize' . (empty(p) ? '' : ' /' . p)<CR>"
     vnoremap <silent> <Leader>a <Esc>:let p = input('tab/') \| execute ":'<,'>Tabularize" . (empty(p) ? '' : ' /' . p)<CR>
+    " Sort visual selection
+    vnoremap <Leader>vs :sort /\ze\%V/<CR>gvyugvpgv:s/\s\+$//e \| nohlsearch<CR>``
     " Toggle Dvorak keyboard mapping (insert mode only)
     nnoremap <expr> <Leader><Leader>k ':set keymap=' . (&keymap ==? 'dvorak' ? '' : 'dvorak') . '<CR>'
 
@@ -362,7 +384,7 @@
     " Expand line by padding visual block selection with spaces
     vnoremap <Leader>e <Esc>:call ExpandSpaces()<CR>
     " Delete trailing whitespace and retab
-    noremap <Leader><Tab> mx:%s/\s\+$//e \| retab<CR>`x
+    noremap <Leader><Tab> mx:%s/\s\+$//e \| nohlsearch \| retab<CR>`x
 
 " Navigation
     " Fast buffer navigation/editing
@@ -404,15 +426,6 @@
     " Tags in project
     nnoremap <Leader>ft :Tags<Space>
 
-" Quick notes
-    " Global scratch buffer
-    noremap <Leader><Leader>es :edit ~/scratch<CR>
-    " Vimwiki notes file
-    noremap <Leader>wq :e ~/wiki/quick/index.wiki<CR>
-
-" Change working directory to directory of current file
-    noremap <Leader><Leader>cd :cd %:p:h:r<CR>
-
 " Quick settings changes
     " .vimrc editing/sourcing
     noremap <Leader><Leader>ev :edit $MYVIMRC<CR>
@@ -423,19 +436,6 @@
     noremap <expr> <Leader><Leader>cc ":set colorcolumn=" . (&colorcolumn == 81 ? "" : 81) . "<CR>"
 
 " Changing case
-    function! ChangeCase(vt)
-        if a:vt =~ 'v\|line\|V\|block\|\<C-v>'
-            silent exec 'normal! gvy'
-            let @" = substitute(@", g:change_case[0], g:change_case[1], 'ge')
-            silent exec 'normal! gv"0P'
-        else
-            silent exec 'normal! mx`[v`]y'
-            let @" = substitute(@", g:change_case[0], g:change_case[1], 'ge')
-            silent exec 'normal! gv"0P`x'
-        endif
-        unlet g:change_case
-        nohlsearch
-    endfunction
     " Title Case
     let g:change_case_title=['\v\w+', '\u\L&']
     nnoremap <silent> cut :let g:change_case=g:change_case_title<CR>:set operatorfunc=ChangeCase<CR>g@
@@ -473,14 +473,25 @@
     nnoremap <Leader>hx :Hexmode<CR>
     vnoremap <Leader>he :call StrToHexCodes()<CR>
     vnoremap <Leader>hd :call HexCodesToStr()<CR>
-    nnoremap <Leader>hs "xyiw:echo 0x<C-r>"<CR>
+    nnoremap <Leader>hs :echo 0x<C-r><C-w><CR>
     vnoremap <Leader>hs "xy:echo 0x<C-r>"<CR>
-    nnoremap <Leader>ht "xyiw:echo printf('%x', <C-r>")<CR>
+    nnoremap <Leader>ht :echo printf('%x', <C-r><C-w>)<CR>
     vnoremap <Leader>ht "xy:echo printf('%x', <C-r>")<CR>
+
+" Quick notes
+    " Global scratch buffer
+    noremap <Leader><Leader>es :edit ~/scratch<CR>
+    " Vimwiki notes file
+    noremap <Leader>wq :e ~/wiki/quick/index.wiki<CR>
+
+" Misc
+    " Change working directory to directory of current file
+    noremap <Leader><Leader>cd :cd %:h<CR>
+    " Show calendar
+    nnoremap <Leader><Leader>sc :!clear && cal<CR>
 
 " Enable easy mode (for teaching recitation with a non-Vim user)
     nnoremap <Leader><Leader>em :set insertmode \| source $VIMRUNTIME/evim.vim<CR>
-
 "}}}
 
 " Abbreviations {{{
@@ -535,12 +546,12 @@ call vundle#begin('~/.vim/bundle/')
     " Utility
     Plugin 'tpope/vim-surround'                " Mappings for inserting/changing/deleting surrounding characters/elements
     Plugin 'tpope/vim-repeat'                  " Repeating more actions with .
-    "Plugin 'tpope/vim-rsi'                     " Readline input
     Plugin 'tpope/vim-speeddating'             " Fix negative problem when incrementing dates
-    Plugin 'tommcdo/vim-exchange'              " Text exchanging operators
+    "Plugin 'tpope/vim-rsi'                     " Readline-style input
     Plugin 'godlygeek/tabular'                 " Tabularize
-    Plugin 'vim-scripts/tComment'              " Easy commenting
     Plugin 'jiangmiao/auto-pairs'              " Automatically insert matching punctuation pair, etc.
+    Plugin 'tommcdo/vim-exchange'              " Text exchanging operators
+    Plugin 'vim-scripts/tComment'              " Easy commenting
     Plugin 'vim-scripts/matchit.zip'
 
     " Text objects
@@ -584,8 +595,8 @@ call vundle#end()
     endfunction
 
     function! LightlineBufferline()
-      call bufferline#refresh_status()
-      return [g:bufferline_status_info.before, g:bufferline_status_info.current, g:bufferline_status_info.after]
+        call bufferline#refresh_status()
+        return [g:bufferline_status_info.before, g:bufferline_status_info.current, g:bufferline_status_info.after]
     endfunction
 
     let g:lightline = {
