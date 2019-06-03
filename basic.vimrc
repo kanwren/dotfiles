@@ -158,8 +158,9 @@
 " Editing
     nnoremap <Leader>; mxg_a;<Esc>`x
     vnoremap <Leader>; :s/\v(\s*$)(;)@<!/;/g<CR>
-    nnoremap <expr> <Leader><Leader>k ':set keymap=' . (&keymap ==? 'dvorak' ? '' : 'dvorak') . '<CR>'
     nnoremap <silent> <expr> <Leader>s ':s/' . input('split/') . '/\r/g<CR>'
+    vnoremap <Leader>vs :sort /\ze\%V/<CR>gvyugvpgv:s/\s\+$//e \| nohlsearch<CR>``
+    nnoremap <expr> <Leader><Leader>k ':set keymap=' . (&keymap ==? 'dvorak' ? '' : 'dvorak') . '<CR>'
 
 " Whitespace
     noremap <Leader><Tab> mx:%s/\s\+$//ge \| retab<CR>`x
@@ -208,7 +209,7 @@
     vnoremap <Leader><Leader>v "xy:@x<CR>
 
 " Change working directory
-    noremap <expr> <Leader><Leader>cd ':cd ' . expand('%:p:h:r') . '<CR>'
+    noremap <Leader><Leader>cd :cd %:h<CR>
 
 " Global scratch buffer
     noremap <Leader><Leader>es :edit ~/scratch<CR>
