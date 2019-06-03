@@ -4,7 +4,10 @@
     set encoding=utf-8
     scriptencoding utf-8
     set ffs=unix,dos,mac
-    syntax on
+    " Prevent highlighting from changing when resourcing vimrc
+    if !syntax_on
+        syntax on
+    end
     " enable filetype detection
     filetype on
     filetype indent on
@@ -32,9 +35,9 @@
     colorscheme elflord
 
 " Buffers
+    set hidden                           " allow working with buffers
     set autoread
     set noconfirm                        " fail, don't ask to save
-    set hidden                           " allow working with buffers
     set modelines=1                      " use one line to tell vim how to read the buffer
 
 " History
@@ -58,7 +61,7 @@
     set nocursorline
     " status line (when lightline isn't available)
     set laststatus=2
-    set statusline=buf\ %n:\ \"%F\"%<\ \ \ %m%y%h%w%r\ \ %(%b\ 0x%B%)%=%(col\ %c%)\ \ \ \ %(%l\ /\ %L%)\ \ \ \ %p%%%(\ %)
+    "set statusline=[%n]\ %F%<\ \ \ %m%y%h%w%r\ \ %(0x%B\ %b%)%=%(col\ %c%)\ \ \ \ %(%l\ /\ %L%)\ \ \ \ %p%%%(\ %)
     set showmode
     " command bar
     set cmdheight=1
@@ -68,9 +71,9 @@
     set wildmode=longest:list,full
 
 " Editing
-    set nojoinspaces                     " never two spaces after sentence
     set virtualedit=all                  " allow editing past the ends of lines
     set splitbelow splitright            " sensible split defaults
+    set nojoinspaces                     " never two spaces after sentence
     set backspace=indent,eol,start       " let backspace delete linebreak
     set whichwrap+=<,>,h,l,[,]           " direction key wrapping
     set nrformats=bin,hex                " don't increment octal numbers
@@ -86,9 +89,9 @@
 
 " Searching
     set magic
+    set ignorecase smartcase
     set showmatch
     set incsearch hlsearch
-    set ignorecase smartcase
 
 " Wrapping
     set nowrap
@@ -104,19 +107,49 @@
 
 " Folds
     set foldmethod=manual
-    " set foldcolumn=1
+    set foldcolumn=1
     set foldlevelstart=99
 
 " Timeouts
-    set ttyfast
-    set timeout timeoutlen=500
-    set ttimeoutlen=0
+    "set ttyfast
+    " Time out on mappings after 3 seconds
+    set timeout timeoutlen=3000
+    " Time out immediately on key codes
+    set ttimeout ttimeoutlen=0
+" }}}
+
+" Autocommands {{{
+    if has('autocmd')
+        " autocmd FileType help wincmd L
+        augroup plugin_group
+            autocmd!
+            autocmd StdinReadPre * let s:std_in=1
+        augroup END
+        augroup general_group
+            autocmd!
+            " Return to last edit position when opening files
+            autocmd BufReadPost *
+                        \   if line("'\"") > 1 && line("'\"") <= line("$")
+                        \ |     exe "normal! g'\""
+                        \ | endif
+            " Highlight trailing whitespace (except when typing at end of line)
+            autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
+            autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
+            autocmd InsertLeave * match ExtraWhitespace /\s\+$/
+            " Define new filetypes for ftplugin
+            autocmd BufNewFile,BufRead *.nix setf nix
+            autocmd BufNewFile,BufRead *.sc setf scala
+        augroup END
+    endif
 " }}}
 
 " Highlighting {{{
+    " Highlight trailing whitespace
+    highlight ExtraWhitespace ctermbg=12
+
     " Left column
-    highlight FoldColumn ctermbg=0
-    highlight Folded ctermbg=0
+    highlight FoldColumn ctermbg=NONE
+    highlight Folded ctermbg=NONE
     highlight CursorLineNr ctermbg=4 ctermfg=15
 
     " Highlight 80 character boundary
@@ -124,9 +157,7 @@
     highlight ColorColumn ctermbg=8
     "call matchadd('ColorColumn', '\%81v\S', 100)
 
-    " Highlight trailing whitespace
-    highlight ExtraWhitespace ctermbg=12
-    match ExtraWhitespace /\s\+$/
+    " Highlight TODO in intentionally annoying colors
     highlight Todo ctermbg=1 ctermfg=15
 "}}}
 
@@ -273,26 +304,6 @@
     endfunction
 " }}}
 
-" Autocommands {{{
-if has('autocmd')
-    " autocmd FileType help wincmd L
-    augroup plugin_group
-        autocmd!
-        autocmd StdinReadPre * let s:std_in=1
-    augroup END
-    augroup general_group
-        autocmd!
-        " Return to last edit position when opening files
-        autocmd BufReadPost *
-                    \   if line("'\"") > 1 && line("'\"") <= line("$")
-                    \ |     exe "normal! g'\""
-                    \ | endif
-        autocmd BufNewFile,BufRead *.nix setf nix
-        autocmd BufNewFile,BufRead *.sc setf scala
-    augroup END
-endif
-" }}}
-
 " Mappings {{{
 " Leader configuration
     map <Space> <nop>
@@ -313,6 +324,8 @@ endif
     " Swap ` and '
     noremap ' `
     noremap ` '
+    " Substitute, but only in selection
+    vnoremap g/ :s/\%V
     " Redraw page and clear highlights
     noremap <C-l> :nohlsearch<CR><C-l>
 
@@ -323,6 +336,9 @@ endif
     noremap <Leader>P "0P
 
 " Editing
+    " Convenient semicolon insertion
+    nnoremap <Leader>; mxg_a;<Esc>`x
+    vnoremap <Leader>; :s/\v(\s*$)(;)@<!/;/g<CR>
     " Exchange operation-delete, highlight target, exchange (made obsolete by exchange.vim)
     "vnoremap gx <Esc>`.``gvP``P
     " Split current line by provided regex (\zs or \ze to preserve separators)
@@ -330,13 +346,8 @@ endif
     " Align; prompt for regular expression on which to tabularize
     nnoremap <silent> <expr> <Leader>a ":let p = input('tab/') \| execute ':Tabularize' . (empty(p) ? '' : ' /' . p)<CR>"
     vnoremap <silent> <Leader>a <Esc>:let p = input('tab/') \| execute ":'<,'>Tabularize" . (empty(p) ? '' : ' /' . p)<CR>
-    " Sort lines in visual selection
-    vnoremap <silent> <Leader><Leader>s :sort<CR>
-    " Toggle Dvorak insert mode keyboard mapping
+    " Toggle Dvorak keyboard mapping (insert mode only)
     nnoremap <expr> <Leader><Leader>k ':set keymap=' . (&keymap ==? 'dvorak' ? '' : 'dvorak') . '<CR>'
-    " Convenient semicolon insertion
-    nnoremap <Leader>; mxg_a;<Esc>`x
-    vnoremap <Leader>; :s/\v(\s*$)(;)@<!/;/g<CR>
 
 " Registers
     " Display registers
@@ -407,10 +418,12 @@ endif
 
 " Quick settings changes
     " .vimrc editing/sourcing
-    noremap <Leader><Leader>ev :edit ~/dotfiles/.vimrc<CR>
+    noremap <Leader><Leader>ev :edit $MYVIMRC<CR>
     noremap <Leader><Leader>sv :source $MYVIMRC<CR>
     " Change indent level on the fly
     noremap <expr> <Leader><Leader>i SetIndents()
+    " Color column settings (default of 81)
+    noremap <expr> <Leader><Leader>cc ":set colorcolumn=" . (&colorcolumn == 81 ? "" : 81) . "<CR>"
 
 " Changing case
     function! ChangeCase(vt)
@@ -467,6 +480,10 @@ endif
     vnoremap <Leader>hs "xy:echo 0x<C-r>"<CR>
     nnoremap <Leader>ht "xyiw:echo printf('%x', <C-r>")<CR>
     vnoremap <Leader>ht "xy:echo printf('%x', <C-r>")<CR>
+
+" Enable easy mode (for teaching recitation with a non-Vim user)
+    nnoremap <Leader><Leader>em :set insertmode \| source $VIMRUNTIME/evim.vim<CR>
+
 "}}}
 
 " Abbreviations {{{
@@ -617,8 +634,10 @@ call vundle#end()
     let g:haskell_backpack = 1                " to enable highlighting of backpack keywords
 " }}}
 
-if !empty(glob('~/local.vimrc'))
-    source ~/local.vimrc
-end
+" Local vimrc {{{
+    if !empty(glob('~/local.vimrc'))
+        source ~/local.vimrc
+    end
+" }}}
 
 " vim:foldmethod=marker:foldlevel=0
