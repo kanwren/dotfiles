@@ -239,10 +239,28 @@
             return
         endif
         let template = input('template: ', '')
+        " Default to tpl.txt
         if empty(template)
-            return
+            let template = 'tpl'
         endif
-        execute 'read ~/.vim/template/' . category . '/' . template . '.txt'
+        let path = '~/.vim/template/' . category . '/' . template . '.txt'
+        if empty(glob(path))
+            redraw
+            echo "template '" . template . "'does not exist"
+            return
+        end
+        let contents = readfile(glob(path))
+        let filtered = []
+        for line in contents
+            let vars = []
+            call substitute(line, '%\(.\{-}\)%', '\=add(vars, submatch(1))', 'g')
+            for var in vars
+                let val = input(var . ': ')
+                let line = substitute(line, '%' . var . '%', val, 'e')
+            endfor
+            call add(filtered, line)
+        endfor
+        call append(line('.'), filtered)
     endfunction
 
 " Hex editing
@@ -676,4 +694,4 @@ call vundle#end()
     end
 " }}}
 
-" vim:foldmethod=marker:foldlevel=0
+" vim:foldmethod=marker
