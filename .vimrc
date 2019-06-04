@@ -95,7 +95,7 @@
 
 " Wrapping
     set nowrap
-    set textwidth=80
+    set textwidth=120
     set formatoptions=croqjln
     " c=wrap comments
     " r=insert comment on enter
@@ -149,10 +149,9 @@
     highlight Folded ctermbg=NONE
     highlight CursorLineNr ctermbg=4 ctermfg=15
 
-    " Highlight 80 character boundary
-    set colorcolumn=81
+    " Highlight text width boundary boundary
+    set colorcolumn=+1
     highlight ColorColumn ctermbg=8
-    "call matchadd('ColorColumn', '\%81v\S', 100)
 
     " Highlight TODO in intentionally annoying colors
     highlight Todo ctermbg=1 ctermfg=15
@@ -206,7 +205,6 @@
             let @" = substitute(@", g:change_case[0], g:change_case[1], 'ge')
             silent exec 'normal! gv"0P`x'
         endif
-        unlet g:change_case
         nohlsearch
     endfunction
 
@@ -230,8 +228,21 @@
         if a:0 > 0
             let command.=' --rev ' . a:1
         end
-        let command.=' --quiet | grep -E "' . join(fields, '|') . '" | sed -E "s/\s*\"(.+)\": \"(.+)\",/\1 = \"\2\";/g"'
+        let command.=' --quiet | grep -E "' . join(fields, '|') . '" | sed -E "s/\s*\"(.+)\": \"(.+)\",/\1 = \"\2\";/g" 2>/dev/null'
         execute('read! ' . command)
+    endfunction
+
+    " Query the user to read in a template located in ~/.vim/template
+    function! ReadTemplate()
+        let category = input('category: ', '')
+        if empty(category)
+            return
+        endif
+        let template = input('template: ', '')
+        if empty(template)
+            return
+        endif
+        execute 'read ~/.vim/template/' . category . '/' . template . '.txt'
     endfunction
 
 " Hex editing
@@ -354,7 +365,7 @@
 
 " Editing
     " Convenient semicolon insertion
-    nnoremap <Leader>; mxg_a;<Esc>`x
+    nnoremap <Leader>; mx:s/[^;]*\zs\ze\s*$/;/e \| nohlsearch<CR>`x
     vnoremap <Leader>; :s/\v(\s*$)(;)@<!/;/g<CR>
     " Exchange operation-delete, highlight target, exchange (made obsolete by exchange.vim)
     "vnoremap gx <Esc>`.``gvP``P
@@ -364,9 +375,11 @@
     nnoremap <silent> <expr> <Leader>a ":let p = input('tab/') \| execute ':Tabularize' . (empty(p) ? '' : ' /' . p)<CR>"
     vnoremap <silent> <Leader>a <Esc>:let p = input('tab/') \| execute ":'<,'>Tabularize" . (empty(p) ? '' : ' /' . p)<CR>
     " Sort visual selection
-    vnoremap <Leader>vs :sort /\ze\%V/<CR>gvyugvpgv:s/\s\+$//e \| nohlsearch<CR>``
+    vnoremap <silent> <Leader>vs :sort /\ze\%V/<CR>gvyugvpgv:s/\s\+$//e \| nohlsearch<CR>``
     " Toggle Dvorak keyboard mapping (insert mode only)
     nnoremap <expr> <Leader><Leader>k ':set keymap=' . (&keymap ==? 'dvorak' ? '' : 'dvorak') . '<CR>'
+    " Read in a template
+    nnoremap <Leader><Leader>t :call ReadTemplate()<CR>
 
 " Registers
     " Display registers
@@ -428,7 +441,7 @@
 
 " Fugitive mappings
     nnoremap <Leader>gs :Gstatus<CR>
-    nnoremap <Leader>gpu :Gpull<CR>
+    nnoremap <Leader>gpl :Gpull<CR>
     nnoremap <Leader>gps :Gpush<CR>
     nnoremap <Leader>gl :Glog<CR>
     nnoremap <Leader>gw :Gwrite<CR>
@@ -440,15 +453,20 @@
     " .vimrc editing/sourcing
     noremap <Leader><Leader>ev :edit $MYVIMRC<CR>
     noremap <Leader><Leader>sv :source $MYVIMRC<CR>
+    " Filetype ftplugin editing
+    noremap <Leader><Leader>ef :edit ~/.vim/ftplugin/<C-r>=&filetype<CR>.vim<CR>
     " Change indent level on the fly
     noremap <expr> <Leader><Leader>i SetIndents()
-    " Color column settings (default of 81)
-    noremap <expr> <Leader><Leader>cc ":set colorcolumn=" . (&colorcolumn == 81 ? "" : 81) . "<CR>"
+    " Binary switches
+    noremap ]oc :set colorcolumn=+1<CR>
+    noremap [oc :set colorcolumn=<CR>
+    noremap ]ot :set textwidth=120<CR>
+    noremap [ot :set textwidth=80<CR>
 
 " Changing case
     " Title Case
     let g:change_case_title=['\v\w+', '\u\L&']
-    nnoremap <silent> cut :let g:change_case=g:change_case_title<CR>:set operatorfunc=ChangeCase<CR>g@
+    nnoremap <silent> cut  :let g:change_case=g:change_case_title<CR>:set operatorfunc=ChangeCase<CR>g@
     nnoremap <silent> cutc :let g:change_case=g:change_case_title<CR>V:call ChangeCase(visualmode())<CR>
     vnoremap <silent> cut <Esc>:let g:change_case=g:change_case_title<CR>:call ChangeCase(visualmode())<CR>
     " Alternating caps (lowercase first)
@@ -497,8 +515,8 @@
 " Misc
     " Change working directory to directory of current file
     noremap <Leader><Leader>cd :cd %:h<CR>
-    " Show calendar
-    nnoremap <Leader><Leader>sc :!clear && cal<CR>
+    " Execute cal
+    nnoremap <Leader><Leader>ec :!clear && cal -y<CR>
 
 " Enable easy mode (for teaching recitation with a non-Vim user)
     nnoremap <Leader><Leader>em :set insertmode \| source $VIMRUNTIME/evim.vim<CR>
