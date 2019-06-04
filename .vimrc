@@ -256,6 +256,9 @@
             call substitute(line, '%\(.\{-}\)%', '\=add(vars, submatch(1))', 'g')
             for var in vars
                 let val = input(var . ': ')
+                if empty(val)
+                    let val = '<' . var . '>'
+                endif
                 let line = substitute(line, '%' . var . '%', val, 'e')
             endfor
             call add(filtered, line)
