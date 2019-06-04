@@ -31,6 +31,6 @@ iabbrev <buffer> xlecture %date <C-r>=strftime("%Y-%m-%d")<CR><CR>_<C-r>=strftim
 let b:surround_indent = 0
 let b:surround_109 = "{{$ \r }}$"
 let b:surround_99 = "{{{ \r }}}"
-iabbrev <buffer> xcode {{{<CR>}}}<Esc>O
-iabbrev <buffer> xmj {{$%align%<CR>}}$<Esc>O
+iabbrev <buffer> xcode <Esc>:let i=b:autopairs_enabled<CR>:let b:autopairs_enabled=0<CR>i{{{<CR>}}}<Esc>:let b:autopairs_enabled=i<CR>O
+iabbrev <buffer> xmj <Esc>:let i=b:autopairs_enabled<CR>:let b:autopairs_enabled=0<CR>i{{$%align%<CR>}}$<Esc>:let b:autopairs_enabled=i<CR>O
 
