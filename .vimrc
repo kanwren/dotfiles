@@ -89,7 +89,7 @@
 
 " Searching
     set magic
-    set ignorecase smartcase
+    set noignorecase smartcase
     set showmatch
     set incsearch hlsearch
 
@@ -228,7 +228,7 @@
         if a:0 > 0
             let command.=' --rev ' . a:1
         end
-        let command.=' --quiet | grep -E "' . join(fields, '|') . '" | sed -E "s/\s*\"(.+)\": \"(.+)\",/\1 = \"\2\";/g" 2>/dev/null'
+        let command.=' --quiet 2>/dev/null | grep -E "' . join(fields, '|') . '" | sed -E "s/\s*\"(.+)\": \"(.+)\",/\1 = \"\2\";/g"'
         execute('read! ' . command)
     endfunction
 
@@ -357,7 +357,7 @@
     map <S-Space> <Space>
     let mapleader=" "
 
-" Basic
+" Essential
     " Work by visual line without a count, but normal when used with one
     noremap <silent> <expr> j (v:count == 0 ? 'gj' : 'j')
     noremap <silent> <expr> k (v:count == 0 ? 'gk' : 'k')
@@ -373,16 +373,11 @@
     noremap ` '
     " Make & keep flags
     nnoremap & :&&<CR>
-    " Substitute, but only in selection
-    vnoremap g/ :s/\%V
+    " Faster substitutes with sensible settings
+    nnoremap gs :%s/\v
+    vnoremap gs :s/\v\%V
     " Redraw page and clear highlights
     noremap <C-l> :nohlsearch<CR><C-l>
-
-" Convenience
-    noremap <Leader>d "_d
-    noremap <Leader>D "_D
-    noremap <Leader>p "0p
-    noremap <Leader>P "0P
 
 " Editing
     " Convenient semicolon insertion
@@ -402,12 +397,6 @@
     " Read in a template
     nnoremap <Leader><Leader>t :call ReadTemplate()<CR>
 
-" Registers
-    " Display registers
-    noremap <silent> "" :registers<CR>
-    " Copy contents from one register to another (like MOV, but with arguments reversed)
-    noremap <silent> <Leader>r :call CopyRegister()<CR>
-
 " Whitespace
     " Add blank line below/above current line, cursor in same column
     nnoremap <silent> <Leader>o :<C-u>call append(line("."), repeat([''], v:count1)) \| norm <C-r>=v:count1<CR>j<CR>
@@ -419,6 +408,18 @@
     vnoremap <Leader>e <Esc>:call ExpandSpaces()<CR>
     " Delete trailing whitespace and retab
     noremap <Leader><Tab> mx:%s/\s\+$//e \| nohlsearch \| retab<CR>`x
+
+" Convenience
+    noremap <Leader>d "_d
+    noremap <Leader>D "_D
+    noremap <Leader>p "0p
+    noremap <Leader>P "0P
+
+" Registers
+    " Display registers
+    noremap <silent> "" :registers<CR>
+    " Copy contents from one register to another (like MOV, but with arguments reversed)
+    noremap <silent> <Leader>r :call CopyRegister()<CR>
 
 " Navigation
     " Fast buffer navigation/editing
