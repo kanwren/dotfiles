@@ -3,6 +3,7 @@ exec sh ~/.fehbg
 
 exec --no-startup-id /usr/lib/gnome-settings-daemon/gnome-settings-daemon
 exec --no-startup-id compton
+exec --no-startup-id nm-applet
 
 exec setxkbmap -layout us -option caps:escape
 
@@ -45,9 +46,9 @@ gaps outer 10
 floating_modifier $mod
 
 # Volume controls (requires pulseaudio)
-bindsym XF86AudioRaiseVolume exec --no-startup-id pactl -- set-sink-volume 0 +5% # Increase sound volume
-bindsym XF86AudioLowerVolume exec --no-startup-id pactl -- set-sink-volume 0 -5% # Decrease sound volume
-bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle # Mute sound
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl -- set-sink-volume @DEFAULT_SINK@ +5% # Increase sound volume
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl -- set-sink-volume @DEFAULT_SINK@ -5% # Decrease sound volume
+bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle # Mute sound
 
 # Custom bindings
 # start a terminal
