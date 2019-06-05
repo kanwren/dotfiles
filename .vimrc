@@ -465,11 +465,9 @@
     nnoremap <Leader>gs :Gstatus<CR>
     nnoremap <Leader>gpl :Gpull<CR>
     nnoremap <Leader>gps :Gpush<CR>
-    nnoremap <Leader>gl :Glog<CR>
     nnoremap <Leader>gw :Gwrite<CR>
-    nnoremap <Leader>gd :Gvdiff<CR>
-    nnoremap <Leader>gb :Gblame<CR>
     nnoremap <Leader>gc :Gcommit<CR>
+    nnoremap <Leader>gd :Gvdiff<CR>
 
 " Quick settings changes
     " .vimrc editing/sourcing
