@@ -12,6 +12,6 @@ map <Space> nop
 map <S-Space> <Space>
 let mapleader = " "
 
-iabbrev <expr> xaz     <C-r>="abcdefghijklmnopqrstuvwxyz"<CR>
-iabbrev <expr> xAZ     <C-r>="ABCDEFGHIJKLMNOPQRSTUVWXYZ"<CR>
-iabbrev <expr> xdigits <C-r>="0123456789"<CR>
+iabbrev <expr> xaz <C-r>="abcdefghijklmnopqrstuvwxyz"<CR>
+iabbrev <expr> xAZ <C-r>="ABCDEFGHIJKLMNOPQRSTUVWXYZ"<CR>
+iabbrev <expr> x09 <C-r>="0123456789"<CR>
