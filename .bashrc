@@ -145,6 +145,9 @@ alias se='path=$(fzf); [ ! -z "$path" ] && vim "$path"'
 
 alias puzzle='xdg-open "https://lichess.org/training" >/dev/null'
 
+# Establish superiority
+alias emacs='vim'
+
 alias l='ls -CF'
 alias la='ls -A'
 alias ll='ls -alF'
