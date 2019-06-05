@@ -459,7 +459,7 @@
     " Results of an ag search
     nnoremap <Leader>fa :Ag<Space>
     " Tags in project
-    nnoremap <Leader>ft :Tags<Space>
+    nnoremap <Leader>ft :Tags<CR>
 
 " Fugitive mappings
     nnoremap <Leader>gs :Gstatus<CR>
