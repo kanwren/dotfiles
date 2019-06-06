@@ -53,7 +53,7 @@
 
 " Searching
     set magic
-    set ignorecase smartcase
+    set noignorecase smartcase
     set showmatch
     set incsearch hlsearch
 
@@ -91,7 +91,7 @@
     highlight FoldColumn ctermbg=NONE
     highlight Folded ctermbg=NONE
     highlight CursorLineNr ctermbg=4 ctermfg=15
-    set colorcolumn=81
+    set colorcolumn=+1
     highlight ColorColumn ctermbg=8
     highlight Todo ctermbg=1 ctermfg=15
 
@@ -104,21 +104,12 @@
     command! WS :execute ':silent w !sudo tee % > /dev/null' | :edit!
 
 " Functions
-    function! SetIndents(...)
-        if a:0 > 0
-            execute 'setlocal tabstop=' . a:1
-                        \ . ' softtabstop=' . a:1
-                        \ . ' shiftwidth=' . a:1
-        else
-            let i = input('ts=sts=sw=', '')
-            if i
-                call SetIndents(i)
-            endif
-            echo 'ts=' . &tabstop
-                        \ . ', sts=' . &softtabstop
-                        \ . ', sw=' . &shiftwidth
-                        \ . ', et=' . &expandtab
+    function! SetIndents()
+        let i = input('ts=sts=sw=')
+        if i
+            execute 'setlocal tabstop=' . i . ' softtabstop=' . i . ' shiftwidth=' . i
         endif
+        echo 'ts=' . &tabstop . ', sts=' . &softtabstop . ', sw='  . &shiftwidth . ', et='  . &expandtab
     endfunction
 
     function! CopyRegister()
@@ -137,7 +128,12 @@
         execute com
     endfunction
 
-" Basic
+" Leader configuration
+    map <Space> <nop>
+    map <S-Space> <Space>
+    let mapleader=" "
+
+" Essential
     noremap <silent> <expr> j (v:count == 0 ? 'gj' : 'j')
     noremap <silent> <expr> k (v:count == 0 ? 'gk' : 'k')
     nnoremap Q @q
@@ -146,8 +142,25 @@
     noremap Y y$
     noremap ' `
     noremap ` '
-    vnoremap g/ :s/\%V
+    nnoremap & :&&<CR>
+    nnoremap gs :%s/\v
+    vnoremap gs :s/\%V\v
     noremap <C-l> :nohlsearch<CR><C-l>
+
+" Editing
+    nnoremap <Leader>; mx:s/[^;]*\zs\ze\s*$/;/e \| nohlsearch<CR>`x
+    vnoremap <Leader>; :s/\v(\s*$)(;)@<!/;/g<CR>
+    vnoremap gx <Esc>`.``gvP``P
+    nnoremap <silent> <expr> <Leader>s ':s/' . input('split/') . '/\r/g \| nohlsearch<CR>'
+    vnoremap <silent> <Leader>vs :sort /\ze\%V/<CR>gvyugvpgv:s/\s\+$//e \| nohlsearch<CR>``
+
+" Whitespace
+    nnoremap <silent> <Leader>o :<C-u>call append(line("."), repeat([''], v:count1)) \| norm <C-r>=v:count1<CR>j<CR>
+    nnoremap <silent> <Leader>O :<C-u>call append(line(".") - 1, repeat([''], v:count1)) \| norm <C-r>=v:count1<CR>k<CR>
+    nnoremap <silent> <Leader>n :<C-u>call append(line('.'), repeat([''], v:count1)) \| call append(line('.') - 1, repeat([''], v:count1))<CR>
+    vnoremap <silent> <Leader>n <Esc>:call append(line("'>"), '') \| call append(line("'<") - 1, '')<CR>
+    vnoremap <Leader>e <Esc>:call ExpandSpaces()<CR>
+    noremap <Leader><Tab> mx:%s/\s\+$//e \| nohlsearch \| retab<CR>`x
 
 " Convenience
     noremap <Leader>d "_d
@@ -155,78 +168,71 @@
     noremap <Leader>p "0p
     noremap <Leader>P "0P
 
-" Editing
-    nnoremap <Leader>; mxg_a;<Esc>`x
-    vnoremap <Leader>; :s/\v(\s*$)(;)@<!/;/g<CR>
-    nnoremap <silent> <expr> <Leader>s ':s/' . input('split/') . '/\r/g<CR>'
-    vnoremap <Leader>vs :sort /\ze\%V/<CR>gvyugvpgv:s/\s\+$//e \| nohlsearch<CR>``
-    nnoremap <expr> <Leader><Leader>k ':set keymap=' . (&keymap ==? 'dvorak' ? '' : 'dvorak') . '<CR>'
-
-" Whitespace
-    noremap <Leader><Tab> mx:%s/\s\+$//ge \| retab<CR>`x
-    vnoremap <Leader>e <Esc>:call ExpandSpaces()<CR>
-    nnoremap <silent> <Leader>o :<C-u>call append(line("."), repeat([''], v:count1)) \| norm <C-r>=v:count1<CR>j<CR>
-    nnoremap <silent> <Leader>O :<C-u>call append(line(".") - 1, repeat([''], v:count1)) \| norm <C-r>=v:count1<CR>k<CR>
-    nnoremap <silent> <Leader>n :<C-u>call append(line('.'), repeat([''], v:count1)) \| call append(line('.') - 1, repeat([''], v:count1))<CR>
-    vnoremap <silent> <Leader>n <Esc>:call append(line("'>"), '') \| call append(line("'<") - 1, '')<CR>
+" Registers
+    noremap <silent> "" :registers<CR>
+    noremap <silent> <Leader>r :call CopyRegister()<CR>
 
 " Navigation
     noremap <Leader>b :ls<CR>:b
-    noremap <Leader>* mx*`x
-    nnoremap ]b :bnext<CR>
-    nnoremap [b :bprevious<CR>
-    nnoremap ]B :blast<CR>
-    nnoremap [B :bfirst<CR>
-    nnoremap ]t :tnext<CR>
-    nnoremap [t :tprevious<CR>
-    nnoremap ]T :tlast<CR>
-    nnoremap [T :tfirst<CR>
-    nnoremap ]q :cnext<CR>
-    nnoremap [q :cprevious<CR>
-    nnoremap ]Q :clast<CR>
-    nnoremap [Q :cfirst<CR>
+    nnoremap <Leader>* mx*`x
+    vnoremap <Leader>* mxy/<C-r>"<CR>`x
+    noremap ]b :bnext<CR>
+    noremap [b :bprevious<CR>
+    noremap ]B :blast<CR>
+    noremap [B :bfirst<CR>
+    noremap ]t :tnext<CR>
+    noremap [t :tprevious<CR>
+    noremap ]T :tlast<CR>
+    noremap [T :tfirst<CR>
+    noremap ]q :cnext<CR>
+    noremap [q :cprevious<CR>
+    noremap ]Q :clast<CR>
+    noremap [Q :cfirst<CR>
+    noremap ]l :lnext<CR>
+    noremap [l :lprevious<CR>
+    noremap ]L :llast<CR>
+    noremap [L :lfirst<CR>
 
-" Registers
-    noremap <silent> <Leader>r :call CopyRegister()<CR>
-    noremap <silent> "" :registers<CR>
-
-" Settings changes
+" Quick settings changes
     noremap <Leader><Leader>ev :edit $MYVIMRC<CR>
     noremap <Leader><Leader>sv :source $MYVIMRC<CR>
     noremap <expr> <Leader><Leader>i SetIndents()
-    noremap <Leader><Leader>cc :set colorcolumn=<C-r>=&colorcolumn == 81 ? "" : 81<CR><CR>
-
-" Conversion
-    nnoremap <Leader><Leader>jt :.!python3 -mjson.tool<CR>
-    vnoremap <Leader><Leader>jt :!python3 -mjson.tool<CR>
-    vnoremap <silent> <Leader><Leader>cjy :!python3 -c 'import sys, yaml, json; yaml.safe_dump(json.load(sys.stdin), sys.stdout, default_flow_style=False)'<CR>
-    vnoremap <silent> <Leader><Leader>cyj :!python3 -c 'import sys, yaml, json; json.dump(yaml.safe_load(sys.stdin), sys.stdout)'<CR>
+    noremap ]oc :set colorcolumn=+1<CR>
+    noremap [oc :set colorcolumn=<CR>
+    noremap ]ot :set textwidth=120<CR>
+    noremap [ot :set textwidth=80<CR>
 
 " Inline execution
-    nnoremap <Leader><Leader>p :.!python<CR>
-    vnoremap <Leader><Leader>p :!python<CR>
     nnoremap <Leader><Leader>v 0"xy$:@x<CR>
     vnoremap <Leader><Leader>v "xy:@x<CR>
 
-" Change working directory
+" Misc
     noremap <Leader><Leader>cd :cd %:h<CR>
 
-" Global scratch buffer
-    noremap <Leader><Leader>es :edit ~/scratch<CR>
+" Plugin setup
+    command! PlugSetup call PlugSetup()
+    function! PlugSetup()
+        let plug_loc = '~/.vim/autoload/plug.vim'
+        let plug_source = 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+        if empty(glob(plug_location))
+            echom 'vim-plug not found. Installing...'
+            if executable('curl')
+                silent exec '!curl -fLo curl -fLo ' . expand(plug_loc) . ' --create-dirs ' . plug_source
+            elseif executable('wget')
+                call mkdir(fnamemodify(s:plugin_loc, ':h'), 'p')
+                silent exec '!wget --force-directories --no-check-certificate -O ' . expand(plug_loc) . ' ' . plug_source
+            else
+                echom 'Error: could not download vim-plug'
+            endif
+        endif
+    endfunction
 
-" Common sequence abbrevations
-    iabbrev xaz <C-r>='abcdefghijklmnopqrstuvwxyz'<CR>
-    iabbrev xAZ <C-r>='ABCDEFGHIJKLMNOPQRSTUVWXYZ'<CR>
-    iabbrev x09 <C-r>='0123456789'<CR>
-
-" Date/time abbreviations
-    iabbrev <expr> xymd   strftime("%Y-%m-%d")
-    iabbrev <expr> xdate  strftime("%a %d %b %Y")
-    iabbrev <expr> xtime  strftime("%I:%M %p")
-    iabbrev <expr> xmtime strftime("%H:%M")
-    iabbrev <expr> xiso   strftime("%Y-%m-%dT%H:%M:%S")
+    " call plug#begin('~/.vim/bundle')
+        " Plug 'tpope/vim-surround'
+    " call plug#end()
 
 " Local vimrc
     if !empty(glob('~/local.vimrc'))
         source ~/local.vimrc
     end
+
