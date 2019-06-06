@@ -25,12 +25,13 @@
     set directory^=~/.vim/tmp
 
 " Colors and terminal settings
-    set term=xterm-256color
-    set t_Co=256
-    let &t_ti.="\e[1 q"
-    let &t_SI.="\e[5 q"
-    let &t_EI.="\e[1 q"
-    let &t_te.="\e[0 q"
+    if &term ==? "xterm-256color"
+        set t_Co=256
+        let &t_ti.="\e[1 q"
+        let &t_SI.="\e[5 q"
+        let &t_EI.="\e[1 q"
+        let &t_te.="\e[0 q"
+    endif
     set background=dark
     colorscheme elflord
 
@@ -97,13 +98,6 @@
     set nowrap
     set textwidth=120
     set formatoptions=croqjln
-    " c=wrap comments
-    " r=insert comment on enter
-    " o=insert comment on o/O
-    " q=allow formatting of comments with gq
-    " j=remove comment marker when joining lines
-    " l=don't break lines longer than textwidth before insert started
-    " n=recognize numbered lists
 
 " Folds
     set foldmethod=manual
@@ -428,25 +422,25 @@
     nnoremap <Leader>* mx*`x
     vnoremap <Leader>* mxy/<C-r>"<CR>`x
     " Matching navigation commands, like in unimpaired
-    nnoremap ]b :bnext<CR>
-    nnoremap [b :bprevious<CR>
-    nnoremap ]B :blast<CR>
-    nnoremap [B :bfirst<CR>
+    noremap ]b :bnext<CR>
+    noremap [b :bprevious<CR>
+    noremap ]B :blast<CR>
+    noremap [B :bfirst<CR>
 
-    nnoremap ]t :tnext<CR>
-    nnoremap [t :tprevious<CR>
-    nnoremap ]T :tlast<CR>
-    nnoremap [T :tfirst<CR>
+    noremap ]t :tnext<CR>
+    noremap [t :tprevious<CR>
+    noremap ]T :tlast<CR>
+    noremap [T :tfirst<CR>
 
-    nnoremap ]q :cnext<CR>
-    nnoremap [q :cprevious<CR>
-    nnoremap ]Q :clast<CR>
-    nnoremap [Q :cfirst<CR>
+    noremap ]q :cnext<CR>
+    noremap [q :cprevious<CR>
+    noremap ]Q :clast<CR>
+    noremap [Q :cfirst<CR>
 
-    nnoremap ]l :lnext<CR>
-    nnoremap [l :lprevious<CR>
-    nnoremap ]L :llast<CR>
-    nnoremap [L :lfirst<CR>
+    noremap ]l :lnext<CR>
+    noremap [l :lprevious<CR>
+    noremap ]L :llast<CR>
+    noremap [L :lfirst<CR>
 
 " fzf mappings
     " All files
@@ -512,8 +506,8 @@
 
 " Inline execution
     " Replace selection with output when run in python for programmatic text generation
-    nnoremap <Leader><Leader>p :.!python<CR>
-    vnoremap <Leader><Leader>p :!python<CR>
+    nnoremap <Leader><Leader>p :.!python3<CR>
+    vnoremap <Leader><Leader>p :!python3<CR>
     " Run selection in vimscript
     nnoremap <Leader><Leader>v 0"xy$:@x<CR>
     vnoremap <Leader><Leader>v "xy:@x<CR>
@@ -566,59 +560,57 @@
 " }}}
 
 " Plugins {{{
-command! PlugSetup call PlugSetup()
-function PlugSetup()
-    let plug_loc = '~/.vim/autoload/plug.vim'
-    let plug_source = 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-    if empty(glob(plug_location))
-        echom 'vim-plug not found. Installing...'
-        if executable('curl')
-            silent exec '!curl -fLo curl -fLo ' . expand(plug_loc) . ' --create-dirs ' . plug_source
-        elseif executable('wget')
-            call mkdir(fnamemodify(s:plugin_loc, ':h'), 'p')
-            silent exec '!wget --force-directories --no-check-certificate -O ' . expand(plug_loc) . ' ' . plug_source
-        else
-            echom 'Error: could not download vim-plug'
+    command! PlugSetup call PlugSetup()
+    function! PlugSetup()
+        let plug_loc = '~/.vim/autoload/plug.vim'
+        let plug_source = 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+        if empty(glob(plug_location))
+            echom 'vim-plug not found. Installing...'
+            if executable('curl')
+                silent exec '!curl -fLo curl -fLo ' . expand(plug_loc) . ' --create-dirs ' . plug_source
+            elseif executable('wget')
+                call mkdir(fnamemodify(s:plugin_loc, ':h'), 'p')
+                silent exec '!wget --force-directories --no-check-certificate -O ' . expand(plug_loc) . ' ' . plug_source
+            else
+                echom 'Error: could not download vim-plug'
+            endif
         endif
-    endif
-endfunction
+    endfunction
 
-call plug#begin('~/.vim/bundle')
+    call plug#begin('~/.vim/bundle')
+        Plug 'vimwiki/vimwiki'                   " Personal wiki for Vim
 
-    Plug 'vimwiki/vimwiki'                   " Personal wiki for Vim
+        " Interface
+        Plug 'itchyny/lightline.vim'
 
-    " Interface
-    Plug 'itchyny/lightline.vim'
+        " Functionality
+        Plug 'w0rp/ale'                          " Async linting tool
+        Plug 'sheerun/vim-polyglot'              " Collection of language packs to rule them all (testing)
+        "Plug 'scrooloose/nerdtree'               " File explorer/interface
+        Plug 'tpope/vim-eunuch'                  " File operations
+        Plug 'tpope/vim-fugitive'                " Git integration
 
-    " Functionality
-    Plug 'w0rp/ale'                          " Async linting tool
-    Plug 'sheerun/vim-polyglot'              " Collection of language packs to rule them all (testing)
-    "Plug 'scrooloose/nerdtree'               " File explorer/interface
-    Plug 'tpope/vim-eunuch'                  " File operations
-    Plug 'tpope/vim-fugitive'                " Git integration
+        " Fuzzy finding
+        Plug 'junegunn/fzf'
+        Plug 'junegunn/fzf.vim'
 
-    " Fuzzy finding
-    Plug 'junegunn/fzf'
-    Plug 'junegunn/fzf.vim'
+        " Utility
+        Plug 'tpope/vim-surround'                " Mappings for inserting/changing/deleting surrounding characters/elements
+        Plug 'tpope/vim-repeat'                  " Repeating more actions with .
+        Plug 'tpope/vim-speeddating'             " Fix negative problem when incrementing dates
+        Plug 'godlygeek/tabular'                 " Tabularize
+        Plug 'jiangmiao/auto-pairs'              " Automatically insert matching punctuation pair, etc.
+        Plug 'tommcdo/vim-exchange'              " Text exchanging operators
+        Plug 'vim-scripts/tComment'              " Easy commenting
+        Plug 'vim-scripts/matchit.zip'
 
-    " Utility
-    Plug 'tpope/vim-surround'                " Mappings for inserting/changing/deleting surrounding characters/elements
-    Plug 'tpope/vim-repeat'                  " Repeating more actions with .
-    Plug 'tpope/vim-speeddating'             " Fix negative problem when incrementing dates
-    Plug 'godlygeek/tabular'                 " Tabularize
-    Plug 'jiangmiao/auto-pairs'              " Automatically insert matching punctuation pair, etc.
-    Plug 'tommcdo/vim-exchange'              " Text exchanging operators
-    Plug 'vim-scripts/tComment'              " Easy commenting
-    Plug 'vim-scripts/matchit.zip'
+        " Text objects
+        Plug 'kana/vim-textobj-user'
+        Plug 'kana/vim-textobj-function'
 
-    " Text objects
-    Plug 'kana/vim-textobj-user'
-    Plug 'kana/vim-textobj-function'
-
-    " Language-specific
-    Plug 'neovimhaskell/haskell-vim', { 'for': 'haskell' }
-
-call plug#end()
+        " Language-specific
+        Plug 'neovimhaskell/haskell-vim', { 'for': 'haskell' }
+    call plug#end()
 " }}}
 
 " Plugin settings {{{
@@ -688,7 +680,6 @@ call plug#end()
                 \ 'python': ['pylint'],
                 \ 'java': ['javac', 'checkstyle']
                 \ }
-    let g:ale_java_checkstyle_options = '-c /c/tools/checkstyle/cs1331-checkstyle.xml'
 
 " haskell-vim
     let g:haskell_enable_quantification = 1   " to enable highlighting of `forall`
