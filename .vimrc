@@ -367,9 +367,11 @@
     noremap ` '
     " Make & keep flags
     nnoremap & :&&<CR>
-    " Faster substitutes with sensible settings
-    nnoremap gs :%s/\v
-    vnoremap gs :s/\%V\v
+    " Make temporary unlisted scratch buffer
+    noremap <Leader>t :new<CR>:setlocal buftype=nofile bufhidden=wipe nobuflisted noswapfile<CR>
+    " Faster substitutes (debating inserting verymagic here)
+    nnoremap gs :%s/
+    vnoremap gs :s/\%V
     " Redraw page and clear highlights
     noremap <C-l> :nohlsearch<CR><C-l>
 
@@ -453,8 +455,8 @@
     nnoremap <Leader>fb :BLines<CR>
     " Results of an ag search
     nnoremap <Leader>fa :Ag<Space>
-    " Tags in project
-    nnoremap <Leader>ft :Tags<CR>
+    " Tags in project (doesn't quite jump right currently)
+    "nnoremap <Leader>ft :Tags<CR>
 
 " Fugitive mappings
     nnoremap <Leader>gs :Gstatus<CR>

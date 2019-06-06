@@ -143,8 +143,9 @@
     noremap ' `
     noremap ` '
     nnoremap & :&&<CR>
-    nnoremap gs :%s/\v
-    vnoremap gs :s/\%V\v
+    noremap <Leader>t :new<CR>:setlocal buftype=nofile bufhidden=wipe nobuflisted noswapfile<CR>
+    nnoremap gs :%s/
+    vnoremap gs :s/\%V
     noremap <C-l> :nohlsearch<CR><C-l>
 
 " Editing
