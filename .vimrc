@@ -375,7 +375,7 @@
     nnoremap & :&&<CR>
     " Faster substitutes with sensible settings
     nnoremap gs :%s/\v
-    vnoremap gs :s/\v\%V
+    vnoremap gs :s/\%V\v
     " Redraw page and clear highlights
     noremap <C-l> :nohlsearch<CR><C-l>
 
@@ -425,7 +425,8 @@
     " Fast buffer navigation/editing
     noremap <Leader>b :ls<CR>:b
     " Search word underneath cursor/selection but don't jump
-    noremap <Leader>* mx*`x
+    nnoremap <Leader>* mx*`x
+    vnoremap <Leader>* mxy/<C-r>"<CR>`x
     " Matching navigation commands, like in unimpaired
     nnoremap ]b :bnext<CR>
     nnoremap [b :bprevious<CR>
@@ -565,50 +566,59 @@
 " }}}
 
 " Plugins {{{
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin('~/.vim/bundle/')
-    " Plugins to try out:
-    " romainl/vim-cool
-    " svermeulen/vim-subversive
-    " airblade/vim-gitgutter
-    " majutsushi/tagbar
-    " kana/vim-niceblock
-    Plugin 'gmarik/Vundle.vim'                 " Plugin installer
+command! PlugSetup call PlugSetup()
+function PlugSetup()
+    let plug_loc = '~/.vim/autoload/plug.vim'
+    let plug_source = 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+    if empty(glob(plug_location))
+        echom 'vim-plug not found. Installing...'
+        if executable('curl')
+            silent exec '!curl -fLo curl -fLo ' . expand(plug_loc) . ' --create-dirs ' . plug_source
+        elseif executable('wget')
+            call mkdir(fnamemodify(s:plugin_loc, ':h'), 'p')
+            silent exec '!wget --force-directories --no-check-certificate -O ' . expand(plug_loc) . ' ' . plug_source
+        else
+            echom 'Error: could not download vim-plug'
+        endif
+    endif
+endfunction
 
-    Plugin 'vimwiki/vimwiki'                   " Personal wiki for Vim
+call plug#begin('~/.vim/bundle')
+
+    Plug 'vimwiki/vimwiki'                   " Personal wiki for Vim
 
     " Interface
-    Plugin 'itchyny/lightline.vim'
+    Plug 'itchyny/lightline.vim'
 
     " Functionality
-    Plugin 'w0rp/ale'                          " Async linting tool
-    Plugin 'sheerun/vim-polyglot'              " Collection of language packs to rule them all (testing)
-    "Plugin 'scrooloose/nerdtree'               " File explorer/interface
-    Plugin 'tpope/vim-eunuch'                  " File operations
-    Plugin 'tpope/vim-fugitive'                " Git integration
+    Plug 'w0rp/ale'                          " Async linting tool
+    Plug 'sheerun/vim-polyglot'              " Collection of language packs to rule them all (testing)
+    "Plug 'scrooloose/nerdtree'               " File explorer/interface
+    Plug 'tpope/vim-eunuch'                  " File operations
+    Plug 'tpope/vim-fugitive'                " Git integration
 
     " Fuzzy finding
-    Plugin 'junegunn/fzf'
-    Plugin 'junegunn/fzf.vim'
+    Plug 'junegunn/fzf'
+    Plug 'junegunn/fzf.vim'
 
     " Utility
-    Plugin 'tpope/vim-surround'                " Mappings for inserting/changing/deleting surrounding characters/elements
-    Plugin 'tpope/vim-repeat'                  " Repeating more actions with .
-    Plugin 'tpope/vim-speeddating'             " Fix negative problem when incrementing dates
-    "Plugin 'tpope/vim-rsi'                     " Readline-style input
-    Plugin 'godlygeek/tabular'                 " Tabularize
-    Plugin 'jiangmiao/auto-pairs'              " Automatically insert matching punctuation pair, etc.
-    Plugin 'tommcdo/vim-exchange'              " Text exchanging operators
-    Plugin 'vim-scripts/tComment'              " Easy commenting
-    Plugin 'vim-scripts/matchit.zip'
+    Plug 'tpope/vim-surround'                " Mappings for inserting/changing/deleting surrounding characters/elements
+    Plug 'tpope/vim-repeat'                  " Repeating more actions with .
+    Plug 'tpope/vim-speeddating'             " Fix negative problem when incrementing dates
+    Plug 'godlygeek/tabular'                 " Tabularize
+    Plug 'jiangmiao/auto-pairs'              " Automatically insert matching punctuation pair, etc.
+    Plug 'tommcdo/vim-exchange'              " Text exchanging operators
+    Plug 'vim-scripts/tComment'              " Easy commenting
+    Plug 'vim-scripts/matchit.zip'
 
     " Text objects
-    Plugin 'kana/vim-textobj-user'
-    Plugin 'kana/vim-textobj-function'
+    Plug 'kana/vim-textobj-user'
+    Plug 'kana/vim-textobj-function'
 
     " Language-specific
-    Plugin 'neovimhaskell/haskell-vim'
-call vundle#end()
+    Plug 'neovimhaskell/haskell-vim', { 'for': 'haskell' }
+
+call plug#end()
 " }}}
 
 " Plugin settings {{{
