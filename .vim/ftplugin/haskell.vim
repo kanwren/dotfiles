@@ -3,4 +3,4 @@ setlocal textwidth=120
 
 let g:surround_76 = "{-# language \r #-}"
 
-
+nnoremap <Leader>i dsbi$<Space>
