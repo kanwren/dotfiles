@@ -158,7 +158,7 @@
 
 " Utility
     function! ClearRegisters()
-        let regs='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/-*+"'
+        let regs = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/-*+"'
         let i = 0
         while i < strlen(regs)
             execute 'let @' . regs[i] . '=""'
@@ -218,12 +218,12 @@
     command! -bar -nargs=+ NPG call Nix_Prefetch_Git(<f-args>)
     function! Nix_Prefetch_Git(owner, repo, ...)
         " Other fields: url, date, fetchSubmodules
-        let fields=['rev', 'sha256']
-        let command='nix-prefetch-git git@github.com:' . a:owner . '/' . a:repo
+        let fields = ['rev', 'sha256']
+        let command = 'nix-prefetch-git git@github.com:' . a:owner . '/' . a:repo
         if a:0 > 0
-            let command.=' --rev ' . a:1
+            let command .= ' --rev ' . a:1
         end
-        let command.=' --quiet 2>/dev/null | grep -E "' . join(fields, '|') . '" | sed -E "s/\s*\"(.+)\": \"(.+)\",/\1 = \"\2\";/g"'
+        let command .= ' --quiet 2>/dev/null | grep -E "' . join(fields, '|') . '" | sed -E "s/\s*\"(.+)\": \"(.+)\",/\1 = \"\2\";/g"'
         if $USER ==# 'root'
             " If root, try to run command as login user instead
             let logname = substitute(system('logname'), '\n', '', 'ge')
