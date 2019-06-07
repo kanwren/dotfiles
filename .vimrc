@@ -72,6 +72,7 @@
     set wildmode=longest:list,full
 
 " Editing
+    set clipboard=unnamedplus
     set virtualedit=all                  " allow editing past the ends of lines
     set splitbelow splitright            " sensible split defaults
     set nojoinspaces                     " never two spaces after sentence
@@ -223,7 +224,13 @@
             let command.=' --rev ' . a:1
         end
         let command.=' --quiet 2>/dev/null | grep -E "' . join(fields, '|') . '" | sed -E "s/\s*\"(.+)\": \"(.+)\",/\1 = \"\2\";/g"'
-        execute('read! ' . command)
+        if $USER ==# 'root'
+            " If root, try to run command as login user instead
+            let logname = substitute(system('logname'), '\n', '', 'ge')
+            execute('read! ' . 'runuser -l ' . logname . " -c '" . command . "'")
+        else
+            execute('read! ' . command)
+        endif
     endfunction
 
     " Query the user to read in a template located in ~/.vim/template
