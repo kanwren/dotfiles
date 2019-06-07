@@ -573,7 +573,7 @@
     function! PlugSetup()
         let plug_loc = '~/.vim/autoload/plug.vim'
         let plug_source = 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-        if empty(glob(plug_location))
+        if empty(glob(plug_loc))
             echom 'vim-plug not found. Installing...'
             if executable('curl')
                 silent exec '!curl -fLo curl -fLo ' . expand(plug_loc) . ' --create-dirs ' . plug_source
@@ -583,6 +583,8 @@
             else
                 echom 'Error: could not download vim-plug'
             endif
+        else
+            execute('PlugUpgrade')
         endif
     endfunction
 
