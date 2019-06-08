@@ -50,7 +50,7 @@
     set visualbell t_vb=
 
 " Navigation
-    set mouse-=a
+    set mouse=
     set scrolloff=0
     set tags=tags;/
 
@@ -376,8 +376,7 @@
     nnoremap & :&&<CR>
     " Make temporary unlisted scratch buffer
     noremap <Leader>t :new<CR>:setlocal buftype=nofile bufhidden=wipe nobuflisted noswapfile<CR>
-    " Faster substitutes (debating inserting verymagic here)
-    nnoremap gs :%s/
+    " Faster visual substitute
     vnoremap gs :s/\%V
     " Redraw page and clear highlights
     noremap <C-l> :nohlsearch<CR><C-l>
@@ -395,8 +394,6 @@
     vnoremap <silent> <Leader>a <Esc>:let p = input('tab/') \| execute ":'<,'>Tabularize" . (empty(p) ? '' : ' /' . p)<CR>
     " Sort visual selection
     vnoremap <silent> <Leader>vs :sort /\ze\%V/<CR>gvyugvpgv:s/\s\+$//e \| nohlsearch<CR>``
-    " Toggle Dvorak keyboard mapping (insert mode only)
-    nnoremap <expr> <Leader><Leader>k ':set keymap=' . (&keymap ==? 'dvorak' ? '' : 'dvorak') . '<CR>'
     " Read in a template
     nnoremap <Leader><Leader>t :call ReadTemplate()<CR>
 
@@ -463,7 +460,7 @@
     " Results of an ag search
     nnoremap <Leader>fa :Ag<Space>
     " Tags in project (doesn't quite jump right currently)
-    "nnoremap <Leader>ft :Tags<CR>
+    nnoremap <Leader>ft :Tags<CR>
 
 " Fugitive mappings
     nnoremap <Leader>gs :Gstatus<CR>
