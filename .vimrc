@@ -43,6 +43,7 @@
 
 " History
     set history=1000
+
     set undolevels=1000
 
 " Disable annoying flashing/beeping
@@ -72,6 +73,7 @@
     set wildmode=longest:list,full
 
 " Editing
+    set noinsertmode                     " just in case
     set clipboard=unnamedplus
     set virtualedit=all                  " allow editing past the ends of lines
     set splitbelow splitright            " sensible split defaults
@@ -155,6 +157,17 @@
 " Functions/commands {{{
 " Force write trick
     command! WS :execute ':silent w !sudo tee % > /dev/null' | :edit!
+
+" Enable easy mode (for teaching recitation with a non-Vim user)
+    command! EM execute "set insertmode | source $VIMRUNTIME/evim.vim"
+
+" JSON utilities
+    " Format with python's JSON tool
+    command! -range JT <line1>,<line2>!python3 -mjson.tool
+    " Convert JSON to YAML
+    command! -range JY <line1>,<line2>!python3 -c 'import sys, yaml, json; yaml.safe_dump(json.load(sys.stdin), sys.stdout, default_flow_style=False)'
+    " Convert YAML to JSON
+    command! -range YJ <line1>,<line2>!python3 -c 'import sys, yaml, json; json.dump(yaml.safe_load(sys.stdin), sys.stdout)'
 
 " Utility
     function! ClearRegisters()
@@ -353,6 +366,11 @@
 " }}}
 
 " Mappings {{{
+" Space is the default leader, and Shift-Space has the same function to make it easier to hit things like <Space>P
+" Single leader is for abbreviating common operations and important plugin commands
+" Double leader is for execution of some extraneous operations, like reading in templates or inline execution
+" \ is for very special and specific operations, like invoking external programs
+
 " Leader configuration
     map <Space> <nop>
     map <S-Space> <Space>
@@ -397,13 +415,10 @@
     " Read in a template
     nnoremap <Leader><Leader>t :call ReadTemplate()<CR>
 
-" Whitespace
-    " Add blank line below/above current line, cursor in same column
-    nnoremap <silent> <Leader>o :<C-u>call append(line("."), repeat([''], v:count1)) \| norm <C-r>=v:count1<CR>j<CR>
-    nnoremap <silent> <Leader>O :<C-u>call append(line(".") - 1, repeat([''], v:count1)) \| norm <C-r>=v:count1<CR>k<CR>
-    " Add newlines around current line/selection
-    nnoremap <silent> <Leader>n :<C-u>call append(line('.'), repeat([''], v:count1)) \| call append(line('.') - 1, repeat([''], v:count1))<CR>
-    vnoremap <silent> <Leader>n <Esc>:call append(line("'>"), '') \| call append(line("'<") - 1, '')<CR>
+" Managing Whitespace
+    " Add blank line below/above current line, keep cursor in same position
+    nnoremap <silent> <C-j> :call append(line("."), [''])<CR>
+    nnoremap <silent> <C-k> :call append(line(".") - 1, [''])<CR>
     " Expand line by padding visual block selection with spaces
     vnoremap <Leader>e <Esc>:call ExpandSpaces()<CR>
     " Delete trailing whitespace and retab
@@ -477,7 +492,7 @@
     " Filetype ftplugin editing
     noremap <Leader><Leader>ef :edit ~/.vim/ftplugin/<C-r>=&filetype<CR>.vim<CR>
     " Change indent level on the fly
-    noremap <expr> <Leader><Leader>i SetIndents()
+    noremap <expr> <Leader>i SetIndents()
     " Binary switches
     noremap ]oc :set colorcolumn=+1<CR>
     noremap [oc :set colorcolumn=<CR>
@@ -501,15 +516,6 @@
     nnoremap <silent> cuAc :let g:change_case=g:change_case_alt_up<CR>V:call ChangeCase(visualmode())<CR>
     vnoremap <silent> cuA <Esc>:let g:change_case=g:change_case_alt_up<CR>:call ChangeCase(visualmode())<CR>
 
-" Conversion
-    " Format selection using python's JSON tool
-    nnoremap <Leader><Leader>jt :.!python3 -mjson.tool<CR>
-    vnoremap <Leader><Leader>jt :!python3 -mjson.tool<CR>
-    " JSON to YAML
-    vnoremap <silent> <Leader><Leader>cjy :!python3 -c 'import sys, yaml, json; yaml.safe_dump(json.load(sys.stdin), sys.stdout, default_flow_style=False)'<CR>
-    " YAML to JSON
-    vnoremap <silent> <Leader><Leader>cyj :!python3 -c 'import sys, yaml, json; json.dump(yaml.safe_load(sys.stdin), sys.stdout)'<CR>
-
 " Inline execution
     " Replace selection with output when run in python for programmatic text generation
     nnoremap <Leader><Leader>p :.!python3<CR>
@@ -530,17 +536,14 @@
 " Quick notes
     " Global scratch buffer
     noremap <Leader><Leader>es :edit ~/scratch<CR>
-    " Vimwiki notes file
+    " Vimwiki quick notes file
     noremap <Leader>wq :e ~/wiki/quick/index.wiki<CR>
 
 " Misc
     " Change working directory to directory of current file
     noremap <Leader><Leader>cd :cd %:h<CR>
-    " Execute cal
-    nnoremap <Leader><Leader>ec :!clear && cal -y<CR>
-
-" Enable easy mode (for teaching recitation with a non-Vim user)
-    nnoremap <Leader><Leader>em :set insertmode \| source $VIMRUNTIME/evim.vim<CR>
+    " Show calendar and date/time
+    nnoremap \ec :!clear && cal -y && date -R<CR>
 "}}}
 
 " Abbreviations {{{
