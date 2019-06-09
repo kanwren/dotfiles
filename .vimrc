@@ -416,13 +416,15 @@
     nnoremap <Leader><Leader>t :call ReadTemplate()<CR>
 
 " Managing Whitespace
-    " Add blank line below/above current line, keep cursor in same position
-    nnoremap <silent> <C-j> :call append(line("."), [''])<CR>
-    nnoremap <silent> <C-k> :call append(line(".") - 1, [''])<CR>
+    " Delete trailing whitespace and retab
+    noremap <Leader><Tab> m`:%s/\s\+$//e \| call histdel("/", -1) \| nohlsearch \| retab<CR>``
+    " Add blank line below/above line/selection, keep cursor in same position (can take count)
+    nnoremap <silent> <C-j> :<C-u>call append(line("."), repeat([''], v:count1))<CR>
+    nnoremap <silent> <C-k> :<C-u>call append(line(".") - 1, repeat([''], v:count1))<CR>
+    vnoremap <silent> <C-j> :<C-u>call append(line("'>"), repeat([''], v:count1))<CR>gv
+    vnoremap <silent> <C-k> :<C-u>call append(line("'<") - 1, repeat([''], v:count1))<CR>gv
     " Expand line by padding visual block selection with spaces
     vnoremap <Leader>e <Esc>:call ExpandSpaces()<CR>
-    " Delete trailing whitespace and retab
-    noremap <Leader><Tab> mx:%s/\s\+$//e \| nohlsearch \| retab<CR>`x
 
 " Convenience
     noremap <Leader>d "_d
