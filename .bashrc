@@ -138,12 +138,6 @@ bak() {
   fi
 }
 
-gw() {
-  compiler="${1:-ghc865}"
-  packages="${@:2}"
-  nix-shell -p "haskell.packages.$compiler.ghcWithPackages (pkgs: with pkgs; [ $packages ])"
-}
-
 # Search with fzf and edit with vim
 alias se='path=$(fzf); [ ! -z "$path" ] && vim "$path"'
 
