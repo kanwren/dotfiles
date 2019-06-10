@@ -57,6 +57,7 @@
     set backspace=indent,eol,start
     set whichwrap+=<,>,h,l,[,]
     set nrformats=bin,hex
+    set cpoptions+=y
 
 " Indentation
     set autoindent smartindent

@@ -34,6 +34,7 @@ set nojoinspaces
 set backspace=indent,eol,start
 set whichwrap+=h,l,[,]
 set nrformats=bin,hex
+set cpoptions+=y
 set autoindent smartindent
 set tabstop=4 expandtab softtabstop=4 smarttab shiftwidth=4 noshiftround
 set cinoptions+=:0L0g0j1J1

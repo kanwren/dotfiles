@@ -84,6 +84,7 @@
     set backspace=indent,eol,start       " let backspace delete linebreak
     set whichwrap+=<,>,h,l,[,]           " direction key wrapping
     set nrformats=bin,hex                " don't increment octal numbers
+    set cpoptions+=y                     " let yank be repeated with . (primarily for repeating appending)
 
 " Indentation
     set autoindent smartindent
@@ -677,8 +678,8 @@
     autocmd! User GoyoLeave nested source $MYVIMRC
 
 " AutoPairs
-    " Only match curly braces (everything else is a bit annoying)
-    let g:AutoPairs = { '{': '}' }
+    " Only match curly braces and square brackets (everything else is a bit annoying)
+    let g:AutoPairs = { '{': '}', '[': ']' }
 
 " haskell-vim
     let g:haskell_enable_quantification = 1   " `forall`
