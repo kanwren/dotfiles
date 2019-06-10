@@ -20,10 +20,10 @@
     set nospell spelllang=en_us
 
 " Backups
-    set swapfile directory^=~/.vim/tmp
     set backup writebackup backupdir=~/.vim/backup
+    set swapfile directory^=~/.vim/tmp
     if has('persistent_undo')
-        set undofile
+        set undofile undodir=~/.vim/undo
     endif
 
 " Buffers

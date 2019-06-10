@@ -14,10 +14,10 @@ let $LANG='en'
 set nospell spelllang=en_us
 
 " Uncomment if backups are okay
-" set swapfile directory^=~/.vim/tmp
 " set backup writebackup backupdir=~/.vim/backup
+" set swapfile directory^=~/.vim/tmp
 " if has('persistent_undo')
-"     set undofile
+"     set undofile undodir=~/.vim/undo
 " endif
 
 set hidden autoread noconfirm
