@@ -467,6 +467,9 @@
     nnoremap <Leader>gc  :Gcommit<CR>
     nnoremap <Leader>gd  :Gvdiff<CR>
 
+" Goyo mappings
+    nnoremap <Leader>gy :Goyo<CR>
+
 " Quick settings changes
     " .vimrc editing/sourcing
     noremap <Leader><Leader>ev :edit $MYVIMRC<CR>
@@ -500,12 +503,9 @@
     vnoremap <silent> cuA <Esc>:let g:change_case=g:change_case_alt_up<CR>:call ChangeCase(visualmode(), 1)<CR>
 
 " Inline execution
-    " Replace selection with output when run in python for programmatic text generation
+    " Run selection in python and replace with output for programmatic text generation
     nnoremap <Leader><Leader>p :.!python3<CR>
     vnoremap <Leader><Leader>p :!python3<CR>
-    " Run selection in vimscript
-    nnoremap <Leader><Leader>v 0"xy$:@x<CR>
-    vnoremap <Leader><Leader>v "xy:@x<CR>
 
 " Hex utilities
     nnoremap <Leader>hx :Hexmode<CR>
@@ -573,21 +573,22 @@
         endif
     endfunction
 
-    call plug#begin('~/.vim/bundle')
+    silent! if plug#begin('~/.vim/bundle')
         " Functionality
         Plug 'vimwiki/vimwiki'                   " Personal wiki for Vim
         Plug 'sheerun/vim-polyglot'              " Collection of language packs to rule them all
         Plug 'tpope/vim-eunuch'                  " File operations
         Plug 'tpope/vim-fugitive'                " Git integration
+        Plug 'junegunn/goyo.vim'                 " Distraction-free writing in Vim
 
         " Utility
         Plug 'tpope/vim-surround'                " Mappings for inserting/changing/deleting surrounding characters/elements
         Plug 'tpope/vim-repeat'                  " Repeating more actions with .
+        Plug 'tpope/vim-commentary'              " Easy commenting
         Plug 'tpope/vim-speeddating'             " Fix negative problem when incrementing dates
         Plug 'godlygeek/tabular'                 " Tabularize
         Plug 'jiangmiao/auto-pairs'              " Automatically insert matching punctuation pair, etc.
         Plug 'tommcdo/vim-exchange'              " Text exchanging operators
-        Plug 'vim-scripts/tComment'              " Easy commenting
         Plug 'vim-scripts/matchit.zip'
 
         " Interface
@@ -607,7 +608,8 @@
 
         " Language-specific
         Plug 'neovimhaskell/haskell-vim', { 'for': 'haskell' }
-    call plug#end()
+        call plug#end()
+    endif
 " }}}
 
 " Plugin settings {{{
@@ -664,6 +666,15 @@
                 \   'keymapname': 'LightlineKeymapName',
                 \ },
                 \ }
+
+" Goyo settings
+    function! s:goyo_enter()
+        set noshowcmd
+        set wrap
+        set scrolloff=999
+    endfunction
+    autocmd! User GoyoEnter nested call <SID>goyo_enter()
+    autocmd! User GoyoLeave nested source $MYVIMRC
 
 " AutoPairs
     " Only match curly braces (everything else is a bit annoying)
