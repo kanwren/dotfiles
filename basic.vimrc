@@ -103,29 +103,17 @@
 " Sudo write trick
     command! WS :execute ':silent w !sudo tee % > /dev/null' | :edit!
 
+" JSON utilities
+    command! -range JT <line1>,<line2>!python3 -mjson.tool
+    command! -range JY <line1>,<line2>!python3 -c 'import sys, yaml, json; yaml.safe_dump(json.load(sys.stdin), sys.stdout, default_flow_style=False)'
+    command! -range YJ <line1>,<line2>!python3 -c 'import sys, yaml, json; json.dump(yaml.safe_load(sys.stdin), sys.stdout)'
+
 " Functions
-    function! SetIndents()
-        let i = input('ts=sts=sw=')
-        if i
-            execute 'setlocal tabstop=' . i . ' softtabstop=' . i . ' shiftwidth=' . i
-        endif
-        echo 'ts=' . &tabstop . ', sts=' . &softtabstop . ', sw='  . &shiftwidth . ', et='  . &expandtab
-    endfunction
-
-    function! CopyRegister()
-        let r1 = substitute(nr2char(getchar()), "'", "\"", "")
-        let r2 = substitute(nr2char(getchar()), "'", "\"", "")
-        execute 'let @' . r2 . '=@' . r1
-        echo "Copied @" . r1 . " to @" . r2
-    endfunction
-
     function! ExpandSpaces()
         let [start, startv] = getpos("'<")[2:3]
         let [end, endv]     = getpos("'>")[2:3]
         let cols = abs(end + endv - start - startv) + 1
-        let com  = 'normal ' . cols . 'I '
-        normal gv
-        execute com
+        execute 'normal gv' . cols . 'I '
     endfunction
 
 " Leader configuration
@@ -148,19 +136,19 @@
     noremap <C-l> :nohlsearch<CR><C-l>
 
 " Editing
-    nnoremap <Leader>; mx:s/[^;]*\zs\ze\s*$/;/e \| nohlsearch<CR>`x
-    vnoremap <Leader>; :s/\v(\s*$)(;)@<!/;/g<CR>
+    nnoremap <silent> <Leader>; :let wv=winsaveview()<CR>:s/[^;]*\zs\ze\s*$/;/e \| nohlsearch<CR>:call winrestview(wv)<CR>
+    vnoremap <silent> <Leader>; :let wv=winsaveview()<CR>:s/\v(\s*$)(;)@<!/;/g \| nohlsearch<CR>:call winrestview(wv)<CR>
     vnoremap gx <Esc>`.``gvP``P
     nnoremap <silent> <expr> <Leader>s ':s/' . input('split/') . '/\r/g \| nohlsearch<CR>'
     vnoremap <silent> <Leader>vs :sort /\ze\%V/<CR>gvyugvpgv:s/\s\+$//e \| nohlsearch<CR>``
 
 " Whitespace
-    nnoremap <silent> <Leader>o :<C-u>call append(line("."), repeat([''], v:count1)) \| norm <C-r>=v:count1<CR>j<CR>
-    nnoremap <silent> <Leader>O :<C-u>call append(line(".") - 1, repeat([''], v:count1)) \| norm <C-r>=v:count1<CR>k<CR>
-    nnoremap <silent> <Leader>n :<C-u>call append(line('.'), repeat([''], v:count1)) \| call append(line('.') - 1, repeat([''], v:count1))<CR>
-    vnoremap <silent> <Leader>n <Esc>:call append(line("'>"), '') \| call append(line("'<") - 1, '')<CR>
+    noremap <Leader><Tab> m`:%s/\s\+$//e \| call histdel("/", -1) \| nohlsearch \| retab<CR>``
+    nnoremap <silent> <C-j> :<C-u>call append(line("."), repeat([''], v:count1))<CR>
+    nnoremap <silent> <C-k> :<C-u>call append(line(".") - 1, repeat([''], v:count1))<CR>
+    vnoremap <silent> <C-j> :<C-u>call append(line("'>"), repeat([''], v:count1))<CR>gv
+    vnoremap <silent> <C-k> :<C-u>call append(line("'<") - 1, repeat([''], v:count1))<CR>gv
     vnoremap <Leader>e <Esc>:call ExpandSpaces()<CR>
-    noremap <Leader><Tab> mx:%s/\s\+$//e \| nohlsearch \| retab<CR>`x
 
 " Convenience
     noremap <Leader>d "_d
@@ -170,12 +158,13 @@
 
 " Registers
     noremap <silent> "" :registers<CR>
-    noremap <silent> <Leader>r :call CopyRegister()<CR>
+    noremap <silent> <Leader>r :let r1 = substitute(nr2char(getchar()), "'", "\"", "") \| let r2 = substitute(nr2char(getchar()), "'", "\"", "")
+          \ \| execute 'let @' . r2 . '=@' . r1 \| echo "Copied @" . r1 . " to @" . r2<CR>
 
 " Navigation
     noremap <Leader>b :ls<CR>:b
-    nnoremap <Leader>* mx*`x
-    vnoremap <Leader>* mxy/<C-r>"<CR>`x
+    nnoremap <Leader>* :let wv=winsaveview()<CR>*:call winrestview(wv)<CR>
+    vnoremap <Leader>* :let wv=winsaveview()<CR>y/<C-r>"<CR>:call winrestview(wv)<CR>
     noremap ]b :bnext<CR>
     noremap [b :bprevious<CR>
     noremap ]B :blast<CR>
@@ -196,7 +185,9 @@
 " Quick settings changes
     noremap <Leader><Leader>ev :edit $MYVIMRC<CR>
     noremap <Leader><Leader>sv :source $MYVIMRC<CR>
-    noremap <expr> <Leader><Leader>i SetIndents()
+    noremap <Leader><Leader>ef :edit ~/.vim/ftplugin/<C-r>=&filetype<CR>.vim<CR>
+    noremap <Leader>i :let i=input('ts=sts=sw=') \| if i \| execute 'setlocal tabstop=' . i . ' softtabstop=' . i . ' shiftwidth=' . i \| endif
+                \ \| redraw \| echo 'ts=' . &tabstop . ', sts=' . &softtabstop . ', sw='  . &shiftwidth . ', et='  . &expandtab<CR>
     noremap ]oc :set colorcolumn=+1<CR>
     noremap [oc :set colorcolumn=<CR>
     noremap ]ot :set textwidth=120<CR>
@@ -207,6 +198,7 @@
     vnoremap <Leader><Leader>v "xy:@x<CR>
 
 " Misc
+    noremap <Leader><Leader>es :edit ~/scratch<CR>
     noremap <Leader><Leader>cd :cd %:h<CR>
 
 " Plugin setup
@@ -214,7 +206,7 @@
     function! PlugSetup()
         let plug_loc = '~/.vim/autoload/plug.vim'
         let plug_source = 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-        if empty(glob(plug_location))
+        if empty(glob(plug_loc))
             echom 'vim-plug not found. Installing...'
             if executable('curl')
                 silent exec '!curl -fLo curl -fLo ' . expand(plug_loc) . ' --create-dirs ' . plug_source
@@ -224,11 +216,18 @@
             else
                 echom 'Error: could not download vim-plug'
             endif
+        else
+            execute('PlugUpgrade')
         endif
     endfunction
 
     " call plug#begin('~/.vim/bundle')
         " Plug 'tpope/vim-surround'
+        " Plug 'junegunn/fzf'
+        " Plug 'junegunn/fzf.vim'
+        " Plug 'vimwiki/vimwiki'
+        " Plug 'godlygeek/tabular'
+        " Plug 'jiangmiao/auto-pairs'
     " call plug#end()
 
 " Local vimrc
