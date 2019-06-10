@@ -179,41 +179,21 @@
         endwhile
     endfunction
 
-    function! EraseMarks()
-        delmarks!
-        delmarks A-Z0-9
-    endfunction
-
-    function! SetIndents()
-        let i = input('ts=sts=sw=')
-        if i
-            execute 'setlocal tabstop=' . i . ' softtabstop=' . i . ' shiftwidth=' . i
-        endif
-        echo 'ts=' . &tabstop . ', sts=' . &softtabstop . ', sw='  . &shiftwidth . ', et='  . &expandtab
-    endfunction
-
-    " Copy one register to another
-    function! CopyRegister()
-        " Provide ' as an easier-to-type alias for "
-        let r1 = substitute(nr2char(getchar()), "'", "\"", "")
-        let r2 = substitute(nr2char(getchar()), "'", "\"", "")
-        execute 'let @' . r2 . '=@' . r1
-        echo "Copied @" . r1 . " to @" . r2
-    endfunction
-
     " Use the regexes in g:change_case to substitute text. Not strictly limited
     " to case. Used with operatorfunc in mappings.
-    function! ChangeCase(vt)
-        if a:vt =~ 'v\|line\|V\|block\|\<C-v>'
+    function! ChangeCase(vt, ...)
+        let l:winview = winsaveview()
+        if a:0
             silent exec 'normal! gvy'
-            let @" = substitute(@", g:change_case[0], g:change_case[1], 'ge')
-            silent exec 'normal! gv"0P'
+        elseif a:vt ==? 'line'
+            silent exec "normal! '[V']y"
         else
-            silent exec 'normal! mx`[v`]y'
-            let @" = substitute(@", g:change_case[0], g:change_case[1], 'ge')
-            silent exec 'normal! gv"0P`x'
+            silent exec 'normal! `[v`]y'
         endif
+        let @@ = substitute(@@, g:change_case[0], g:change_case[1], 'ge')
+        silent exec 'normal! gv"0P'
         nohlsearch
+        call winrestview(l:winview)
     endfunction
 
     " Use a visual block selection to pad with spaces
@@ -222,9 +202,7 @@
         let [start, startv] = getpos("'<")[2:3]
         let [end, endv]     = getpos("'>")[2:3]
         let cols = abs(end + endv - start - startv) + 1
-        let com  = 'normal ' . cols . 'I '
-        normal gv
-        execute com
+        execute 'normal gv' . cols . 'I '
     endfunction
 
     " nix-prefetch-git shortcut
@@ -366,6 +344,7 @@
 " }}}
 
 " Mappings {{{
+
 " Space is the default leader, and Shift-Space has the same function to make it easier to hit things like <Space>P
 " Single leader is for abbreviating common operations and important plugin commands
 " Double leader is for execution of some extraneous operations, like reading in templates or inline execution
@@ -401,8 +380,8 @@
 
 " Editing
     " Convenient semicolon insertion
-    nnoremap <Leader>; mx:s/[^;]*\zs\ze\s*$/;/e \| nohlsearch<CR>`x
-    vnoremap <Leader>; :s/\v(\s*$)(;)@<!/;/g<CR>
+    nnoremap <silent> <Leader>; :let wv=winsaveview()<CR>:s/[^;]*\zs\ze\s*$/;/e \| nohlsearch<CR>:call winrestview(wv)<CR>
+    vnoremap <silent> <Leader>; :let wv=winsaveview()<CR>:s/\v(\s*$)(;)@<!/;/g \| nohlsearch<CR>:call winrestview(wv)<CR>
     " Exchange operation-delete, highlight target, exchange (made obsolete by exchange.vim)
     "vnoremap gx <Esc>`.``gvP``P
     " Split current line by provided regex (\zs or \ze to preserve separators)
@@ -435,15 +414,16 @@
 " Registers
     " Display registers
     noremap <silent> "" :registers<CR>
-    " Copy contents from one register to another (like MOV, but with arguments reversed)
-    noremap <silent> <Leader>r :call CopyRegister()<CR>
+    " Copy contents of register to another, provides ' as an alias for "
+    noremap <silent> <Leader>r :let r1 = substitute(nr2char(getchar()), "'", "\"", "") \| let r2 = substitute(nr2char(getchar()), "'", "\"", "")
+          \ \| execute 'let @' . r2 . '=@' . r1 \| echo "Copied @" . r1 . " to @" . r2<CR>
 
 " Navigation
     " Fast buffer navigation/editing
     noremap <Leader>b :ls<CR>:b
     " Search word underneath cursor/selection but don't jump
-    nnoremap <Leader>* mx*`x
-    vnoremap <Leader>* mxy/<C-r>"<CR>`x
+    nnoremap <Leader>* :let wv=winsaveview()<CR>*:call winrestview(wv)<CR>
+    vnoremap <Leader>* :let wv=winsaveview()<CR>y/<C-r>"<CR>:call winrestview(wv)<CR>
     " Matching navigation commands, like in unimpaired
     noremap ]b :bnext<CR>
     noremap [b :bprevious<CR>
@@ -494,7 +474,8 @@
     " Filetype ftplugin editing
     noremap <Leader><Leader>ef :edit ~/.vim/ftplugin/<C-r>=&filetype<CR>.vim<CR>
     " Change indent level on the fly
-    noremap <expr> <Leader>i SetIndents()
+    noremap <Leader>i :let i=input('ts=sts=sw=') \| if i \| execute 'setlocal tabstop=' . i . ' softtabstop=' . i . ' shiftwidth=' . i \| endif
+                \ \| redraw \| echo 'ts=' . &tabstop . ', sts=' . &softtabstop . ', sw='  . &shiftwidth . ', et='  . &expandtab<CR>
     " Binary switches
     noremap ]oc :set colorcolumn=+1<CR>
     noremap [oc :set colorcolumn=<CR>
@@ -505,18 +486,18 @@
     " Title Case
     let g:change_case_title=['\v\w+', '\u\L&']
     nnoremap <silent> cut  :let g:change_case=g:change_case_title<CR>:set operatorfunc=ChangeCase<CR>g@
-    nnoremap <silent> cutc :let g:change_case=g:change_case_title<CR>V:call ChangeCase(visualmode())<CR>
-    vnoremap <silent> cut <Esc>:let g:change_case=g:change_case_title<CR>:call ChangeCase(visualmode())<CR>
+    nnoremap <silent> cutc :let g:change_case=g:change_case_title<CR>V:call ChangeCase(visualmode(), 1)<CR>
+    vnoremap <silent> cut <Esc>:let g:change_case=g:change_case_title<CR>:call ChangeCase(visualmode(), 1)<CR>
     " Alternating caps (lowercase first)
     let g:change_case_alt_low = ['\v(\w)(.{-})(\w)', '\L\1\2\U\3']
     nnoremap <silent> cua :let g:change_case=g:change_case_alt_low<CR>:set operatorfunc=ChangeCase<CR>g@
-    nnoremap <silent> cuac :let g:change_case=g:change_case_alt_low<CR>V:call ChangeCase(visualmode())<CR>
-    vnoremap <silent> cua <Esc>:let g:change_case=g:change_case_alt_low<CR>:call ChangeCase(visualmode())<CR>
+    nnoremap <silent> cuac :let g:change_case=g:change_case_alt_low<CR>V:call ChangeCase(visualmode(), 1)<CR>
+    vnoremap <silent> cua <Esc>:let g:change_case=g:change_case_alt_low<CR>:call ChangeCase(visualmode(), 1)<CR>
     " Alternating caps (uppercase first)
     let g:change_case_alt_up = ['\v(\w)(.{-})(\w)', '\U\1\2\L\3']
     nnoremap <silent> cuA :let g:change_case=g:change_case_alt_up<CR>:set operatorfunc=ChangeCase<CR>g@
-    nnoremap <silent> cuAc :let g:change_case=g:change_case_alt_up<CR>V:call ChangeCase(visualmode())<CR>
-    vnoremap <silent> cuA <Esc>:let g:change_case=g:change_case_alt_up<CR>:call ChangeCase(visualmode())<CR>
+    nnoremap <silent> cuAc :let g:change_case=g:change_case_alt_up<CR>V:call ChangeCase(visualmode(), 1)<CR>
+    vnoremap <silent> cuA <Esc>:let g:change_case=g:change_case_alt_up<CR>:call ChangeCase(visualmode(), 1)<CR>
 
 " Inline execution
     " Replace selection with output when run in python for programmatic text generation
@@ -599,7 +580,6 @@
         " Functionality
         Plug 'w0rp/ale'                          " Async linting tool
         Plug 'sheerun/vim-polyglot'              " Collection of language packs to rule them all (testing)
-        "Plug 'scrooloose/nerdtree'               " File explorer/interface
         Plug 'tpope/vim-eunuch'                  " File operations
         Plug 'tpope/vim-fugitive'                " Git integration
 
@@ -681,6 +661,10 @@
                 \ },
                 \ }
 
+" AutoPairs
+    " Only match curly braces (everything else is a bit annoying)
+    let g:AutoPairs = { '{': '}' }
+
 " ALE
     let g:ale_enabled = 0
     let g:ale_lint_on_enter = 0
@@ -695,13 +679,16 @@
                 \ }
 
 " haskell-vim
-    let g:haskell_enable_quantification = 1   " to enable highlighting of `forall`
-    let g:haskell_enable_recursivedo = 1      " to enable highlighting of `mdo` and `rec`
-    let g:haskell_enable_arrowsyntax = 1      " to enable highlighting of `proc`
-    let g:haskell_enable_pattern_synonyms = 1 " to enable highlighting of `pattern`
-    let g:haskell_enable_typeroles = 1        " to enable highlighting of type roles
-    let g:haskell_enable_static_pointers = 1  " to enable highlighting of `static`
-    let g:haskell_backpack = 1                " to enable highlighting of backpack keywords
+    let g:haskell_enable_quantification = 1   " `forall`
+    let g:haskell_enable_recursivedo = 1      " `mdo` and `rec`
+    let g:haskell_enable_arrowsyntax = 1      " `proc`
+    let g:haskell_enable_pattern_synonyms = 1 " `pattern`
+    let g:haskell_enable_typeroles = 1        " type roles
+    let g:haskell_enable_static_pointers = 1  " `static`
+    let g:haskell_backpack = 1                " backpack keywords
+
+    let g:haskell_indent_if = 2
+    let g:haskell_indent_in = 0
 " }}}
 
 " Local vimrc {{{
