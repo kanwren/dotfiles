@@ -8,7 +8,7 @@
     if !syntax_on
         syntax on
     end
-    " enable filetype detection
+    " Enable filetype detection
     filetype on
     filetype indent on
     filetype plugin on
@@ -18,13 +18,14 @@
     set nospell spelllang=en_us
 
 " Backups
-    set swapfile
-    set directory^=~/.vim/tmp
     set backup
     set writebackup
     set backupdir=~/.vim/backup
+    set swapfile
+    set directory^=~/.vim/tmp
     if has('persistent_undo')
         set undofile
+        set undodir=~/.vim/undo
     endif
 
 " Colors and terminal settings
@@ -46,7 +47,6 @@
 
 " History
     set history=1000
-
     set undolevels=1000
 
 " Disable annoying flashing/beeping
@@ -267,42 +267,36 @@
 " Hex editing
     command! -bar Hexmode call ToggleHex()
     function! ToggleHex()
-        " hex mode should be considered a read-only operation
-        " save values for modified and read-only for restoration later,
-        " and clear the read-only flag for now
-        let l:modified=&mod
-        let l:oldreadonly=&readonly
-        let &readonly=0
-        let l:oldmodifiable=&modifiable
-        let &modifiable=1
+        " save values for modified and read-only, clear read-only flag for now
+        let l:modified = &mod
+        let l:oldreadonly = &readonly
+        let &readonly = 0
+        let l:oldmodifiable = &modifiable
+        let &modifiable = 1
         if !exists("b:editHex") || !b:editHex
             " save old options
-            let b:oldft=&ft
-            let b:oldbin=&bin
+            let b:old_ft = &ft
+            let b:old_bin = &bin
             " set new options
             setlocal binary " make sure it overrides any textwidth, etc.
-            silent :e " this will reload the file without trickeries
-            "(DOS line endings will be shown entirely )
-            let &ft="xxd"
-            " set status
-            let b:editHex=1
-            " switch to hex editor
+            silent :edit " this will reload the file without trickeries
+            " (DOS line endings will be shown entirely)
+            let &ft = "xxd"
+            let b:edit_hex = 1
             %!xxd
         else
             " restore old options
-            let &ft=b:oldft
-            if !b:oldbin
+            let &ft = b:old_ft
+            if !b:old_bin
                 setlocal nobinary
             endif
-            " set status
-            let b:editHex=0
-            " return to normal editing
+            let b:edit_hex = 0
             %!xxd -r
         endif
-        " restore values for modified and read only state
-        let &mod=l:modified
-        let &readonly=l:oldreadonly
-        let &modifiable=l:oldmodifiable
+        " restore old values for modified and read only state
+        let &mod = l:modified
+        let &readonly = l:oldreadonly
+        let &modifiable = l:oldmodifiable
     endfunction
 
     function! StrToHexCodes()
@@ -429,7 +423,7 @@
     noremap <Leader>b :ls<CR>:b
     " Search word underneath cursor/selection but don't jump
     nnoremap <Leader>* :let wv=winsaveview()<CR>*:call winrestview(wv)<CR>
-    vnoremap <Leader>* :let wv=winsaveview()<CR>y/<C-r>"<CR>:call winrestview(wv)<CR>
+    vnoremap <Leader>* :<C-u>let wv=winsaveview()<CR>gvy/<C-r>"<CR>:call winrestview(wv)<CR>
     " Matching navigation commands, like in unimpaired
     noremap ]b :bnext<CR>
     noremap [b :bprevious<CR>
@@ -466,12 +460,12 @@
     nnoremap <Leader>ft :Tags<CR>
 
 " Fugitive mappings
-    nnoremap <Leader>gs :Gstatus<CR>
+    nnoremap <Leader>gs  :Gstatus<CR>
     nnoremap <Leader>gpl :Gpull<CR>
     nnoremap <Leader>gps :Gpush<CR>
-    nnoremap <Leader>gw :Gwrite<CR>
-    nnoremap <Leader>gc :Gcommit<CR>
-    nnoremap <Leader>gd :Gvdiff<CR>
+    nnoremap <Leader>gw  :Gwrite<CR>
+    nnoremap <Leader>gc  :Gcommit<CR>
+    nnoremap <Leader>gd  :Gvdiff<CR>
 
 " Quick settings changes
     " .vimrc editing/sourcing
@@ -580,20 +574,11 @@
     endfunction
 
     call plug#begin('~/.vim/bundle')
-        Plug 'vimwiki/vimwiki'                   " Personal wiki for Vim
-
-        " Interface
-        Plug 'itchyny/lightline.vim'
-
         " Functionality
-        Plug 'w0rp/ale'                          " Async linting tool
-        Plug 'sheerun/vim-polyglot'              " Collection of language packs to rule them all (testing)
+        Plug 'vimwiki/vimwiki'                   " Personal wiki for Vim
+        Plug 'sheerun/vim-polyglot'              " Collection of language packs to rule them all
         Plug 'tpope/vim-eunuch'                  " File operations
         Plug 'tpope/vim-fugitive'                " Git integration
-
-        " Fuzzy finding
-        Plug 'junegunn/fzf'
-        Plug 'junegunn/fzf.vim'
 
         " Utility
         Plug 'tpope/vim-surround'                " Mappings for inserting/changing/deleting surrounding characters/elements
@@ -604,6 +589,13 @@
         Plug 'tommcdo/vim-exchange'              " Text exchanging operators
         Plug 'vim-scripts/tComment'              " Easy commenting
         Plug 'vim-scripts/matchit.zip'
+
+        " Interface
+        Plug 'itchyny/lightline.vim'
+
+        " Fuzzy finding
+        Plug 'junegunn/fzf'
+        Plug 'junegunn/fzf.vim'
 
         " Text objects
         Plug 'kana/vim-textobj-user'
@@ -676,19 +668,6 @@
 " AutoPairs
     " Only match curly braces (everything else is a bit annoying)
     let g:AutoPairs = { '{': '}' }
-
-" ALE
-    let g:ale_enabled = 0
-    let g:ale_lint_on_enter = 0
-    let g:ale_lint_on_filetype_changed = 1
-    let g:ale_lint_on_insert_leave = 1
-    let g:ale_lint_on_save = 1
-    let g:ale_lint_on_text_changed = 1
-    let g:ale_set_signs = 1
-    let g:ale_linters = {
-                \ 'python': ['pylint'],
-                \ 'java': ['javac', 'checkstyle']
-                \ }
 
 " haskell-vim
     let g:haskell_enable_quantification = 1   " `forall`
