@@ -203,44 +203,9 @@
     noremap ]ot :set textwidth=120<CR>
     noremap [ot :set textwidth=80<CR>
 
-" Inline execution
-    nnoremap <Leader><Leader>v 0"xy$:@x<CR>
-    vnoremap <Leader><Leader>v "xy:@x<CR>
-
 " Misc
     noremap <Leader><Leader>es :edit ~/scratch<CR>
     noremap <Leader><Leader>cd :cd %:h<CR>
-
-" Plugin setup
-    command! PlugSetup call PlugSetup()
-    function! PlugSetup()
-        let plug_loc = '~/.vim/autoload/plug.vim'
-        let plug_source = 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-        if empty(glob(plug_loc))
-            echom 'vim-plug not found. Installing...'
-            if executable('curl')
-                silent exec '!curl -fLo curl -fLo ' . expand(plug_loc) . ' --create-dirs ' . plug_source
-            elseif executable('wget')
-                call mkdir(fnamemodify(s:plugin_loc, ':h'), 'p')
-                silent exec '!wget --force-directories --no-check-certificate -O ' . expand(plug_loc) . ' ' . plug_source
-            else
-                echom 'Error: could not download vim-plug'
-            endif
-        else
-            execute('PlugUpgrade')
-            execute('PlugClean')
-            execute('PlugUpdate')
-        endif
-    endfunction
-
-    " call plug#begin('~/.vim/bundle')
-        " Plug 'tpope/vim-surround'
-        " Plug 'junegunn/fzf'
-        " Plug 'junegunn/fzf.vim'
-        " Plug 'vimwiki/vimwiki'
-        " Plug 'godlygeek/tabular'
-        " Plug 'jiangmiao/auto-pairs'
-    " call plug#end()
 
 " Local vimrc
     if !empty(glob('~/local.vimrc'))
