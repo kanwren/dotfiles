@@ -19,10 +19,13 @@
 
 " Backups
     set swapfile
+    set directory^=~/.vim/tmp
     set backup
     set writebackup
     set backupdir=~/.vim/backup
-    set directory^=~/.vim/tmp
+    if has('persistent_undo')
+        set undofile
+    endif
 
 " Colors and terminal settings
     if &term ==? "xterm-256color"
@@ -58,6 +61,7 @@
 " Display
     set lazyredraw                       " don't redraw until after command/macro
     set shortmess+=I                     " disable Vim intro screen
+    set splitbelow splitright            " sensible split defaults
     set number relativenumber            " use Vim properly
     set list listchars=tab:>-,eol:¬,extends:>,precedes:<
     set nocursorline nocursorcolumn
@@ -76,7 +80,6 @@
     set noinsertmode                     " just in case
     set clipboard=unnamedplus
     set virtualedit=all                  " allow editing past the ends of lines
-    set splitbelow splitright            " sensible split defaults
     set nojoinspaces                     " never two spaces after sentence
     set backspace=indent,eol,start       " let backspace delete linebreak
     set whichwrap+=<,>,h,l,[,]           " direction key wrapping
@@ -91,16 +94,19 @@
     set noshiftround
     set cinoptions+=:0L0g0j1J1           " indent distance for case, jumps, scope declarations
 
+" Formatting
+    set nowrap
+    set textwidth=120
+    set formatoptions=croqjln
+
 " Searching
     set magic
     set noignorecase smartcase
     set showmatch
-    set incsearch hlsearch
-
-" Wrapping
-    set nowrap
-    set textwidth=120
-    set formatoptions=croqjln
+    set incsearch
+    if &t_Co > 2 || has("gui_running")
+        set hlsearch
+    endif
 
 " Folds
     set foldmethod=manual
@@ -568,6 +574,8 @@
             endif
         else
             execute('PlugUpgrade')
+            execute('PlugClean')
+            execute('PlugUpdate')
         endif
     endfunction
 
@@ -600,6 +608,10 @@
         " Text objects
         Plug 'kana/vim-textobj-user'
         Plug 'kana/vim-textobj-function'
+
+        " Language server
+        " Plug 'prabirshrestha/async.vim'
+        " Plug 'prabirshrestha/vim-lsp'
 
         " Language-specific
         Plug 'neovimhaskell/haskell-vim', { 'for': 'haskell' }
@@ -689,6 +701,7 @@
 
     let g:haskell_indent_if = 2
     let g:haskell_indent_in = 0
+
 " }}}
 
 " Local vimrc {{{

@@ -1,3 +1,8 @@
+" A stripped-down version of my .vimrc that has no plugins or plugin-specific
+" mappings. The intention is that this can be used anywhere, independently,
+" without anything besides vim, while still giving me a comfortable editing
+" experience. For a very minimal vimrc, see bare.vimrc
+
 " Basic
     set nocompatible
     set encoding=utf-8
@@ -13,6 +18,13 @@
 " Spelling
     let $LANG='en'
     set nospell spelllang=en_us
+
+" Backups
+    set swapfile directory^=~/.vim/tmp
+    set backup writebackup backupdir=~/.vim/backup
+    if has('persistent_undo')
+        set undofile
+    endif
 
 " Buffers
     set hidden autoread noconfirm
@@ -31,6 +43,7 @@
 " Display
     set lazyredraw
     set shortmess+=I
+    set splitbelow splitright
     set number relativenumber
     set list listchars=tab:>-,eol:¬,extends:>,precedes:<
     set nocursorline nocursorcolumn
@@ -40,7 +53,6 @@
 
 " Editing
     set virtualedit=all
-    set splitbelow splitright
     set nojoinspaces
     set backspace=indent,eol,start
     set whichwrap+=<,>,h,l,[,]
@@ -51,16 +63,19 @@
     set tabstop=4 expandtab softtabstop=4 smarttab shiftwidth=4 noshiftround
     set cinoptions+=:0L0g0j1J1
 
+" Formatting
+    set nowrap
+    set textwidth=80
+    set formatoptions=croqjln
+
 " Searching
     set magic
     set noignorecase smartcase
     set showmatch
-    set incsearch hlsearch
-
-" Wrapping
-    set nowrap
-    set textwidth=80
-    set formatoptions=croqjln
+    set incsearch
+    if &t_Co > 2 || has("gui_running")
+        set hlsearch
+    endif
 
 " Folds
     set foldmethod=manual
@@ -94,11 +109,6 @@
     set colorcolumn=+1
     highlight ColorColumn ctermbg=8
     highlight Todo ctermbg=1 ctermfg=15
-
-" Leader configuration
-    map <Space> <nop>
-    map <S-Space> <Space>
-    let mapleader=" "
 
 " Sudo write trick
     command! WS :execute ':silent w !sudo tee % > /dev/null' | :edit!
@@ -218,6 +228,8 @@
             endif
         else
             execute('PlugUpgrade')
+            execute('PlugClean')
+            execute('PlugUpdate')
         endif
     endfunction
 
