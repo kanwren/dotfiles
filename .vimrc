@@ -403,6 +403,7 @@
     nnoremap <silent> <C-k> :<C-u>call append(line(".") - 1, repeat([''], v:count1))<CR>
     vnoremap <silent> <C-j> :<C-u>call append(line("'>"), repeat([''], v:count1))<CR>gv
     vnoremap <silent> <C-k> :<C-u>call append(line("'<") - 1, repeat([''], v:count1))<CR>gv
+    nnoremap <silent> <C-n> :<C-u>call append(line("."), repeat([''], v:count1)) \| call append(line(".") - 1, repeat([''], v:count1))<CR>
     " Expand line by padding visual block selection with spaces
     vnoremap <Leader>e <Esc>:call ExpandSpaces()<CR>
 
