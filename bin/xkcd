@@ -1,5 +1,5 @@
-if [[ "$1" =~ rand(om)? ]]; then
-  xdg-open "https://c.xkcd.com/random/comic/" &>/dev/null
-else
-  xdg-open "https://xkcd.com/$1/" &>/dev/null
-fi
+#!/bin/bash
+case $1 in
+  rand|random) xdg-open "https://c.xkcd.com/random/comic/" &>/dev/null ;;
+  *) xdg-open "https://xkcd.com/$1/" &>/dev/null ;;
+esac

@@ -1,3 +1,4 @@
+#!/bin/bash
 configure_night_mode() {
   for disp in $(xrandr | grep " connected" | cut -f1 -d " "); do
     echo "Configuring $disp..."

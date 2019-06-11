@@ -1,3 +1,4 @@
+#!/bin/bash
 # xrandr --output $(xrandr | grep " connected" | cut -f1 -d " ") --brightness 1
 brightness() {
   if [[ -z $1 ]]; then
