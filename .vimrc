@@ -186,6 +186,13 @@
         endwhile
     endfunction
 
+    command! Pad :call PadLine()
+    function! PadLine()
+        let l = getline(line("."))
+        let pad = (&tw - strlen(l)) / 2.0
+        call setline(line("."), repeat('-', float2nr(floor(pad))) . l . repeat('-', float2nr(ceil(pad))))
+    endfunction
+
     " Use the regexes in g:change_case to substitute text. Not strictly limited
     " to case. Used with operatorfunc in mappings.
     function! ChangeCase(vt, ...)
@@ -374,8 +381,9 @@
     nnoremap & :&&<CR>
     " Make temporary unlisted scratch buffer
     noremap <Leader>t :new<CR>:setlocal buftype=nofile bufhidden=wipe nobuflisted noswapfile<CR>
-    " Faster visual substitute
-    vnoremap gs :s/\%V
+    " Search word underneath cursor/selection but don't jump
+    nnoremap <silent> * :let wv=winsaveview()<CR>*:call winrestview(wv)<CR>
+    vnoremap <silent> * :<C-u>let wv=winsaveview()<CR>gvy/<C-r>"<CR>:call winrestview(wv)<CR>
     " Redraw page and clear highlights
     noremap <C-l> :nohlsearch<CR><C-l>
 
@@ -399,11 +407,11 @@
     " Delete trailing whitespace and retab
     noremap <Leader><Tab> m`:%s/\s\+$//e \| call histdel("/", -1) \| nohlsearch \| retab<CR>``
     " Add blank line below/above line/selection, keep cursor in same position (can take count)
-    nnoremap <silent> <C-j> :<C-u>call append(line("."), repeat([''], v:count1))<CR>
-    nnoremap <silent> <C-k> :<C-u>call append(line(".") - 1, repeat([''], v:count1))<CR>
-    vnoremap <silent> <C-j> :<C-u>call append(line("'>"), repeat([''], v:count1))<CR>gv
-    vnoremap <silent> <C-k> :<C-u>call append(line("'<") - 1, repeat([''], v:count1))<CR>gv
-    nnoremap <silent> <C-n> :<C-u>call append(line("."), repeat([''], v:count1)) \| call append(line(".") - 1, repeat([''], v:count1))<CR>
+    nnoremap <silent> <Leader>j :<C-u>call append(line("."), repeat([''], v:count1))<CR>
+    nnoremap <silent> <Leader>k :<C-u>call append(line(".") - 1, repeat([''], v:count1))<CR>
+    vnoremap <silent> <Leader>j :<C-u>call append(line("'>"), repeat([''], v:count1))<CR>gv
+    vnoremap <silent> <Leader>k :<C-u>call append(line("'<") - 1, repeat([''], v:count1))<CR>gv
+    nnoremap <silent> <Leader>n :<C-u>call append(line("."), repeat([''], v:count1)) \| call append(line(".") - 1, repeat([''], v:count1))<CR>
     " Expand line by padding visual block selection with spaces
     vnoremap <Leader>e <Esc>:call ExpandSpaces()<CR>
 
@@ -423,9 +431,6 @@
 " Navigation
     " Fast buffer navigation/editing
     noremap <Leader>b :ls<CR>:b
-    " Search word underneath cursor/selection but don't jump
-    nnoremap <Leader>* :let wv=winsaveview()<CR>*:call winrestview(wv)<CR>
-    vnoremap <Leader>* :<C-u>let wv=winsaveview()<CR>gvy/<C-r>"<CR>:call winrestview(wv)<CR>
     " Matching navigation commands, like in unimpaired
     noremap ]b :bnext<CR>
     noremap [b :bprevious<CR>

@@ -67,7 +67,8 @@ noremap ' `
 noremap ` '
 nnoremap & :&&<CR>
 noremap <C-l> :nohlsearch<CR><C-l>
-vnoremap gs :s/\%V
+nnoremap <silent> * :let wv=winsaveview()<CR>*:call winrestview(wv)<CR>
+vnoremap <silent> * :<C-u>let wv=winsaveview()<CR>gvy/<C-r>"<CR>:call winrestview(wv)<CR>
 vnoremap gx <Esc>`.``gvP``P
 
 " Leader mappings

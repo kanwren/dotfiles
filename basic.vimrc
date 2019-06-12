@@ -143,7 +143,8 @@
     noremap ` '
     nnoremap & :&&<CR>
     noremap <Leader>t :new<CR>:setlocal buftype=nofile bufhidden=wipe nobuflisted noswapfile<CR>
-    vnoremap gs :s/\%V
+    nnoremap <silent> * :let wv=winsaveview()<CR>*:call winrestview(wv)<CR>
+    vnoremap <silent> * :<C-u>let wv=winsaveview()<CR>gvy/<C-r>"<CR>:call winrestview(wv)<CR>
     noremap <C-l> :nohlsearch<CR><C-l>
 
 " Editing
@@ -155,10 +156,11 @@
 
 " Whitespace
     noremap <Leader><Tab> m`:%s/\s\+$//e \| call histdel("/", -1) \| nohlsearch \| retab<CR>``
-    nnoremap <silent> <C-j> :<C-u>call append(line("."), repeat([''], v:count1))<CR>
-    nnoremap <silent> <C-k> :<C-u>call append(line(".") - 1, repeat([''], v:count1))<CR>
-    vnoremap <silent> <C-j> :<C-u>call append(line("'>"), repeat([''], v:count1))<CR>gv
-    vnoremap <silent> <C-k> :<C-u>call append(line("'<") - 1, repeat([''], v:count1))<CR>gv
+    nnoremap <silent> <Leader>j :<C-u>call append(line("."), repeat([''], v:count1))<CR>
+    nnoremap <silent> <Leader>k :<C-u>call append(line(".") - 1, repeat([''], v:count1))<CR>
+    vnoremap <silent> <Leader>j :<C-u>call append(line("'>"), repeat([''], v:count1))<CR>gv
+    vnoremap <silent> <Leader>k :<C-u>call append(line("'<") - 1, repeat([''], v:count1))<CR>gv
+    nnoremap <silent> <Leader>n :<C-u>call append(line("."), repeat([''], v:count1)) \| call append(line(".") - 1, repeat([''], v:count1))<CR>
     vnoremap <Leader>e <Esc>:call ExpandSpaces()<CR>
 
 " Convenience
@@ -174,8 +176,6 @@
 
 " Navigation
     noremap <Leader>b :ls<CR>:b
-    nnoremap <Leader>* :let wv=winsaveview()<CR>*:call winrestview(wv)<CR>
-    vnoremap <Leader>* :let wv=winsaveview()<CR>y/<C-r>"<CR>:call winrestview(wv)<CR>
     noremap ]b :bnext<CR>
     noremap [b :bprevious<CR>
     noremap ]B :blast<CR>
