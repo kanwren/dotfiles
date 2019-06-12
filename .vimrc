@@ -186,11 +186,15 @@
         endwhile
     endfunction
 
-    command! Pad :call PadLine()
-    function! PadLine()
-        let l = getline(line("."))
-        let pad = (&tw - strlen(l)) / 2.0
-        call setline(line("."), repeat('-', float2nr(floor(pad))) . l . repeat('-', float2nr(ceil(pad))))
+    command! -range Rule call MakeRules(<line1>, <line2>)
+    function! MakeRules(start, end)
+        let n = a:start
+        while n <= a:end
+            let l = getline(n)
+            let pad = (&tw - strlen(l)) / 2.0
+            call setline(n, repeat('-', float2nr(floor(pad))) . l . repeat('-', float2nr(ceil(pad))))
+            let n += 1
+        endwhile
     endfunction
 
     " Use the regexes in g:change_case to substitute text. Not strictly limited
