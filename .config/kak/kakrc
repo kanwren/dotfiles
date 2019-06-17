@@ -28,9 +28,17 @@ evaluate-commands %sh{
     printf "map global user -docstring 'replace from clipboard' R '|%s<ret>'\n" "$paste"
 }
 
+# Automatically expand tabs
+hook global InsertChar \t %{ exec -draft -itersel h@ }
+
+# Set default indentation to 4 spaces
+set global tabstop 4
+set global indentwidth 4
+
+
 hook global WinSetOption filetype=haskell %{
-    ctags-enable-autoinfo
     hook global InsertChar \t %{ exec -draft -itersel h@ }
+    ctags-enable-autoinfo
     set global tabstop 2
     set global indentwidth 2
 }
