@@ -1,6 +1,5 @@
 " Settings {{{
 " Basic
-    set nocompatible
     set encoding=utf-8
     scriptencoding utf-8
     set ffs=unix,dos,mac
@@ -9,9 +8,7 @@
         syntax on
     end
     " Enable filetype detection
-    filetype on
-    filetype indent on
-    filetype plugin on
+    filetype plugin indent on
 
 " Spelling
     let $LANG='en'
@@ -37,7 +34,6 @@
         let &t_te.="\e[0 q"
     endif
     set background=dark
-    colorscheme elflord
 
 " Buffers
     set hidden                           " allow working with buffers
@@ -87,7 +83,7 @@
     set cpoptions+=y                     " let yank be repeated with . (primarily for repeating appending)
 
 " Indentation
-    set autoindent smartindent
+    set autoindent
     set tabstop=4                        " treat tabs as 4 spaces wide
     set expandtab softtabstop=4          " expand tabs to 4 spaces
     set shiftwidth=4                     " use 4 spaces when using > or <
@@ -98,6 +94,7 @@
 " Formatting
     set nowrap
     set textwidth=120
+    set colorcolumn=+1
     set formatoptions=croqjln
 
 " Searching
@@ -122,7 +119,7 @@
     set ttimeout ttimeoutlen=0
 " }}}
 
-" Autocommands {{{
+" Autocommands/highlighting {{{
     if has('autocmd')
         augroup general_group
             autocmd!
@@ -141,28 +138,28 @@
             autocmd BufNewFile,BufRead *.nix setf nix
             autocmd BufNewFile,BufRead *.sc setf scala
         augroup END
+        " Highlighting
+        augroup highlight_group
+            autocmd!
+            " Highlight trailing whitespace
+            autocmd ColorScheme * highlight ExtraWhitespace ctermbg=12
+            " Left column
+            autocmd ColorScheme * highlight FoldColumn ctermbg=NONE
+                              \ | highlight Folded ctermbg=NONE
+                              \ | highlight CursorLineNr ctermbg=4 ctermfg=15
+            " Highlight text width boundary boundary
+            autocmd ColorScheme * highlight ColorColumn ctermbg=8
+            " Highlight TODO in intentionally annoying colors
+            autocmd ColorScheme * highlight Todo ctermbg=1 ctermfg=15
+        augroup END
     endif
+
+    " Colorscheme has to come after highlighting autocommands
+    colorscheme elflord
 " }}}
 
-" Highlighting {{{
-    " Highlight trailing whitespace
-    highlight ExtraWhitespace ctermbg=12
-
-    " Left column
-    highlight FoldColumn ctermbg=NONE
-    highlight Folded ctermbg=NONE
-    highlight CursorLineNr ctermbg=4 ctermfg=15
-
-    " Highlight text width boundary boundary
-    set colorcolumn=+1
-    highlight ColorColumn ctermbg=8
-
-    " Highlight TODO in intentionally annoying colors
-    highlight Todo ctermbg=1 ctermfg=15
-"}}}
-
 " Functions/commands {{{
-" Force write trick
+" Force sudo write trick
     command! WS :execute ':silent w !sudo tee % > /dev/null' | :edit!
 
 " Enable easy mode (for teaching recitation with a non-Vim user)
@@ -374,8 +371,8 @@
     " Makes temporary macros faster
     nnoremap Q @q
     " Repeat macros/commands across visual selections
-    vnoremap Q :norm @q<CR>
-    vnoremap . :norm .<CR>
+    xnoremap Q :norm @q<CR>
+    xnoremap . :norm .<CR>
     " Make Y behave like C and D
     noremap Y y$
     " Swap ` and '
@@ -396,7 +393,7 @@
     nnoremap <silent> <Leader>; :let wv=winsaveview()<CR>:s/[^;]*\zs\ze\s*$/;/e \| nohlsearch<CR>:call winrestview(wv)<CR>
     vnoremap <silent> <Leader>; :let wv=winsaveview()<CR>:s/\v(\s*$)(;)@<!/;/g \| nohlsearch<CR>:call winrestview(wv)<CR>
     " Exchange operation-delete, highlight target, exchange (made obsolete by exchange.vim)
-    "vnoremap gx <Esc>`.``gvP``P
+    "xnoremap gx <Esc>`.``gvP``P
     " Split current line by provided regex (\zs or \ze to preserve separators)
     nnoremap <silent> <expr> <Leader>s ':s/' . input('split/') . '/\r/g \| nohlsearch<CR>'
     " Align; prompt for regular expression on which to tabularize
@@ -409,7 +406,7 @@
 
 " Managing Whitespace
     " Delete trailing whitespace and retab
-    noremap <Leader><Tab> m`:%s/\s\+$//e \| call histdel("/", -1) \| nohlsearch \| retab<CR>``
+    noremap <Leader><Tab> :let wv=winsaveview()<CR>:%s/\s\+$//e \| call histdel("/", -1) \| nohlsearch \| retab<CR>:call winrestview(wv)<CR>
     " Add blank line below/above line/selection, keep cursor in same position (can take count)
     nnoremap <silent> <Leader>j :<C-u>call append(line("."), repeat([''], v:count1))<CR>
     nnoremap <silent> <Leader>k :<C-u>call append(line(".") - 1, repeat([''], v:count1))<CR>
@@ -501,17 +498,17 @@
     let g:change_case_title=['\v\w+', '\u\L&']
     nnoremap <silent> cut  :let g:change_case=g:change_case_title<CR>:set operatorfunc=ChangeCase<CR>g@
     nnoremap <silent> cutc :let g:change_case=g:change_case_title<CR>V:call ChangeCase(visualmode(), 1)<CR>
-    vnoremap <silent> cut <Esc>:let g:change_case=g:change_case_title<CR>:call ChangeCase(visualmode(), 1)<CR>
+    xnoremap <silent> cut <Esc>:let g:change_case=g:change_case_title<CR>:call ChangeCase(visualmode(), 1)<CR>
     " Alternating caps (lowercase first)
     let g:change_case_alt_low = ['\v(\w)(.{-})(\w)', '\L\1\2\U\3']
     nnoremap <silent> cua :let g:change_case=g:change_case_alt_low<CR>:set operatorfunc=ChangeCase<CR>g@
     nnoremap <silent> cuac :let g:change_case=g:change_case_alt_low<CR>V:call ChangeCase(visualmode(), 1)<CR>
-    vnoremap <silent> cua <Esc>:let g:change_case=g:change_case_alt_low<CR>:call ChangeCase(visualmode(), 1)<CR>
+    xnoremap <silent> cua <Esc>:let g:change_case=g:change_case_alt_low<CR>:call ChangeCase(visualmode(), 1)<CR>
     " Alternating caps (uppercase first)
     let g:change_case_alt_up = ['\v(\w)(.{-})(\w)', '\U\1\2\L\3']
     nnoremap <silent> cuA :let g:change_case=g:change_case_alt_up<CR>:set operatorfunc=ChangeCase<CR>g@
     nnoremap <silent> cuAc :let g:change_case=g:change_case_alt_up<CR>V:call ChangeCase(visualmode(), 1)<CR>
-    vnoremap <silent> cuA <Esc>:let g:change_case=g:change_case_alt_up<CR>:call ChangeCase(visualmode(), 1)<CR>
+    xnoremap <silent> cuA <Esc>:let g:change_case=g:change_case_alt_up<CR>:call ChangeCase(visualmode(), 1)<CR>
 
 " Inline execution
     " Run selection in python and replace with output for programmatic text generation
@@ -619,6 +616,8 @@
 
         " Language-specific
         Plug 'neovimhaskell/haskell-vim', { 'for': 'haskell' }
+
+        Plug 'JamshedVesuna/vim-markdown-preview'
         call plug#end()
     endif
 " }}}
@@ -703,6 +702,9 @@
     let g:haskell_indent_if = 2
     let g:haskell_indent_in = 0
 
+" markdown-preview
+    let vim_markdown_preview_pandoc = 1
+    let vim_markdown_preview_use_xdg_open = 1
 " }}}
 
 " Local vimrc {{{

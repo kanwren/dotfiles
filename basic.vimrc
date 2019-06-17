@@ -4,16 +4,13 @@
 " experience. For a very minimal vimrc, see bare.vimrc
 
 " Basic
-    set nocompatible
     set encoding=utf-8
     scriptencoding utf-8
     set ffs=unix,dos,mac
     if !syntax_on
         syntax on
     end
-    filetype on
-    filetype indent on
-    filetype plugin on
+    filetype plugin indent on
 
 " Spelling
     let $LANG='en'
@@ -60,13 +57,14 @@
     set cpoptions+=y
 
 " Indentation
-    set autoindent smartindent
+    set autoindent
     set tabstop=4 expandtab softtabstop=4 smarttab shiftwidth=4 noshiftround
     set cinoptions+=:0L0g0j1J1
 
 " Formatting
     set nowrap
     set textwidth=80
+    set colorcolumn=+1
     set formatoptions=croqjln
 
 " Searching
@@ -87,7 +85,7 @@
     set timeout timeoutlen=3000
     set ttimeout ttimeoutlen=0
 
-" Autocommands
+" Autocommands/highlighting
     if has('autocmd')
         augroup general_group
             autocmd!
@@ -100,18 +98,21 @@
             autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
             autocmd InsertLeave * match ExtraWhitespace /\s\+$/
         augroup END
+        augroup highlight_group
+            autocmd!
+            autocmd ColorScheme * highlight ExtraWhitespace ctermbg=12
+                              \ | highlight FoldColumn ctermbg=NONE
+                              \ | highlight Folded ctermbg=NONE
+                              \ | highlight CursorLineNr ctermbg=4 ctermfg=15
+                              \ | highlight ColorColumn ctermbg=8
+                              \ | highlight Todo ctermbg=1 ctermfg=15
+        augroup END
     end
 
-" Highlighting
-    highlight ExtraWhitespace ctermbg=12
-    highlight FoldColumn ctermbg=NONE
-    highlight Folded ctermbg=NONE
-    highlight CursorLineNr ctermbg=4 ctermfg=15
-    set colorcolumn=+1
-    highlight ColorColumn ctermbg=8
-    highlight Todo ctermbg=1 ctermfg=15
+" Decent colorscheme
+    colorscheme elflord
 
-" Sudo write trick
+" Force sudo write trick
     command! WS :execute ':silent w !sudo tee % > /dev/null' | :edit!
 
 " JSON utilities
@@ -136,8 +137,8 @@
     noremap <silent> <expr> j (v:count == 0 ? 'gj' : 'j')
     noremap <silent> <expr> k (v:count == 0 ? 'gk' : 'k')
     nnoremap Q @q
-    vnoremap Q :norm @q<CR>
-    vnoremap . :norm .<CR>
+    xnoremap Q :norm @q<CR>
+    xnoremap . :norm .<CR>
     noremap Y y$
     noremap ' `
     noremap ` '
@@ -150,7 +151,7 @@
 " Editing
     nnoremap <silent> <Leader>; :let wv=winsaveview()<CR>:s/[^;]*\zs\ze\s*$/;/e \| nohlsearch<CR>:call winrestview(wv)<CR>
     vnoremap <silent> <Leader>; :let wv=winsaveview()<CR>:s/\v(\s*$)(;)@<!/;/g \| nohlsearch<CR>:call winrestview(wv)<CR>
-    vnoremap gx <Esc>`.``gvP``P
+    xnoremap gx <Esc>`.``gvP``P
     nnoremap <silent> <expr> <Leader>s ':s/' . input('split/') . '/\r/g \| nohlsearch<CR>'
     vnoremap <silent> <Leader>vs :sort /\ze\%V/<CR>gvyugvpgv:s/\s\+$//e \| nohlsearch<CR>``
 

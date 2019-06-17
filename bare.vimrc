@@ -2,13 +2,13 @@
 " number of core mappings for comfort. This is just about as portable as
 " possible, primarily for remote curling.
 
-set nocompatible
 set encoding=utf-8
 scriptencoding utf-8
 set ffs=unix,dos,mac
 if !syntax_on
     syntax on
 end
+filetype plugin indent on
 
 let $LANG='en'
 set nospell spelllang=en_us
@@ -35,7 +35,7 @@ set backspace=indent,eol,start
 set whichwrap+=h,l,[,]
 set nrformats=bin,hex
 set cpoptions+=y
-set autoindent smartindent
+set autoindent
 set tabstop=4 expandtab softtabstop=4 smarttab shiftwidth=4 noshiftround
 set cinoptions+=:0L0g0j1J1
 set nowrap textwidth=80 formatoptions=croqjln
@@ -54,14 +54,17 @@ if has('autocmd')
     augroup general_group
         autocmd! BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") |     exe "normal! g'\"" | endif
     augroup END
+    augroup highlight_group
+        autocmd!
+    augroup END
 end
 
 " All of these mappings override default behavior in very minor ways
 noremap <silent> <expr> j (v:count == 0 ? 'gj' : 'j')
 noremap <silent> <expr> k (v:count == 0 ? 'gk' : 'k')
 nnoremap Q @q
-vnoremap Q :norm @q<CR>
-vnoremap . :norm .<CR>
+xnoremap Q :norm @q<CR>
+xnoremap . :norm .<CR>
 noremap Y y$
 noremap ' `
 noremap ` '
@@ -69,7 +72,7 @@ nnoremap & :&&<CR>
 noremap <C-l> :nohlsearch<CR><C-l>
 nnoremap <silent> * :let wv=winsaveview()<CR>*:call winrestview(wv)<CR>
 vnoremap <silent> * :<C-u>let wv=winsaveview()<CR>gvy/<C-r>"<CR>:call winrestview(wv)<CR>
-vnoremap gx <Esc>`.``gvP``P
+xnoremap gx <Esc>`.``gvP``P
 
 " Leader mappings
 " map <Space> <nop>
