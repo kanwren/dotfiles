@@ -39,7 +39,7 @@
     set hidden                           " allow working with buffers
     set autoread
     set noconfirm                        " fail, don't ask to save
-    set modelines=1                      " use one line to tell vim how to read the buffer
+    set modeline modelines=1             " use one line to tell vim how to read the buffer
 
 " History
     set history=1000
@@ -81,6 +81,7 @@
     set whichwrap+=<,>,h,l,[,]           " direction key wrapping
     set nrformats=bin,hex                " don't increment octal numbers
     set cpoptions+=y                     " let yank be repeated with . (primarily for repeating appending)
+    " set tildeop                          " Make ~ behave like g~ does by default
 
 " Indentation
     set autoindent
@@ -491,8 +492,6 @@
     " Binary switches
     noremap ]oc :set colorcolumn=+1<CR>
     noremap [oc :set colorcolumn=<CR>
-    noremap ]ot :set textwidth=120<CR>
-    noremap [ot :set textwidth=80<CR>
 
 " Changing case
     " Title Case
