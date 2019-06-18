@@ -171,7 +171,7 @@
     command! -range YJ <line1>,<line2>!python3 -c 'import sys, yaml, json; json.dump(yaml.safe_load(sys.stdin), sys.stdout)'
 
 " Utility
-    function! ClearRegisters()
+    function! ClearRegisters() abort
         let regs = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/-*+"'
         let i = 0
         while i < strlen(regs)
@@ -181,7 +181,7 @@
     endfunction
 
     command! -range Rule call MakeRules(<line1>, <line2>)
-    function! MakeRules(start, end)
+    function! MakeRules(start, end) abort
         let n = a:start
         while n <= a:end
             let l = getline(n)
@@ -193,7 +193,7 @@
 
     " Use the regexes in g:change_case to substitute text. Not strictly limited
     " to case. Used with operatorfunc in mappings.
-    function! ChangeCase(vt, ...)
+    function! ChangeCase(vt, ...) abort
         let l:winview = winsaveview()
         if a:0
             silent exec 'normal! gvy'
@@ -209,7 +209,7 @@
     endfunction
 
     " Use a visual block selection to pad with spaces
-    function! ExpandSpaces()
+    function! ExpandSpaces() abort
         " Index 3 includes overflow information for virtualedit
         let [start, startv] = getpos("'<")[2:3]
         let [end, endv]     = getpos("'>")[2:3]
@@ -219,7 +219,7 @@
 
     " nix-prefetch-git shortcut
     command! -bar -nargs=+ NPG call Nix_Prefetch_Git(<f-args>)
-    function! Nix_Prefetch_Git(owner, repo, ...)
+    function! Nix_Prefetch_Git(owner, repo, ...) abort
         " Other fields: url, date, fetchSubmodules
         let fields = ['rev', 'sha256']
         let command = 'nix-prefetch-git git@github.com:' . a:owner . '/' . a:repo
@@ -237,7 +237,7 @@
     endfunction
 
     " Query the user to read in a template located in ~/.vim/template
-    function! ReadTemplate()
+    function! ReadTemplate() abort
         let category = input('category: ', '')
         if empty(category)
             return
@@ -272,7 +272,7 @@
 
 " Hex editing
     command! -bar Hexmode call ToggleHex()
-    function! ToggleHex()
+    function! ToggleHex() abort
         " save values for modified and read-only, clear read-only flag for now
         let l:modified = &mod
         let l:oldreadonly = &readonly
@@ -305,7 +305,7 @@
         let &modifiable = l:oldmodifiable
     endfunction
 
-    function! StrToHexCodes()
+    function! StrToHexCodes() abort
         normal gvy
         let str = @"
         let i = 0
@@ -318,7 +318,7 @@
         normal gv"0P
     endfunction
 
-    function! HexCodesToStr()
+    function! HexCodesToStr() abort
         normal gvy
         let codes = split(@", '\x\{2}\zs *')
         let str = ''
@@ -330,12 +330,12 @@
     endfunction
 
 " Testing
-    function! ColorList()
+    function! ColorList() abort
         let paths = split(globpath(&runtimepath, 'colors/*.vim'), "\n")
         return map(paths, 'fnamemodify(v:val, ":t:r")')
     endfunction
 
-    function! NextColor()
+    function! NextColor() abort
         if !exists('g:colors') || !exists('g:cur_color')
             let g:colors = ColorList()
             let g:cur_color = -1
@@ -562,7 +562,7 @@
 
 " Plugins {{{
     command! PlugSetup call PlugSetup()
-    function! PlugSetup()
+    function! PlugSetup() abort
         let plug_loc = '~/.vim/autoload/plug.vim'
         let plug_source = 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
         if empty(glob(plug_loc))
@@ -651,11 +651,11 @@
     let g:vimwiki_dir_link = 'index'
 
 " Lightline
-    function! LightlineKeymapName()
+    function! LightlineKeymapName() abort
         return &keymap
     endfunction
 
-    function! LightlineBufferline()
+    function! LightlineBufferline() abort
         call bufferline#refresh_status()
         return [g:bufferline_status_info.before, g:bufferline_status_info.current, g:bufferline_status_info.after]
     endfunction
@@ -679,7 +679,7 @@
                 \ }
 
 " Goyo settings
-    function! s:goyo_enter()
+    function! s:goyo_enter() abort
         set noshowcmd
         set wrap
         set scrolloff=999

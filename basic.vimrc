@@ -118,7 +118,7 @@
     command! -range YJ <line1>,<line2>!python3 -c 'import sys, yaml, json; json.dump(yaml.safe_load(sys.stdin), sys.stdout)'
 
 " Functions
-    function! ExpandSpaces()
+    function! ExpandSpaces() abort
         let [start, startv] = getpos("'<")[2:3]
         let [end, endv]     = getpos("'>")[2:3]
         let cols = abs(end + endv - start - startv) + 1
