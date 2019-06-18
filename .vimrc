@@ -93,7 +93,7 @@
 
 " Formatting
     set nowrap
-    set textwidth=120
+    set textwidth=80
     set colorcolumn=+1
     set formatoptions=croqjln
 
@@ -153,9 +153,6 @@
             autocmd ColorScheme * highlight Todo ctermbg=1 ctermfg=15
         augroup END
     endif
-
-    " Colorscheme has to come after highlighting autocommands
-    colorscheme elflord
 " }}}
 
 " Functions/commands {{{
@@ -387,6 +384,9 @@
     vnoremap <silent> * :<C-u>let wv=winsaveview()<CR>gvy/<C-r>"<CR>:call winrestview(wv)<CR>
     " Redraw page and clear highlights
     noremap <C-l> :nohlsearch<CR><C-l>
+    " Put text deleted with <C-w>/<C-u> into @"
+    "inoremap <silent> <C-w> <C-\><C-o>db
+    "inoremap <silent> <C-u> <C-\><C-o>d0
 
 " Editing
     " Convenient semicolon insertion
@@ -413,6 +413,7 @@
     vnoremap <silent> <Leader>j :<C-u>call append(line("'>"), repeat([''], v:count1))<CR>gv
     vnoremap <silent> <Leader>k :<C-u>call append(line("'<") - 1, repeat([''], v:count1))<CR>gv
     nnoremap <silent> <Leader>n :<C-u>call append(line("."), repeat([''], v:count1)) \| call append(line(".") - 1, repeat([''], v:count1))<CR>
+    vnoremap <silent> <Leader>n :<C-u>call append(line("'>"), repeat([''], v:count1)) \| call append(line("'<") - 1, repeat([''], v:count1))<CR>
     " Expand line by padding visual block selection with spaces
     vnoremap <Leader>e <Esc>:call ExpandSpaces()<CR>
 
@@ -601,6 +602,7 @@
 
         " Interface
         Plug 'itchyny/lightline.vim'
+        Plug 'arcticicestudio/nord-vim'
 
         " Fuzzy finding
         Plug 'junegunn/fzf'
@@ -617,7 +619,7 @@
         " Language-specific
         Plug 'neovimhaskell/haskell-vim', { 'for': 'haskell' }
 
-        Plug 'JamshedVesuna/vim-markdown-preview'
+        Plug 'JamshedVesuna/vim-markdown-preview', { 'for': 'markdown' }
         call plug#end()
     endif
 " }}}
@@ -659,7 +661,6 @@
     endfunction
 
     let g:lightline = {
-                \ 'colorscheme': 'powerline',
                 \ 'active': {
                 \   'left': [ [ 'mode', 'paste' ],
                 \             [ 'readonly', 'buffilename', 'modified', 'keymapname', 'charvalue' ] ]
@@ -706,6 +707,15 @@
     let vim_markdown_preview_pandoc = 1
     let vim_markdown_preview_use_xdg_open = 1
 " }}}
+
+" Colorscheme can come anywhere after highlighting autocommands
+    if &term ==? "xterm-256color"
+        colorscheme nord
+        let g:lightline['colorscheme'] = 'nord'
+    else
+        colorscheme elflord
+        let g:lightline['colorscheme'] = 'powerline'
+    endif
 
 " Local vimrc {{{
     if !empty(glob('~/local.vimrc'))

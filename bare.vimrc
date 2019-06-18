@@ -1,6 +1,7 @@
 " This is my bare minimum vim configuration, with sensible settings and a small
 " number of core mappings for comfort. This is just about as portable as
-" possible, primarily for remote curling.
+" possible, primarily for remote curling. However, there are still sections
+" for expanding if necessary.
 
 set encoding=utf-8
 scriptencoding utf-8
@@ -52,14 +53,16 @@ set timeout timeoutlen=3000 ttimeout ttimeoutlen=0
 
 if has('autocmd')
     augroup general_group
-        autocmd! BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") |     exe "normal! g'\"" | endif
+        autocmd!
+        autocmd FileType help wincmd L
+        autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") |     exe "normal! g'\"" | endif
     augroup END
     augroup highlight_group
         autocmd!
     augroup END
 end
 
-" All of these mappings override default behavior in very minor ways
+" Warning: all of these mappings override default behavior in very minor ways
 noremap <silent> <expr> j (v:count == 0 ? 'gj' : 'j')
 noremap <silent> <expr> k (v:count == 0 ? 'gk' : 'k')
 nnoremap Q @q
@@ -78,5 +81,8 @@ xnoremap gx <Esc>`.``gvP``P
 " map <Space> <nop>
 " map <S-Space> <Space>
 " let mapleader=" "
+" noremap <Leader><Tab> :let wv=winsaveview()<CR>:%s/\s\+$//e \| call histdel("/", -1) \| nohlsearch \| retab<CR>:call winrestview(wv)<CR>
 " noremap <Leader>t :new<CR>:setlocal buftype=nofile bufhidden=wipe nobuflisted noswapfile<CR>
+" nnoremap <silent> <expr> <Leader>s ':s/' . input('split/') . '/\r/g \| nohlsearch<CR>'
+" nnoremap <silent> <expr> <Leader>a ":let p = input('tab/') \| execute ':Tabularize' . (empty(p) ? '' : ' /' . p)<CR>"
 

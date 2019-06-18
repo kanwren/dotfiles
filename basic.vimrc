@@ -109,9 +109,6 @@
         augroup END
     end
 
-" Decent colorscheme
-    colorscheme elflord
-
 " Force sudo write trick
     command! WS :execute ':silent w !sudo tee % > /dev/null' | :edit!
 
@@ -162,6 +159,7 @@
     vnoremap <silent> <Leader>j :<C-u>call append(line("'>"), repeat([''], v:count1))<CR>gv
     vnoremap <silent> <Leader>k :<C-u>call append(line("'<") - 1, repeat([''], v:count1))<CR>gv
     nnoremap <silent> <Leader>n :<C-u>call append(line("."), repeat([''], v:count1)) \| call append(line(".") - 1, repeat([''], v:count1))<CR>
+    vnoremap <silent> <Leader>n :<C-u>call append(line("'>"), repeat([''], v:count1)) \| call append(line("'<") - 1, repeat([''], v:count1))<CR>
     vnoremap <Leader>e <Esc>:call ExpandSpaces()<CR>
 
 " Convenience
@@ -208,6 +206,9 @@
 " Misc
     noremap <Leader><Leader>es :edit ~/scratch<CR>
     noremap <Leader><Leader>cd :cd %:h<CR>
+
+" Decent colorscheme
+    colorscheme elflord
 
 " Local vimrc
     if !empty(glob('~/local.vimrc'))
