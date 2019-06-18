@@ -153,6 +153,8 @@ alias l1='ls -1'
 alias lsd='ls -d */'
 
 alias xc='xclip -sel clip'
+# Copy last command
+alias copylast="fc -ln -1 | awk '{\$1=\$1}1' | xclip -sel clip"
 
 alias .1='cd ..'
 alias .2='cd ../..'
