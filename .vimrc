@@ -160,6 +160,33 @@
 " Force sudo write trick
     command! WS :execute ':silent w !sudo tee % > /dev/null' | :edit!
 
+" Session management
+    function! GetSessions(arglead, cmdline, cursorpos) abort
+        let paths = split(globpath(&runtimepath, 'sessions/*.vim'), "\n")
+        let names = map(paths, 'fnamemodify(v:val, ":t:r")')
+        if empty(a:arglead)
+            return names
+        else
+            return filter(names, {idx, val -> len(val) >= len(a:arglead) && val[:len(a:arglead) - 1] ==# a:arglead})
+        endif
+    endfunction
+    " Save
+    command! -bang -nargs=? -complete=customlist,GetSessions Save :call MkSession("<bang>", <f-args>)
+    function! MkSession(b, ...) abort
+        if a:0 > 0
+            execute "mksession" . a:b . " ~/.vim/sessions/" . a:1 . ".vim"
+            echo "Saved session to ~/.vim/sessions/" . a:1 . ".vim"
+        else
+            execute "mksession! ~/.vim/sessions/temp.vim"
+            echo "Saved session to ~/.vim/sessions/temp.vim"
+        endif
+    endfunction
+    " Restore
+    command! -nargs=? -complete=customlist,GetSessions Restore :call SourceSession(<f-args>)
+    function! SourceSession(...) abort
+        execute "source ~/.vim/sessions/" . (a:0 > 0 ? a:1 : 'temp') . ".vim"
+    endfunction
+
 " Enable easy mode (for teaching recitation with a non-Vim user)
     command! EM execute "set insertmode | source $VIMRUNTIME/evim.vim"
 
@@ -405,6 +432,10 @@
     " Read in a template
     nnoremap <Leader><Leader>t :call ReadTemplate()<CR>
 
+" Sessions
+    nnoremap \s :Save<CR>
+    nnoremap \r :Restore<CR>
+
 " Managing Whitespace
     " Delete trailing whitespace and retab
     noremap <Leader><Tab> :let wv=winsaveview()<CR>:%s/\s\+$//e \| call histdel("/", -1) \| nohlsearch \| retab<CR>:call winrestview(wv)<CR>
@@ -595,7 +626,7 @@
         Plug 'tpope/vim-commentary'              " Easy commenting
         Plug 'tpope/vim-speeddating'             " Fix negative problem when incrementing dates
         Plug 'godlygeek/tabular'                 " Tabularize
-        Plug 'jiangmiao/auto-pairs'              " Automatically insert matching punctuation pair, etc.
+        " Plug 'jiangmiao/auto-pairs'              " Automatically insert matching punctuation pair, etc.
         Plug 'tommcdo/vim-exchange'              " Text exchanging operators
         Plug 'vim-scripts/matchit.zip'
 
