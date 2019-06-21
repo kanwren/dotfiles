@@ -764,4 +764,8 @@
     end
 " }}}
 
+augroup meow
+    autocmd! VimEnter * echo '>^.^<'
+augroup END
+
 " vim:foldmethod=marker
