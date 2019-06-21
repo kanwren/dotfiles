@@ -486,6 +486,17 @@
     noremap ]L :llast<CR>
     noremap [L :lfirst<CR>
 
+" Text objects
+    " Inner line - line minus leading/trailing blanks
+    vnoremap <silent> il :normal! g_v^<CR>
+    onoremap <silent> il :normal! g_v^<CR>
+    " Around line - a line, minus the newline on the end
+    vnoremap <silent> al :normal! $v0<CR>
+    onoremap <silent> al :normal! $v0<CR>
+    " Inner document
+    vnoremap <silent> id :normal! GVgg<CR>
+    onoremap <silent> id :normal! GVgg<CR>
+
 " fzf mappings
     " All files
     nnoremap <Leader>ff :Files<CR>
