@@ -174,9 +174,6 @@ command_not_found_handle() {
 # File for when private aliases/functions are needed
 [ -f ~/local.bashrc ] && source ~/local.bashrc
 
-# This probably should be added to ~/.profile instead
-# export PATH="$PATH:~/dotfiles/bin"
-
 # Everything below is for interactive sessions only
 [ -z "$PS1" ] && return
 
