@@ -1,7 +1,7 @@
 set-option global grepcmd 'ag --column'
 set-option global ui_options ncurses_assistant=none
 
-colorscheme desertex
+colorscheme default
 
 add-highlighter global/ show-matching
 
@@ -12,11 +12,11 @@ set-face global search +bi
 add-highlighter global/ column '%opt{autowrap_column}' default,magenta
 
 # Enable once characters are fixed
-# hook global WinCreate ^[^*]+$ %{ add-highlighter window/ number-lines -hlcursor }
+hook global WinCreate ^[^*]+$ %{ add-highlighter window/ number-lines -hlcursor }
 
 # Enable editor config
 hook global BufOpenFile .* %{ editorconfig-load }
-hook global BufNewFile .* %{ editorconfig-load }
+hook global BufNewFile  .* %{ editorconfig-load }
 
 # System clipboard handling
 evaluate-commands %sh{
@@ -35,14 +35,13 @@ hook global InsertChar \t %{ exec -draft -itersel h@ }
 set global tabstop 4
 set global indentwidth 4
 
-
 hook global WinSetOption filetype=haskell %{
-    hook global InsertChar \t %{ exec -draft -itersel h@ }
     ctags-enable-autoinfo
     set global tabstop 2
     set global indentwidth 2
 }
 
+# Make x and X extend selection down and up a line respectively
 def -params 1 extend-line-down %{
     exec "<a-:>%arg{1}X"
 }
