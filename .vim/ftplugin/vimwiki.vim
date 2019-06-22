@@ -1,4 +1,3 @@
-let b:autopairs_enabled=0
 setlocal formatoptions=croqjlnt
 
 function! DrawImage()

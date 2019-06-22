@@ -637,9 +637,9 @@
         Plug 'tpope/vim-commentary'              " Easy commenting
         Plug 'tpope/vim-speeddating'             " Fix negative problem when incrementing dates
         Plug 'godlygeek/tabular'                 " Tabularize
-        " Plug 'jiangmiao/auto-pairs'              " Automatically insert matching punctuation pair, etc.
         Plug 'tommcdo/vim-exchange'              " Text exchanging operators
         Plug 'vim-scripts/matchit.zip'
+        Plug 'jiangmiao/auto-pairs', { 'for': ['java', 'c', 'cpp'] }
 
         " Interface
         Plug 'itchyny/lightline.vim'
