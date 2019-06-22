@@ -140,10 +140,10 @@
     noremap ' `
     noremap ` '
     nnoremap & :&&<CR>
-    noremap <Leader>t :new<CR>:setlocal buftype=nofile bufhidden=wipe nobuflisted noswapfile<CR>
+    nnoremap <Leader>t :new<CR>:setlocal buftype=nofile bufhidden=wipe nobuflisted noswapfile<CR>
     nnoremap <silent> * :let wv=winsaveview()<CR>*:call winrestview(wv)<CR>
     vnoremap <silent> * :<C-u>let wv=winsaveview()<CR>gvy/<C-r>"<CR>:call winrestview(wv)<CR>
-    noremap <C-l> :nohlsearch<CR><C-l>
+    nnoremap <silent> <C-l> :nohlsearch<CR><C-l>
 
 " Editing
     nnoremap <silent> <Leader>; :let wv=winsaveview()<CR>:s/[^;]*\zs\ze\s*$/;/e \| nohlsearch<CR>:call winrestview(wv)<CR>
@@ -153,7 +153,7 @@
     vnoremap <silent> <Leader>vs :sort /\ze\%V/<CR>gvyugvpgv:s/\s\+$//e \| nohlsearch<CR>``
 
 " Whitespace
-    noremap <silent> <Leader><Tab> :let wv=winsaveview()<CR>:%s/\s\+$//e \| call histdel("/", -1) \| nohlsearch \| retab<CR>:call winrestview(wv)<CR>
+    nnoremap <silent> <Leader><Tab> :let wv=winsaveview()<CR>:%s/\s\+$//e \| call histdel("/", -1) \| nohlsearch \| retab<CR>:call winrestview(wv)<CR>
     nnoremap <silent> <Leader>j :<C-u>call append(line("."), repeat([''], v:count1))<CR>
     nnoremap <silent> <Leader>k :<C-u>call append(line(".") - 1, repeat([''], v:count1))<CR>
     vnoremap <silent> <Leader>j :<C-u>call append(line("'>"), repeat([''], v:count1))<CR>gv
@@ -163,49 +163,49 @@
     vnoremap <Leader>e <Esc>:call ExpandSpaces()<CR>
 
 " Convenience
-    noremap <Leader>d "_d
-    noremap <Leader>D "_D
-    noremap <Leader>p "0p
-    noremap <Leader>P "0P
+    nnoremap <Leader>d "_d
+    nnoremap <Leader>D "_D
+    nnoremap <Leader>p "0p
+    nnoremap <Leader>P "0P
 
 " Registers
-    noremap <silent> "" :registers<CR>
-    noremap <silent> <Leader>r :let r1 = substitute(nr2char(getchar()), "'", "\"", "") \| let r2 = substitute(nr2char(getchar()), "'", "\"", "")
+    nnoremap <silent> "" :registers<CR>
+    nnoremap <silent> <Leader>r :let r1 = substitute(nr2char(getchar()), "'", "\"", "") \| let r2 = substitute(nr2char(getchar()), "'", "\"", "")
           \ \| execute 'let @' . r2 . '=@' . r1 \| echo "Copied @" . r1 . " to @" . r2<CR>
 
 " Navigation
-    noremap <Leader>b :ls<CR>:b
-    noremap ]b :bnext<CR>
-    noremap [b :bprevious<CR>
-    noremap ]B :blast<CR>
-    noremap [B :bfirst<CR>
-    noremap ]t :tnext<CR>
-    noremap [t :tprevious<CR>
-    noremap ]T :tlast<CR>
-    noremap [T :tfirst<CR>
-    noremap ]q :cnext<CR>
-    noremap [q :cprevious<CR>
-    noremap ]Q :clast<CR>
-    noremap [Q :cfirst<CR>
-    noremap ]l :lnext<CR>
-    noremap [l :lprevious<CR>
-    noremap ]L :llast<CR>
-    noremap [L :lfirst<CR>
+    nnoremap <Leader>b :ls<CR>:b
+    nnoremap ]b :bnext<CR>
+    nnoremap [b :bprevious<CR>
+    nnoremap ]B :blast<CR>
+    nnoremap [B :bfirst<CR>
+    nnoremap ]t :tnext<CR>
+    nnoremap [t :tprevious<CR>
+    nnoremap ]T :tlast<CR>
+    nnoremap [T :tfirst<CR>
+    nnoremap ]q :cnext<CR>
+    nnoremap [q :cprevious<CR>
+    nnoremap ]Q :clast<CR>
+    nnoremap [Q :cfirst<CR>
+    nnoremap ]l :lnext<CR>
+    nnoremap [l :lprevious<CR>
+    nnoremap ]L :llast<CR>
+    nnoremap [L :lfirst<CR>
 
 " Quick settings changes
-    noremap <Leader><Leader>ev :edit $MYVIMRC<CR>
-    noremap <Leader><Leader>sv :source $MYVIMRC<CR>
-    noremap <Leader><Leader>ef :edit ~/.vim/ftplugin/<C-r>=&filetype<CR>.vim<CR>
-    noremap <Leader>i :let i=input('ts=sts=sw=') \| if i \| execute 'setlocal tabstop=' . i . ' softtabstop=' . i . ' shiftwidth=' . i \| endif
+    nnoremap <Leader><Leader>ev :edit $MYVIMRC<CR>
+    nnoremap <Leader><Leader>sv :source $MYVIMRC<CR>
+    nnoremap <Leader><Leader>ef :edit ~/.vim/ftplugin/<C-r>=&filetype<CR>.vim<CR>
+    nnoremap <Leader>i :let i=input('ts=sts=sw=') \| if i \| execute 'setlocal tabstop=' . i . ' softtabstop=' . i . ' shiftwidth=' . i \| endif
                 \ \| redraw \| echo 'ts=' . &tabstop . ', sts=' . &softtabstop . ', sw='  . &shiftwidth . ', et='  . &expandtab<CR>
-    noremap ]oc :set colorcolumn=+1<CR>
-    noremap [oc :set colorcolumn=<CR>
-    noremap ]ot :set textwidth=120<CR>
-    noremap [ot :set textwidth=80<CR>
+    nnoremap ]oc :set colorcolumn=+1<CR>
+    nnoremap [oc :set colorcolumn=<CR>
+    nnoremap ]ot :set textwidth=120<CR>
+    nnoremap [ot :set textwidth=80<CR>
 
 " Misc
-    noremap <Leader><Leader>es :edit ~/scratch<CR>
-    noremap <Leader><Leader>cd :cd %:h<CR>
+    nnoremap <Leader><Leader>es :edit ~/scratch<CR>
+    nnoremap <Leader><Leader>cd :cd %:h<CR>
 
 " Decent colorscheme
     colorscheme elflord

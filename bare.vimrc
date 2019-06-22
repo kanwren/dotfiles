@@ -72,7 +72,7 @@ noremap Y y$
 noremap ' `
 noremap ` '
 nnoremap & :&&<CR>
-noremap <C-l> :nohlsearch<CR><C-l>
+nnoremap <silent> <C-l> :nohlsearch<CR><C-l>
 nnoremap <silent> * :let wv=winsaveview()<CR>*:call winrestview(wv)<CR>
 vnoremap <silent> * :<C-u>let wv=winsaveview()<CR>gvy/<C-r>"<CR>:call winrestview(wv)<CR>
 xnoremap gx <Esc>`.``gvP``P
@@ -81,8 +81,8 @@ xnoremap gx <Esc>`.``gvP``P
 " map <Space> <nop>
 " map <S-Space> <Space>
 " let mapleader=" "
-" noremap <Leader><Tab> :let wv=winsaveview()<CR>:%s/\s\+$//e \| call histdel("/", -1) \| nohlsearch \| retab<CR>:call winrestview(wv)<CR>
-" noremap <Leader>t :new<CR>:setlocal buftype=nofile bufhidden=wipe nobuflisted noswapfile<CR>
+" nnoremap <Leader><Tab> :let wv=winsaveview()<CR>:%s/\s\+$//e \| call histdel("/", -1) \| nohlsearch \| retab<CR>:call winrestview(wv)<CR>
+" nnoremap <Leader>t :new<CR>:setlocal buftype=nofile bufhidden=wipe nobuflisted noswapfile<CR>
 " nnoremap <silent> <expr> <Leader>s ':s/' . input('split/') . '/\r/g \| nohlsearch<CR>'
 " nnoremap <silent> <expr> <Leader>a ":let p = input('tab/') \| execute ':Tabularize' . (empty(p) ? '' : ' /' . p)<CR>"
 

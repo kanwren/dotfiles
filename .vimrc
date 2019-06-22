@@ -379,10 +379,14 @@
 
 " Mappings {{{
 
-" Space is the default leader, and Shift-Space has the same function to make it easier to hit things like <Space>P
-" Single leader is for abbreviating common operations and important plugin commands
-" Double leader is for execution of some extraneous operations, like reading in templates or inline execution
-" \ is for very special and specific operations, like invoking external programs
+" Notes:
+" * Space is the default leader, and Shift-Space has the same function to make
+"   it easier to hit things like <Space>P
+" * Single leader is for abbreviating common operations and important plugin
+"   commands
+" * Double leader is for execution of meta-editing operations, like reading in
+"   templates or inline execution
+" * \ is for special operations, like invoking external programs
 
 " Leader configuration
     map <Space> <nop>
@@ -406,12 +410,12 @@
     " Make & keep flags
     nnoremap & :&&<CR>
     " Make temporary unlisted scratch buffer
-    noremap <Leader>t :new<CR>:setlocal buftype=nofile bufhidden=wipe nobuflisted noswapfile<CR>
+    nnoremap <Leader>t :new<CR>:setlocal buftype=nofile bufhidden=wipe nobuflisted noswapfile<CR>
     " Search word underneath cursor/selection but don't jump
     nnoremap <silent> * :let wv=winsaveview()<CR>*:call winrestview(wv)<CR>
     vnoremap <silent> * :<C-u>let wv=winsaveview()<CR>gvy/<C-r>"<CR>:call winrestview(wv)<CR>
     " Redraw page and clear highlights
-    noremap <C-l> :nohlsearch<CR><C-l>
+    noremap <silent> <C-l> :nohlsearch<CR><C-l>
     " Put text deleted with <C-w>/<C-u> into @"
     "inoremap <silent> <C-w> <C-\><C-o>db
     "inoremap <silent> <C-u> <C-\><C-o>d0
@@ -438,7 +442,7 @@
 
 " Managing Whitespace
     " Delete trailing whitespace and retab
-    noremap <silent> <Leader><Tab> :let wv=winsaveview()<CR>:%s/\s\+$//e \| call histdel("/", -1) \| nohlsearch \| retab<CR>:call winrestview(wv)<CR>
+    nnoremap <silent> <Leader><Tab> :let wv=winsaveview()<CR>:%s/\s\+$//e \| call histdel("/", -1) \| nohlsearch \| retab<CR>:call winrestview(wv)<CR>
     " Add blank line below/above line/selection, keep cursor in same position (can take count)
     nnoremap <silent> <Leader>j :<C-u>call append(line("."), repeat([''], v:count1))<CR>
     nnoremap <silent> <Leader>k :<C-u>call append(line(".") - 1, repeat([''], v:count1))<CR>
@@ -457,45 +461,50 @@
 
 " Registers
     " Display registers
-    noremap <silent> "" :registers<CR>
-    " Copy contents of register to another, provides ' as an alias for "
-    noremap <silent> <Leader>r :let r1 = substitute(nr2char(getchar()), "'", "\"", "") \| let r2 = substitute(nr2char(getchar()), "'", "\"", "")
+    nnoremap <silent> "" :registers<CR>
+    " Copy contents of register to another, providing ' as an alias for "
+    nnoremap <silent> <Leader>r :let r1 = substitute(nr2char(getchar()), "'", "\"", "") \| let r2 = substitute(nr2char(getchar()), "'", "\"", "")
           \ \| execute 'let @' . r2 . '=@' . r1 \| echo "Copied @" . r1 . " to @" . r2<CR>
 
 " Navigation
     " Fast buffer navigation/editing
-    noremap <Leader>b :ls<CR>:b
+    nnoremap <Leader>b :ls<CR>:b
     " Matching navigation commands, like in unimpaired
-    noremap ]b :bnext<CR>
-    noremap [b :bprevious<CR>
-    noremap ]B :blast<CR>
-    noremap [B :bfirst<CR>
+    nnoremap ]b :bnext<CR>
+    nnoremap [b :bprevious<CR>
+    nnoremap ]B :blast<CR>
+    nnoremap [B :bfirst<CR>
 
-    noremap ]t :tnext<CR>
-    noremap [t :tprevious<CR>
-    noremap ]T :tlast<CR>
-    noremap [T :tfirst<CR>
+    nnoremap ]t :tnext<CR>
+    nnoremap [t :tprevious<CR>
+    nnoremap ]T :tlast<CR>
+    nnoremap [T :tfirst<CR>
 
-    noremap ]q :cnext<CR>
-    noremap [q :cprevious<CR>
-    noremap ]Q :clast<CR>
-    noremap [Q :cfirst<CR>
+    nnoremap ]q :cnext<CR>
+    nnoremap [q :cprevious<CR>
+    nnoremap ]Q :clast<CR>
+    nnoremap [Q :cfirst<CR>
 
-    noremap ]l :lnext<CR>
-    noremap [l :lprevious<CR>
-    noremap ]L :llast<CR>
-    noremap [L :lfirst<CR>
+    nnoremap ]l :lnext<CR>
+    nnoremap [l :lprevious<CR>
+    nnoremap ]L :llast<CR>
+    nnoremap [L :lfirst<CR>
 
 " Text objects
     " Inner line - line minus leading/trailing blanks
-    vnoremap <silent> il :normal! g_v^<CR>
+    vnoremap <silent> il :<C-u>normal! g_v^<CR>
     onoremap <silent> il :normal! g_v^<CR>
     " Around line - a line, minus the newline on the end
-    vnoremap <silent> al :normal! $v0<CR>
+    vnoremap <silent> al :<C-u>normal! $v0<CR>
     onoremap <silent> al :normal! $v0<CR>
     " Inner document
-    vnoremap <silent> id :normal! GVgg<CR>
+    vnoremap <silent> id :<C-u>normal! GVgg<CR>
     onoremap <silent> id :normal! GVgg<CR>
+    " Folds
+    vnoremap <silent> iz :<C-u>normal! [zjV]zk<CR>
+    xnoremap <silent> iz :normal! [zjV]zk<CR>
+    vnoremap <silent> az :<C-u>normal! [zV]z<CR>
+    xnoremap <silent> az :normal! [zV]z<CR>
 
 " fzf mappings
     " All files
@@ -524,16 +533,16 @@
 
 " Quick settings changes
     " .vimrc editing/sourcing
-    noremap <Leader><Leader>ev :edit $MYVIMRC<CR>
-    noremap <Leader><Leader>sv :source $MYVIMRC<CR>
+    nnoremap <Leader><Leader>ev :edit $MYVIMRC<CR>
+    nnoremap <Leader><Leader>sv :source $MYVIMRC<CR>
     " Filetype ftplugin editing
-    noremap <Leader><Leader>ef :edit ~/.vim/ftplugin/<C-r>=&filetype<CR>.vim<CR>
+    nnoremap <Leader><Leader>ef :edit ~/.vim/ftplugin/<C-r>=&filetype<CR>.vim<CR>
     " Change indent level on the fly
-    noremap <Leader>i :let i=input('ts=sts=sw=') \| if i \| execute 'setlocal tabstop=' . i . ' softtabstop=' . i . ' shiftwidth=' . i \| endif
+    nnoremap <Leader>i :let i=input('ts=sts=sw=') \| if i \| execute 'setlocal tabstop=' . i . ' softtabstop=' . i . ' shiftwidth=' . i \| endif
                 \ \| redraw \| echo 'ts=' . &tabstop . ', sts=' . &softtabstop . ', sw='  . &shiftwidth . ', et='  . &expandtab<CR>
     " Binary switches
-    noremap ]oc :set colorcolumn=+1<CR>
-    noremap [oc :set colorcolumn=<CR>
+    nnoremap ]oc :set colorcolumn=+1<CR>
+    nnoremap [oc :set colorcolumn=<CR>
 
 " Changing case
     " Title Case
@@ -568,13 +577,13 @@
 
 " Quick notes
     " Global scratch buffer
-    noremap <Leader><Leader>es :edit ~/scratch<CR>
+    nnoremap <Leader><Leader>es :edit ~/scratch<CR>
     " Vimwiki quick notes file
-    noremap <Leader>wq :e ~/wiki/quick/index.wiki<CR>
+    nnoremap <Leader>wq :e ~/wiki/quick/index.wiki<CR>
 
 " Misc
     " Change working directory to directory of current file
-    noremap <Leader><Leader>cd :cd %:h<CR>
+    nnoremap <Leader><Leader>cd :cd %:h<CR>
     " Show calendar and date/time
     nnoremap \ec :!clear && cal -y && date -R<CR>
 "}}}
