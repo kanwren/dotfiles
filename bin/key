@@ -1,0 +1,14 @@
+#!/bin/bash
+
+set -e
+
+if [ $# -eq 0 ]; then
+  echo "Error: expected arguments"
+  exit 1
+fi
+
+case "$1" in
+  us|qwerty) setxkbmap -layout us -option caps:escape     ;;
+  dvorak)    setxkbmap -layout dvorak -option caps:escape ;;
+  *)         echo "Unrecognized argument: $1"             ;;
+esac

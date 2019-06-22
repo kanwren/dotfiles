@@ -1,0 +1,24 @@
+#!/bin/bash
+
+set -e
+
+primary="eDP-1"
+hdmi="HDMI-1"
+
+if [ $# -eq 0 ]; then
+  echo "Error: expected arguments"
+  exit 1
+fi
+
+for arg in "$@"; do
+  case "$arg" in
+    on)         xrandr --output $hdmi --auto              ;;
+    left)       xrandr --output $hdmi --left-of  $primary ;;
+    right)      xrandr --output $hdmi --right-of $primary ;;
+    up|above)   xrandr --output $hdmi --above    $primary ;;
+    down|below) xrandr --output $hdmi --below    $primary ;;
+    mirror)     xrandr --output $hdmi --same-as  $primary ;;
+    off)        xrandr --output $hdmi --off               ;;
+    *)          echo "Unrecognized argument: $arg"        ;;
+  esac
+done
