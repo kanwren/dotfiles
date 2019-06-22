@@ -12,16 +12,16 @@
     end
     filetype plugin indent on
 
-" Spelling
-    let $LANG='en'
-    set nospell spelllang=en_us
-
 " Backups
     set backup writebackup backupdir=~/.vim/backup
     set swapfile directory^=~/.vim/tmp
     if has('persistent_undo')
         set undofile undodir=~/.vim/undo
     endif
+
+" Spelling
+    let $LANG='en'
+    set nospell spelllang=en_us
 
 " Buffers
     set hidden autoread noconfirm
@@ -153,7 +153,7 @@
     vnoremap <silent> <Leader>vs :sort /\ze\%V/<CR>gvyugvpgv:s/\s\+$//e \| nohlsearch<CR>``
 
 " Whitespace
-    noremap <Leader><Tab> m`:%s/\s\+$//e \| call histdel("/", -1) \| nohlsearch \| retab<CR>``
+    noremap <silent> <Leader><Tab> :let wv=winsaveview()<CR>:%s/\s\+$//e \| call histdel("/", -1) \| nohlsearch \| retab<CR>:call winrestview(wv)<CR>
     nnoremap <silent> <Leader>j :<C-u>call append(line("."), repeat([''], v:count1))<CR>
     nnoremap <silent> <Leader>k :<C-u>call append(line(".") - 1, repeat([''], v:count1))<CR>
     vnoremap <silent> <Leader>j :<C-u>call append(line("'>"), repeat([''], v:count1))<CR>gv

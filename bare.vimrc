@@ -11,15 +11,15 @@ if !syntax_on
 end
 filetype plugin indent on
 
-let $LANG='en'
-set nospell spelllang=en_us
-
 " Uncomment if backups are okay
 " set backup writebackup backupdir=~/.vim/backup
 " set swapfile directory^=~/.vim/tmp
 " if has('persistent_undo')
 "     set undofile undodir=~/.vim/undo
 " endif
+
+let $LANG='en'
+set nospell spelllang=en_us
 
 set hidden autoread noconfirm
 set noerrorbells visualbell t_vb=
@@ -55,7 +55,7 @@ if has('autocmd')
     augroup general_group
         autocmd!
         autocmd FileType help wincmd L
-        autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") |     exe "normal! g'\"" | endif
+        autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
     augroup END
     augroup highlight_group
         autocmd!

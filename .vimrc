@@ -10,10 +10,6 @@
     " Enable filetype detection
     filetype plugin indent on
 
-" Spelling
-    let $LANG='en'
-    set nospell spelllang=en_us
-
 " Backups
     set backup
     set writebackup
@@ -24,6 +20,10 @@
         set undofile
         set undodir=~/.vim/undo
     endif
+
+" Spelling
+    let $LANG='en'
+    set nospell spelllang=en_us
 
 " Colors and terminal settings
     if &term ==? "xterm-256color"
@@ -438,7 +438,7 @@
 
 " Managing Whitespace
     " Delete trailing whitespace and retab
-    noremap <Leader><Tab> :let wv=winsaveview()<CR>:%s/\s\+$//e \| call histdel("/", -1) \| nohlsearch \| retab<CR>:call winrestview(wv)<CR>
+    noremap <silent> <Leader><Tab> :let wv=winsaveview()<CR>:%s/\s\+$//e \| call histdel("/", -1) \| nohlsearch \| retab<CR>:call winrestview(wv)<CR>
     " Add blank line below/above line/selection, keep cursor in same position (can take count)
     nnoremap <silent> <Leader>j :<C-u>call append(line("."), repeat([''], v:count1))<CR>
     nnoremap <silent> <Leader>k :<C-u>call append(line(".") - 1, repeat([''], v:count1))<CR>
