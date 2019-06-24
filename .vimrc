@@ -21,9 +21,10 @@
         set undodir=~/.vim/undo
     endif
 
-" Spelling
+" Spelling and thesaurus
     let $LANG='en'
     set nospell spelllang=en_us
+    set thesaurus=~/.vim/thesaurus
 
 " Colors and terminal settings
     if &term ==? "xterm-256color"
@@ -159,6 +160,9 @@
 " Functions/commands {{{
 " Force sudo write trick
     command! WS :execute ':silent w !sudo tee % > /dev/null' | :edit!
+
+" Fetch mthesaurus.txt from gutenberg with curl
+    command! GetThesaurus :echo system("curl --create-dirs http://www.gutenberg.org/files/3202/files/ -o ~/.vim/thesaurus/mthesaur.txt && echo 'Done'")
 
 " Session management
     function! GetSessions(arglead, cmdline, cursorpos) abort
@@ -298,7 +302,6 @@
         call append(line('.'), filtered)
     endfunction
 
-" Hex editing
     command! -bar Hexmode call ToggleHex()
     function! ToggleHex() abort
         " save values for modified and read-only, clear read-only flag for now
@@ -416,9 +419,6 @@
     vnoremap <silent> * :<C-u>let wv=winsaveview()<CR>gvy/<C-r>"<CR>:call winrestview(wv)<CR>
     " Redraw page and clear highlights
     noremap <silent> <C-l> :nohlsearch<CR><C-l>
-    " Put text deleted with <C-w>/<C-u> into @"
-    "inoremap <silent> <C-w> <C-\><C-o>db
-    "inoremap <silent> <C-u> <C-\><C-o>d0
 
 " Editing
     " Convenient semicolon insertion
@@ -428,9 +428,9 @@
     "xnoremap gx <Esc>`.``gvP``P
     " Split current line by provided regex (\zs or \ze to preserve separators)
     nnoremap <silent> <expr> <Leader>s ':s/' . input('split/') . '/\r/g \| nohlsearch<CR>'
-    " Align; prompt for regular expression on which to tabularize
-    nnoremap <silent> <expr> <Leader>a ":let p = input('tab/') \| execute ':Tabularize' . (empty(p) ? '' : ' /' . p)<CR>"
-    vnoremap <silent> <Leader>a <Esc>:let p = input('tab/') \| execute ":'<,'>Tabularize" . (empty(p) ? '' : ' /' . p)<CR>
+    " easy-align live interactive mode
+    nmap <Leader>a <Plug>(LiveEasyAlign)
+    vmap <Leader>a <Plug>(LiveEasyAlign)
     " Sort visual selection
     vnoremap <silent> <Leader>vs :sort /\ze\%V/<CR>gvyugvpgv:s/\s\+$//e \| nohlsearch<CR>``
     " Read in a template
@@ -645,18 +645,18 @@
         Plug 'tpope/vim-repeat'                  " Repeating more actions with .
         Plug 'tpope/vim-commentary'              " Easy commenting
         Plug 'tpope/vim-speeddating'             " Fix negative problem when incrementing dates
-        Plug 'godlygeek/tabular'                 " Tabularize
-        Plug 'tommcdo/vim-exchange'              " Text exchanging operators
+        Plug 'junegunn/vim-easy-align'           " Interactive alignment rules
+        Plug 'tommcdo/vim-exchange'              " Operators for exchanging text
         Plug 'vim-scripts/matchit.zip'
         Plug 'jiangmiao/auto-pairs', { 'for': ['java', 'c', 'cpp'] }
-
-        " Interface
-        Plug 'itchyny/lightline.vim'
-        Plug 'arcticicestudio/nord-vim'
 
         " Fuzzy finding
         Plug 'junegunn/fzf'
         Plug 'junegunn/fzf.vim'
+
+        " Interface and colorschemes
+        Plug 'itchyny/lightline.vim'
+        Plug 'arcticicestudio/nord-vim'
 
         " Text objects
         Plug 'kana/vim-textobj-user'
@@ -668,8 +668,8 @@
 
         " Language-specific
         Plug 'neovimhaskell/haskell-vim', { 'for': 'haskell' }
-
         Plug 'JamshedVesuna/vim-markdown-preview', { 'for': 'markdown' }
+
         call plug#end()
     endif
 " }}}
@@ -737,10 +737,6 @@
     autocmd! User GoyoEnter nested call <SID>goyo_enter()
     autocmd! User GoyoLeave nested source $MYVIMRC
 
-" AutoPairs
-    " Only match curly braces and square brackets (everything else is a bit annoying)
-    let g:AutoPairs = { '{': '}', '[': ']' }
-
 " haskell-vim
     let g:haskell_enable_quantification = 1   " `forall`
     let g:haskell_enable_recursivedo = 1      " `mdo` and `rec`
@@ -767,14 +763,14 @@
         let g:lightline['colorscheme'] = 'powerline'
     endif
 
-" Local vimrc {{{
+" Local vimrc
     if !empty(glob('~/local.vimrc'))
         source ~/local.vimrc
     end
-" }}}
 
-augroup meow
-    autocmd! VimEnter * echo '>^.^<'
-augroup END
+" Meow
+    augroup meow
+        autocmd! VimEnter * echo '>^.^<'
+    augroup END
 
 " vim:foldmethod=marker
