@@ -24,7 +24,7 @@
 " Spelling and thesaurus
     let $LANG='en'
     set nospell spelllang=en_us
-    set thesaurus=~/.vim/thesaurus
+    set thesaurus=~/.vim/thesaurus/mthesaur.txt
 
 " Colors and terminal settings
     if &term ==? "xterm-256color"
@@ -162,7 +162,7 @@
     command! WS :execute ':silent w !sudo tee % > /dev/null' | :edit!
 
 " Fetch mthesaurus.txt from gutenberg with curl
-    command! GetThesaurus :echo system("curl --create-dirs http://www.gutenberg.org/files/3202/files/ -o ~/.vim/thesaurus/mthesaur.txt && echo 'Done'")
+    command! GetThesaurus :!curl --create-dirs http://www.gutenberg.org/files/3202/files/mthesaur.txt -o ~/.vim/thesaurus/mthesaur.txt
 
 " Session management
     function! GetSessions(arglead, cmdline, cursorpos) abort
