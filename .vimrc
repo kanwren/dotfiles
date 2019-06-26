@@ -429,8 +429,8 @@
     " Split current line by provided regex (\zs or \ze to preserve separators)
     nnoremap <silent> <expr> <Leader>s ':s/' . input('split/') . '/\r/g \| nohlsearch<CR>'
     " easy-align live interactive mode
-    nmap <Leader>a <Plug>(LiveEasyAlign)
-    vmap <Leader>a <Plug>(LiveEasyAlign)
+    nmap ga <Plug>(LiveEasyAlign)
+    vmap ga <Plug>(LiveEasyAlign)
     " Sort visual selection
     vnoremap <silent> <Leader>vs :sort /\ze\%V/<CR>gvyugvpgv:s/\s\+$//e \| nohlsearch<CR>``
     " Read in a template
