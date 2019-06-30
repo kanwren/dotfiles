@@ -77,6 +77,7 @@
     endif
 
 " Folds
+    set foldenable
     set foldmethod=manual
     set foldcolumn=1
     set foldlevelstart=99

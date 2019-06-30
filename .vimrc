@@ -109,6 +109,7 @@
     endif
 
 " Folds
+    set foldenable
     set foldmethod=manual
     set foldcolumn=1
     set foldlevelstart=99
@@ -389,7 +390,8 @@
 "   commands
 " * Double leader is for execution of meta-editing operations, like reading in
 "   templates or inline execution
-" * \ is for special operations, like invoking external programs
+" * \ is for special operations, like invoking external programs or managing
+"   sessions
 
 " Leader configuration
     map <Space> <nop>
@@ -515,7 +517,7 @@
     nnoremap <Leader>fb :BLines<CR>
     " Results of an ag search
     nnoremap <Leader>fa :Ag<Space>
-    " Tags in project (doesn't quite jump right currently)
+    " Tags in project
     nnoremap <Leader>ft :Tags<CR>
 
 " Fugitive mappings
@@ -591,7 +593,7 @@
 "}}}
 
 " Abbreviations {{{
-" Abbreviations for inserting common sequences
+" Common sequences
     iabbrev xaz <C-r>='abcdefghijklmnopqrstuvwxyz'<CR>
     iabbrev xAZ <C-r>='ABCDEFGHIJKLMNOPQRSTUVWXYZ'<CR>
     iabbrev x09 <C-r>='0123456789'<CR>
@@ -733,6 +735,7 @@
 " Goyo settings
     function! s:goyo_enter() abort
         set noshowcmd
+        set foldcolumn=0
         set wrap
         set scrolloff=999
     endfunction
