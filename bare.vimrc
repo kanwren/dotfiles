@@ -62,7 +62,7 @@ if has('autocmd')
     augroup END
 end
 
-" Warning: all of these mappings override default behavior in very minor ways
+" Warning: all of these mappings override default behavior
 noremap <silent> <expr> j (v:count == 0 ? 'gj' : 'j')
 noremap <silent> <expr> k (v:count == 0 ? 'gk' : 'k')
 nnoremap Q @q
@@ -73,8 +73,6 @@ noremap ' `
 noremap ` '
 nnoremap & :&&<CR>
 nnoremap <silent> <C-l> :nohlsearch<CR><C-l>
-nnoremap <silent> * :let wv=winsaveview()<CR>*:call winrestview(wv)<CR>
-vnoremap <silent> * :<C-u>let wv=winsaveview()<CR>gvy/<C-r>"<CR>:call winrestview(wv)<CR>
 xnoremap gx <Esc>`.``gvP``P
 
 " Leader mappings
