@@ -467,8 +467,6 @@
           \ \| execute 'let @' . r2 . '=@' . r1 \| echo "Copied @" . r1 . " to @" . r2<CR>
 
 " Navigation
-    " Fast buffer navigation/editing
-    nnoremap <Leader>b :ls<CR>:b
     " Matching navigation commands, like in unimpaired
     nnoremap ]b :bnext<CR>
     nnoremap [b :bprevious<CR>
@@ -547,33 +545,37 @@
 " Changing case
     " Title Case
     let g:change_case_title=['\v\w+', '\u\L&']
-    nnoremap <silent> cut  :let g:change_case=g:change_case_title<CR>:set operatorfunc=ChangeCase<CR>g@
-    nnoremap <silent> cutc :let g:change_case=g:change_case_title<CR>V:call ChangeCase(visualmode(), 1)<CR>
-    xnoremap <silent> cut <Esc>:let g:change_case=g:change_case_title<CR>:call ChangeCase(visualmode(), 1)<CR>
+    nnoremap <silent> gct  :let g:change_case=g:change_case_title<CR>:set operatorfunc=ChangeCase<CR>g@
+    nnoremap <silent> gctt :let g:change_case=g:change_case_title<CR>g_v^:call ChangeCase(visualmode(), 1)<CR>
+    xnoremap <silent> gct <Esc>:let g:change_case=g:change_case_title<CR>:call ChangeCase(visualmode(), 1)<CR>
     " Alternating caps (lowercase first)
     let g:change_case_alt_low = ['\v(\w)(.{-})(\w)', '\L\1\2\U\3']
-    nnoremap <silent> cua :let g:change_case=g:change_case_alt_low<CR>:set operatorfunc=ChangeCase<CR>g@
-    nnoremap <silent> cuac :let g:change_case=g:change_case_alt_low<CR>V:call ChangeCase(visualmode(), 1)<CR>
-    xnoremap <silent> cua <Esc>:let g:change_case=g:change_case_alt_low<CR>:call ChangeCase(visualmode(), 1)<CR>
+    nnoremap <silent> gca :let g:change_case=g:change_case_alt_low<CR>:set operatorfunc=ChangeCase<CR>g@
+    nnoremap <silent> gcaa :let g:change_case=g:change_case_alt_low<CR>g_v^:call ChangeCase(visualmode(), 1)<CR>
+    xnoremap <silent> gca <Esc>:let g:change_case=g:change_case_alt_low<CR>:call ChangeCase(visualmode(), 1)<CR>
     " Alternating caps (uppercase first)
     let g:change_case_alt_up = ['\v(\w)(.{-})(\w)', '\U\1\2\L\3']
-    nnoremap <silent> cuA :let g:change_case=g:change_case_alt_up<CR>:set operatorfunc=ChangeCase<CR>g@
-    nnoremap <silent> cuAc :let g:change_case=g:change_case_alt_up<CR>V:call ChangeCase(visualmode(), 1)<CR>
-    xnoremap <silent> cuA <Esc>:let g:change_case=g:change_case_alt_up<CR>:call ChangeCase(visualmode(), 1)<CR>
+    nnoremap <silent> gcA :let g:change_case=g:change_case_alt_up<CR>:set operatorfunc=ChangeCase<CR>g@
+    nnoremap <silent> gcAA :let g:change_case=g:change_case_alt_up<CR>g_v^:call ChangeCase(visualmode(), 1)<CR>
+    xnoremap <silent> gcA <Esc>:let g:change_case=g:change_case_alt_up<CR>:call ChangeCase(visualmode(), 1)<CR>
 
 " Inline execution
     " Run selection in python and replace with output for programmatic text generation
     nnoremap <Leader><Leader>p :.!python3<CR>
     vnoremap <Leader><Leader>p :!python3<CR>
 
-" Hex utilities
+" Base conversion utilities
     nnoremap <Leader>hx :Hexmode<CR>
     vnoremap <Leader>he :call StrToHexCodes()<CR>
     vnoremap <Leader>hd :call HexCodesToStr()<CR>
-    nnoremap <Leader>hs :echo 0x<C-r><C-w><CR>
-    vnoremap <Leader>hs "xy:echo 0x<C-r>"<CR>
-    nnoremap <Leader>ht :echo printf('%x', <C-r><C-w>)<CR>
-    vnoremap <Leader>ht "xy:echo printf('%x', <C-r>")<CR>
+    nnoremap gbdb ciw<C-r>=printf('%b', <C-r>")<CR><Esc>
+    nnoremap gbbd ciw<C-r>=0b<C-r>"<CR><Esc>
+    vnoremap gbdb c<C-r>=printf('%b', <C-r>")<CR><Esc>
+    vnoremap gbbd c<C-r>=0b<C-r>"<CR><Esc>
+    nnoremap gbdh ciw<C-r>=printf('%x', <C-r>")<CR><Esc>
+    nnoremap gbhd ciw<C-r>=0x<C-r>"<CR><Esc>
+    vnoremap gbdh c<C-r>=printf('%x', <C-r>")<CR><Esc>
+    vnoremap gbhd c<C-r>=0x<C-r>"<CR><Esc>
 
 " Quick notes
     " Global scratch buffer
@@ -755,7 +757,7 @@
 " }}}
 
 " Colorscheme can come anywhere after highlighting autocommands
-    if &term ==? "xterm-256color"
+    if &term =~ ".*-256color"
         colorscheme nord
         let g:lightline['colorscheme'] = 'nord'
     else
