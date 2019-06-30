@@ -441,6 +441,9 @@
     " easy-align live interactive mode
     nmap ga <Plug>(LiveEasyAlign)
     vmap ga <Plug>(LiveEasyAlign)
+    " Prompt for regex to tabularize on
+    nnoremap <Leader>a :Tab<Space>
+    vnoremap <Leader>a :Tab<Space>
     " Sort visual selection
     vnoremap <silent> <Leader>vs :sort /\ze\%V/<CR>gvyugvpgv:s/\s\+$//e \| nohlsearch<CR>``
     " Read in a template
@@ -658,6 +661,7 @@
         Plug 'tpope/vim-commentary'              " Easy commenting
         Plug 'tpope/vim-speeddating'             " Fix negative problem when incrementing dates
         Plug 'junegunn/vim-easy-align'           " Interactive alignment rules
+        Plug 'godlygeek/tabular'                 " Tabularization and alignment
         Plug 'tommcdo/vim-exchange'              " Operators for exchanging text
         Plug 'vim-scripts/matchit.zip'
         Plug 'jiangmiao/auto-pairs', { 'for': ['java', 'c', 'cpp'] }
