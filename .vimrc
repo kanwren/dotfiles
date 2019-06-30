@@ -27,12 +27,20 @@
     set thesaurus=~/.vim/thesaurus/mthesaur.txt
 
 " Colors and terminal settings
-    if &term ==? "xterm-256color"
+    if &term =~ ".*-256color"
         set t_Co=256
         let &t_ti.="\e[1 q"
         let &t_SI.="\e[5 q"
         let &t_EI.="\e[1 q"
         let &t_te.="\e[0 q"
+    endif
+    " Fix cursor in tmux
+    if exists('$TMUX')
+        let &t_SI = "\ePtmux;\e\e[5 q\e\\"
+        let &t_EI = "\ePtmux;\e\e[2 q\e\\"
+    else
+        let &t_SI = "\e[5 q"
+        let &t_EI = "\e[2 q"
     endif
     set background=dark
 
