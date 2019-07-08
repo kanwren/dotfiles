@@ -45,7 +45,7 @@
     set number relativenumber
     set list listchars=tab:>-,eol:¬,extends:>,precedes:<
     set nocursorline nocursorcolumn
-    set laststatus=2 showmode statusline=[%n]\ %F%<\ \ \ %m%y%h%w%r\ \ %(0x%B\ %b%)%=%(col\ %c%)\ \ \ \ %(%l\ /\ %L%)\ \ \ \ %p%%%(\ %)
+    set laststatus=2 showmode statusline=[%n]\ %F%<\ %m%y%h%w%r\ \ %(0x%B\ %b%)%=%p%%\ \ %(%l/%L%)%(\ \|\ %c%V%)%(\ %)
     set cmdheight=1 showcmd
     set wildmenu wildmode=longest:list,full
 

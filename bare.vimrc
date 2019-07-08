@@ -27,7 +27,7 @@ set lazyredraw
 set number relativenumber
 set splitbelow splitright
 set cmdheight=1 showcmd
-set laststatus=2 showmode statusline=[%n]\ %F%<\ \ \ %m%y%h%w%r\ \ %(0x%B\ %b%)%=%(col\ %c%)\ \ \ \ %(%l\ /\ %L%)\ \ \ \ %p%%%(\ %)
+set laststatus=2 showmode statusline=[%n]\ %F%<\ %m%y%h%w%r\ \ %(0x%B\ %b%)%=%p%%\ \ %(%l/%L%)%(\ \|\ %c%V%)%(\ %)
 set wildmenu wildmode=longest:list,full
 
 set virtualedit=all
