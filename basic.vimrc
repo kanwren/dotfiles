@@ -22,6 +22,7 @@
 " Spelling
     let $LANG='en'
     set nospell spelllang=en_us
+    set thesaurus=~/.vim/thesaurus/mthesaur.txt
 
 " Buffers
     set hidden autoread noconfirm
@@ -113,6 +114,12 @@
 " Force sudo write trick
     command! WS :execute ':silent w !sudo tee % > /dev/null' | :edit!
 
+" Fetch mthesaurus.txt from gutenberg with curl
+    command! GetThesaurus :!curl --create-dirs http://www.gutenberg.org/files/3202/files/mthesaur.txt -o ~/.vim/thesaurus/mthesaur.txt
+
+" Reverse lines
+    command! -bar -range=% Reverse <line1>,<line2>g/^/m<line1>-1 | nohlsearch
+
 " JSON utilities
     command! -range JT <line1>,<line2>!python3 -mjson.tool
     command! -range JY <line1>,<line2>!python3 -c 'import sys, yaml, json; yaml.safe_dump(json.load(sys.stdin), sys.stdout, default_flow_style=False)'
@@ -175,6 +182,7 @@
           \ \| execute 'let @' . r2 . '=@' . r1 \| echo "Copied @" . r1 . " to @" . r2<CR>
 
 " Navigation
+    nnoremap <Leader>b :ls<CR>:
     nnoremap ]b :bnext<CR>
     nnoremap [b :bprevious<CR>
     nnoremap ]B :blast<CR>

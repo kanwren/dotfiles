@@ -34,14 +34,6 @@
         let &t_EI.="\e[1 q"
         let &t_te.="\e[0 q"
     endif
-    " Fix cursor in tmux
-    if exists('$TMUX')
-        let &t_SI = "\ePtmux;\e\e[5 q\e\\"
-        let &t_EI = "\ePtmux;\e\e[2 q\e\\"
-    else
-        let &t_SI = "\e[5 q"
-        let &t_EI = "\e[2 q"
-    endif
     set background=dark
 
 " Buffers
@@ -172,6 +164,9 @@
 
 " Fetch mthesaurus.txt from gutenberg with curl
     command! GetThesaurus :!curl --create-dirs http://www.gutenberg.org/files/3202/files/mthesaur.txt -o ~/.vim/thesaurus/mthesaur.txt
+
+" Reverse lines
+    command! -bar -range=% Reverse <line1>,<line2>g/^/m<line1>-1 | nohlsearch
 
 " Session management
     function! GetSessions(arglead, cmdline, cursorpos) abort
@@ -442,8 +437,8 @@
     nmap ga <Plug>(LiveEasyAlign)
     vmap ga <Plug>(LiveEasyAlign)
     " Prompt for regex to tabularize on
-    nnoremap <Leader>a :Tab<Space>
-    vnoremap <Leader>a :Tab<Space>
+    nnoremap <Leader>a :Tab/
+    vnoremap <Leader>a :Tab/
     " Sort visual selection
     vnoremap <silent> <Leader>vs :sort /\ze\%V/<CR>gvyugvpgv:s/\s\+$//e \| nohlsearch<CR>``
     " Read in a template
@@ -480,6 +475,7 @@
           \ \| execute 'let @' . r2 . '=@' . r1 \| echo "Copied @" . r1 . " to @" . r2<CR>
 
 " Navigation
+    nnoremap <Leader>b :ls<CR>:
     " Matching navigation commands, like in unimpaired
     nnoremap ]b :bnext<CR>
     nnoremap [b :bprevious<CR>
@@ -581,14 +577,22 @@
     nnoremap <Leader>hx :Hexmode<CR>
     vnoremap <Leader>he :call StrToHexCodes()<CR>
     vnoremap <Leader>hd :call HexCodesToStr()<CR>
-    nnoremap gbdb ciw<C-r>=printf('%b', <C-r>")<CR><Esc>
-    nnoremap gbbd ciw<C-r>=0b<C-r>"<CR><Esc>
-    vnoremap gbdb c<C-r>=printf('%b', <C-r>")<CR><Esc>
-    vnoremap gbbd c<C-r>=0b<C-r>"<CR><Esc>
-    nnoremap gbdh ciw<C-r>=printf('%x', <C-r>")<CR><Esc>
-    nnoremap gbhd ciw<C-r>=0x<C-r>"<CR><Esc>
-    vnoremap gbdh c<C-r>=printf('%x', <C-r>")<CR><Esc>
-    vnoremap gbhd c<C-r>=0x<C-r>"<CR><Esc>
+    nnoremap <Plug>(DecToBin) ciw<C-r>=printf('%b', <C-r>")<CR><Esc>:silent! call repeat#set("\<Plug>(DecToBin)", v:count)<CR>
+    nnoremap <Plug>(BinToDec) ciw<C-r>=0b<C-r>"<CR><Esc>:silent! call repeat#set("\<Plug>(BinToDec)", v:count)<CR>
+    vnoremap <Plug>(DecToBin) c<C-r>=printf('%b', <C-r>")<CR><Esc>:silent! call repeat#set("\<Plug>(DecToBin)", v:count)<CR>
+    vnoremap <Plug>(BinToDec) c<C-r>=0b<C-r>"<CR><Esc>:silent! call repeat#set("\<Plug>(BinToDec)", v:count)<CR>
+    nnoremap <Plug>(DecToHex) ciw<C-r>=printf('%x', <C-r>")<CR><Esc>:silent! call repeat#set("\<Plug>(DecToHex)", v:count)<CR>
+    nnoremap <Plug>(HexToDec) ciw<C-r>=0x<C-r>"<CR><Esc>:silent! call repeat#set("\<Plug>(HexToDec)", v:count)<CR>
+    vnoremap <Plug>(DecToHex) c<C-r>=printf('%x', <C-r>")<CR><Esc>:silent! call repeat#set("\<Plug>(DecToHex)", v:count)<CR>
+    vnoremap <Plug>(HexToDec) c<C-r>=0x<C-r>"<CR><Esc>:silent! call repeat#set("\<Plug>(HexToDec)", v:count)<CR>
+    nmap gbdb <Plug>(DecToBin)
+    nmap gbbd <Plug>(BinToDec)
+    vmap gbdb <Plug>(DecToBin)
+    vmap gbbd <Plug>(BinToDec)
+    nmap gbdh <Plug>(DecToHex)
+    nmap gbhd <Plug>(HexToDec)
+    vmap gbdh <Plug>(DecToHex)
+    vmap gbhd <Plug>(HexToDec)
 
 " Quick notes
     " Global scratch buffer
@@ -654,6 +658,7 @@
         Plug 'tpope/vim-eunuch'                  " File operations
         Plug 'tpope/vim-fugitive'                " Git integration
         Plug 'junegunn/goyo.vim'                 " Distraction-free writing in Vim
+        Plug 'airblade/vim-rooter'               " Automatically cd to project root
 
         " Utility
         Plug 'tpope/vim-surround'                " Mappings for inserting/changing/deleting surrounding characters/elements
