@@ -513,7 +513,13 @@
     vnoremap <silent> az :<C-u>normal! [zV]z<CR>
     xnoremap <silent> az :normal! [zV]z<CR>
 
-" fzf mappings
+" Netrw mappings (<Leader>l)
+    " Open directory of current buffer in vertical split
+    nnoremap <Leader>lv :Vex<CR>
+    " Open directory of current working directory in vertical split
+    nnoremap <Leader>ll :Lex<CR>
+
+" fzf mappings (<Leader>f)
     " All files
     nnoremap <Leader>ff :Files<CR>
     " All git ls-files files
@@ -527,7 +533,7 @@
     " Tags in project
     nnoremap <Leader>ft :Tags<CR>
 
-" Fugitive mappings
+" Fugitive mappings (<Leader>g)
     nnoremap <Leader>gs  :Gstatus<CR>
     nnoremap <Leader>gpl :Gpull<CR>
     nnoremap <Leader>gps :Gpush<CR>
@@ -551,7 +557,7 @@
     nnoremap ]oc :set colorcolumn=+1<CR>
     nnoremap [oc :set colorcolumn=<CR>
 
-" Changing case
+" Changing case (gc)
     " Title Case
     let g:change_case_title=['\v\w+', '\u\L&']
     nnoremap <silent> gct  :let g:change_case=g:change_case_title<CR>:set operatorfunc=ChangeCase<CR>g@
@@ -573,7 +579,7 @@
     nnoremap <Leader><Leader>p :.!python3<CR>
     vnoremap <Leader><Leader>p :!python3<CR>
 
-" Base conversion utilities
+" Base conversion utilities (gb)
     nnoremap <Leader>hx :Hexmode<CR>
     vnoremap <Leader>he :call StrToHexCodes()<CR>
     vnoremap <Leader>hd :call HexCodesToStr()<CR>
@@ -696,6 +702,9 @@
 " }}}
 
 " Plugin settings {{{
+" Netrw
+let g:netrw_banner=0
+
 " Vimwiki
     highlight VimwikiLink ctermbg=black ctermfg=2
     highlight VimwikiHeader1 ctermfg=magenta
@@ -734,7 +743,7 @@
     let g:lightline = {
                 \ 'active': {
                 \   'left': [ [ 'mode', 'paste' ],
-                \             [ 'readonly', 'buffilename', 'modified', 'keymapname', 'charvalue' ] ]
+                \             [ 'readonly', 'buffilename', 'modified', 'fugitive', 'keymapname', 'charvalue' ] ]
                 \ },
                 \ 'enable': {
                 \   'statusline': 1,
@@ -746,6 +755,7 @@
                 \ },
                 \ 'component_function': {
                 \   'keymapname': 'LightlineKeymapName',
+                \   'fugitive': 'FugitiveHead',
                 \ },
                 \ }
 
