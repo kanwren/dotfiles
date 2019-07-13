@@ -82,7 +82,6 @@
     set whichwrap+=<,>,h,l,[,]           " direction key wrapping
     set nrformats=bin,hex                " don't increment octal numbers
     set cpoptions+=y                     " let yank be repeated with . (primarily for repeating appending)
-    " set tildeop                          " Make ~ behave like g~ does by default
 
 " Indentation
     set autoindent
@@ -159,14 +158,27 @@
 " }}}
 
 " Functions/commands {{{
-" Force sudo write trick
+" Basic commands
+    " Force sudo write trick
     command! WS :execute ':silent w !sudo tee % > /dev/null' | :edit!
-
-" Fetch mthesaurus.txt from gutenberg with curl
-    command! GetThesaurus :!curl --create-dirs http://www.gutenberg.org/files/3202/files/mthesaur.txt -o ~/.vim/thesaurus/mthesaur.txt
-
-" Reverse lines
+    " cd to directory of current file
+    command! CD :cd %:h
+    " Reverse lines
     command! -bar -range=% Reverse <line1>,<line2>g/^/m<line1>-1 | nohlsearch
+    " Show calendar and date/time
+    command! Cal :!clear && cal -y && date -R
+    " Fetch mthesaurus.txt from gutenberg with curl
+    command! GetThesaurus :!curl --create-dirs http://www.gutenberg.org/files/3202/files/mthesaur.txt -o ~/.vim/thesaurus/mthesaur.txt
+    " Enable easy mode (for teaching recitation with a non-Vim user)
+    command! EM execute "set insertmode | source $VIMRUNTIME/evim.vim"
+
+" JSON utilities
+    " Format with python's JSON tool
+    command! -range JT <line1>,<line2>!python3 -mjson.tool
+    " Convert JSON to YAML
+    command! -range JY <line1>,<line2>!python3 -c 'import sys, yaml, json; yaml.safe_dump(json.load(sys.stdin), sys.stdout, default_flow_style=False)'
+    " Convert YAML to JSON
+    command! -range YJ <line1>,<line2>!python3 -c 'import sys, yaml, json; json.dump(yaml.safe_load(sys.stdin), sys.stdout)'
 
 " Session management
     function! GetSessions(arglead, cmdline, cursorpos) abort
@@ -194,17 +206,6 @@
     function! SourceSession(...) abort
         execute "source ~/.vim/sessions/" . (a:0 > 0 ? a:1 : 'temp') . ".vim"
     endfunction
-
-" Enable easy mode (for teaching recitation with a non-Vim user)
-    command! EM execute "set insertmode | source $VIMRUNTIME/evim.vim"
-
-" JSON utilities
-    " Format with python's JSON tool
-    command! -range JT <line1>,<line2>!python3 -mjson.tool
-    " Convert JSON to YAML
-    command! -range JY <line1>,<line2>!python3 -c 'import sys, yaml, json; yaml.safe_dump(json.load(sys.stdin), sys.stdout, default_flow_style=False)'
-    " Convert YAML to JSON
-    command! -range YJ <line1>,<line2>!python3 -c 'import sys, yaml, json; json.dump(yaml.safe_load(sys.stdin), sys.stdout)'
 
 " Utility
     function! ClearRegisters() abort
@@ -242,15 +243,6 @@
         silent exec 'normal! gv"0P'
         nohlsearch
         call winrestview(l:winview)
-    endfunction
-
-    " Use a visual block selection to pad with spaces
-    function! ExpandSpaces() abort
-        " Index 3 includes overflow information for virtualedit
-        let [start, startv] = getpos("'<")[2:3]
-        let [end, endv]     = getpos("'>")[2:3]
-        let cols = abs(end + endv - start - startv) + 1
-        execute 'normal gv' . cols . 'I '
     endfunction
 
     " nix-prefetch-git shortcut
@@ -421,28 +413,27 @@
     nnoremap <Leader>t :new<CR>:setlocal buftype=nofile bufhidden=wipe nobuflisted noswapfile<CR>
     " Search word underneath cursor/selection but don't jump
     nnoremap <silent> * :let wv=winsaveview()<CR>*:call winrestview(wv)<CR>
-    vnoremap <silent> * :<C-u>let wv=winsaveview()<CR>gvy/<C-r>"<CR>:call winrestview(wv)<CR>
     " Redraw page and clear highlights
     noremap <silent> <C-l> :nohlsearch<CR><C-l>
 
 " Editing
-    " Convenient semicolon insertion
-    nnoremap <silent> <Leader>; :let wv=winsaveview()<CR>:s/[^;]*\zs\ze\s*$/;/e \| nohlsearch<CR>:call winrestview(wv)<CR>
-    vnoremap <silent> <Leader>; :let wv=winsaveview()<CR>:s/\v(\s*$)(;)@<!/;/g \| nohlsearch<CR>:call winrestview(wv)<CR>
     " Exchange operation-delete, highlight target, exchange (made obsolete by exchange.vim)
     "xnoremap gx <Esc>`.``gvP``P
     " Split current line by provided regex (\zs or \ze to preserve separators)
     nnoremap <silent> <expr> <Leader>s ':s/' . input('split/') . '/\r/g \| nohlsearch<CR>'
+    " Sort visual selection
+    vnoremap <silent> <Leader>vs :sort /\ze\%V/<CR>gvyugvpgv:s/\s\+$//e \| nohlsearch<CR>``
+    " Convenient semicolon insertion
+    nnoremap <silent> <Leader>; :let wv=winsaveview()<CR>:s/[^;]*\zs\ze\s*$/;/e \| nohlsearch<CR>:call winrestview(wv)<CR>
+    vnoremap <silent> <Leader>; :let wv=winsaveview()<CR>:s/\v(\s*$)(;)@<!/;/g \| nohlsearch<CR>:call winrestview(wv)<CR>
+    " Read in a template
+    nnoremap <Leader><Leader>t :call ReadTemplate()<CR>
     " easy-align live interactive mode
     nmap ga <Plug>(LiveEasyAlign)
     vmap ga <Plug>(LiveEasyAlign)
     " Prompt for regex to tabularize on
     nnoremap <Leader>a :Tab/
     vnoremap <Leader>a :Tab/
-    " Sort visual selection
-    vnoremap <silent> <Leader>vs :sort /\ze\%V/<CR>gvyugvpgv:s/\s\+$//e \| nohlsearch<CR>``
-    " Read in a template
-    nnoremap <Leader><Leader>t :call ReadTemplate()<CR>
 
 " Sessions
     nnoremap \s :Save<CR>
@@ -459,7 +450,7 @@
     nnoremap <silent> <Leader>n :<C-u>call append(line("."), repeat([''], v:count1)) \| call append(line(".") - 1, repeat([''], v:count1))<CR>
     vnoremap <silent> <Leader>n :<C-u>call append(line("'>"), repeat([''], v:count1)) \| call append(line("'<") - 1, repeat([''], v:count1))<CR>
     " Expand line by padding visual block selection with spaces
-    vnoremap <Leader>e <Esc>:call ExpandSpaces()<CR>
+    vnoremap <Leader>e <Esc>:execute 'normal gv' . (abs(getpos("'>")[2] + getpos("'>")[3] - getpos("'<")[2] - getpos("'<")[3]) + 1) . 'I '<CR>
 
 " Convenience
     noremap <Leader>d "_d
@@ -470,11 +461,11 @@
 " Registers
     " Display registers
     nnoremap <silent> "" :registers<CR>
-    " Copy contents of register to another, providing ' as an alias for "
+    " Copy contents of register to another (provides ' as an alias for ")
     nnoremap <silent> <Leader>r :let r1 = substitute(nr2char(getchar()), "'", "\"", "") \| let r2 = substitute(nr2char(getchar()), "'", "\"", "")
           \ \| execute 'let @' . r2 . '=@' . r1 \| echo "Copied @" . r1 . " to @" . r2<CR>
 
-" Navigation Matching navigation commands, like in unimpaired
+" Matching navigation commands, like in unimpaired
     nnoremap ]b :bnext<CR>
     nnoremap [b :bprevious<CR>
     nnoremap ]B :blast<CR>
@@ -495,21 +486,57 @@
     nnoremap ]L :llast<CR>
     nnoremap [L :lfirst<CR>
 
-" Text objects
-    " Inner line - line minus leading/trailing blanks
-    vnoremap <silent> il :<C-u>normal! g_v^<CR>
-    onoremap <silent> il :normal! g_v^<CR>
-    " Around line - a line, minus the newline on the end
-    vnoremap <silent> al :<C-u>normal! $v0<CR>
-    onoremap <silent> al :normal! $v0<CR>
-    " Inner document
-    vnoremap <silent> id :<C-u>normal! GVgg<CR>
-    onoremap <silent> id :normal! GVgg<CR>
-    " Folds
-    vnoremap <silent> iz :<C-u>normal! [zjV]zk<CR>
-    xnoremap <silent> iz :normal! [zjV]zk<CR>
-    vnoremap <silent> az :<C-u>normal! [zV]z<CR>
-    xnoremap <silent> az :normal! [zV]z<CR>
+" Quick settings changes
+    " .vimrc editing/sourcing
+    nnoremap <Leader><Leader>ev :edit $MYVIMRC<CR>
+    nnoremap <Leader><Leader>sv :source $MYVIMRC<CR>
+    " Filetype ftplugin editing
+    nnoremap <Leader><Leader>ef :edit ~/.vim/ftplugin/<C-r>=&filetype<CR>.vim<CR>
+    " Change indent level on the fly
+    nnoremap <Leader>i :let i=input('ts=sts=sw=') \| if i \| execute 'setlocal tabstop=' . i . ' softtabstop=' . i . ' shiftwidth=' . i \| endif
+                \ \| redraw \| echo 'ts=' . &tabstop . ', sts=' . &softtabstop . ', sw='  . &shiftwidth . ', et='  . &expandtab<CR>
+
+" Changing case (gc)
+    " Title Case
+    let g:change_case_title=['\v\w+', '\u\L&']
+    nnoremap <silent> gct  :let g:change_case=g:change_case_title<CR>:set operatorfunc=ChangeCase<CR>g@
+    nnoremap <silent> gctt :let g:change_case=g:change_case_title<CR>g_v^:call ChangeCase(visualmode(), 1)<CR>
+    xnoremap <silent> gct <Esc>:let g:change_case=g:change_case_title<CR>:call ChangeCase(visualmode(), 1)<CR>
+    " Alternating caps (lowercase first)
+    let g:change_case_alt_low = ['\v(\w)(.{-})(\w)', '\L\1\2\U\3']
+    nnoremap <silent> gca :let g:change_case=g:change_case_alt_low<CR>:set operatorfunc=ChangeCase<CR>g@
+    nnoremap <silent> gcaa :let g:change_case=g:change_case_alt_low<CR>g_v^:call ChangeCase(visualmode(), 1)<CR>
+    xnoremap <silent> gca <Esc>:let g:change_case=g:change_case_alt_low<CR>:call ChangeCase(visualmode(), 1)<CR>
+    " Alternating caps (uppercase first)
+    let g:change_case_alt_up = ['\v(\w)(.{-})(\w)', '\U\1\2\L\3']
+    nnoremap <silent> gcA :let g:change_case=g:change_case_alt_up<CR>:set operatorfunc=ChangeCase<CR>g@
+    nnoremap <silent> gcAA :let g:change_case=g:change_case_alt_up<CR>g_v^:call ChangeCase(visualmode(), 1)<CR>
+    xnoremap <silent> gcA <Esc>:let g:change_case=g:change_case_alt_up<CR>:call ChangeCase(visualmode(), 1)<CR>
+
+" Base conversion utilities (gb)
+    vnoremap <Leader>he :call StrToHexCodes()<CR>
+    vnoremap <Leader>hd :call HexCodesToStr()<CR>
+    nnoremap <Plug>(DecToBin) ciw<C-r>=printf('%b', <C-r>")<CR><Esc>:silent! call repeat#set("\<Plug>(DecToBin)", v:count)<CR>
+    nnoremap <Plug>(BinToDec) ciw<C-r>=0b<C-r>"<CR><Esc>:silent! call repeat#set("\<Plug>(BinToDec)", v:count)<CR>
+    vnoremap <Plug>(DecToBin) c<C-r>=printf('%b', <C-r>")<CR><Esc>:silent! call repeat#set("\<Plug>(DecToBin)", v:count)<CR>
+    vnoremap <Plug>(BinToDec) c<C-r>=0b<C-r>"<CR><Esc>:silent! call repeat#set("\<Plug>(BinToDec)", v:count)<CR>
+    nnoremap <Plug>(DecToHex) ciw<C-r>=printf('%x', <C-r>")<CR><Esc>:silent! call repeat#set("\<Plug>(DecToHex)", v:count)<CR>
+    nnoremap <Plug>(HexToDec) ciw<C-r>=0x<C-r>"<CR><Esc>:silent! call repeat#set("\<Plug>(HexToDec)", v:count)<CR>
+    vnoremap <Plug>(DecToHex) c<C-r>=printf('%x', <C-r>")<CR><Esc>:silent! call repeat#set("\<Plug>(DecToHex)", v:count)<CR>
+    vnoremap <Plug>(HexToDec) c<C-r>=0x<C-r>"<CR><Esc>:silent! call repeat#set("\<Plug>(HexToDec)", v:count)<CR>
+    nmap gbdb <Plug>(DecToBin)
+    nmap gbbd <Plug>(BinToDec)
+    vmap gbdb <Plug>(DecToBin)
+    vmap gbbd <Plug>(BinToDec)
+    nmap gbdh <Plug>(DecToHex)
+    nmap gbhd <Plug>(HexToDec)
+    vmap gbdh <Plug>(DecToHex)
+    vmap gbhd <Plug>(HexToDec)
+
+" Inline execution
+    " Run selection in python and replace with output for programmatic text generation
+    nnoremap <Leader><Leader>p :.!python3<CR>
+    vnoremap <Leader><Leader>p :!python3<CR>
 
 " Netrw mappings (<Leader>l)
     " Open directory of current buffer in vertical split
@@ -542,73 +569,11 @@
 " Goyo mappings
     nnoremap <Leader>gy :Goyo<CR>
 
-" Quick settings changes
-    " .vimrc editing/sourcing
-    nnoremap <Leader><Leader>ev :edit $MYVIMRC<CR>
-    nnoremap <Leader><Leader>sv :source $MYVIMRC<CR>
-    " Filetype ftplugin editing
-    nnoremap <Leader><Leader>ef :edit ~/.vim/ftplugin/<C-r>=&filetype<CR>.vim<CR>
-    " Change indent level on the fly
-    nnoremap <Leader>i :let i=input('ts=sts=sw=') \| if i \| execute 'setlocal tabstop=' . i . ' softtabstop=' . i . ' shiftwidth=' . i \| endif
-                \ \| redraw \| echo 'ts=' . &tabstop . ', sts=' . &softtabstop . ', sw='  . &shiftwidth . ', et='  . &expandtab<CR>
-    " Binary switches
-    nnoremap ]oc :set colorcolumn=+1<CR>
-    nnoremap [oc :set colorcolumn=<CR>
-
-" Changing case (gc)
-    " Title Case
-    let g:change_case_title=['\v\w+', '\u\L&']
-    nnoremap <silent> gct  :let g:change_case=g:change_case_title<CR>:set operatorfunc=ChangeCase<CR>g@
-    nnoremap <silent> gctt :let g:change_case=g:change_case_title<CR>g_v^:call ChangeCase(visualmode(), 1)<CR>
-    xnoremap <silent> gct <Esc>:let g:change_case=g:change_case_title<CR>:call ChangeCase(visualmode(), 1)<CR>
-    " Alternating caps (lowercase first)
-    let g:change_case_alt_low = ['\v(\w)(.{-})(\w)', '\L\1\2\U\3']
-    nnoremap <silent> gca :let g:change_case=g:change_case_alt_low<CR>:set operatorfunc=ChangeCase<CR>g@
-    nnoremap <silent> gcaa :let g:change_case=g:change_case_alt_low<CR>g_v^:call ChangeCase(visualmode(), 1)<CR>
-    xnoremap <silent> gca <Esc>:let g:change_case=g:change_case_alt_low<CR>:call ChangeCase(visualmode(), 1)<CR>
-    " Alternating caps (uppercase first)
-    let g:change_case_alt_up = ['\v(\w)(.{-})(\w)', '\U\1\2\L\3']
-    nnoremap <silent> gcA :let g:change_case=g:change_case_alt_up<CR>:set operatorfunc=ChangeCase<CR>g@
-    nnoremap <silent> gcAA :let g:change_case=g:change_case_alt_up<CR>g_v^:call ChangeCase(visualmode(), 1)<CR>
-    xnoremap <silent> gcA <Esc>:let g:change_case=g:change_case_alt_up<CR>:call ChangeCase(visualmode(), 1)<CR>
-
-" Inline execution
-    " Run selection in python and replace with output for programmatic text generation
-    nnoremap <Leader><Leader>p :.!python3<CR>
-    vnoremap <Leader><Leader>p :!python3<CR>
-
-" Base conversion utilities (gb)
-    nnoremap <Leader>hx :Hexmode<CR>
-    vnoremap <Leader>he :call StrToHexCodes()<CR>
-    vnoremap <Leader>hd :call HexCodesToStr()<CR>
-    nnoremap <Plug>(DecToBin) ciw<C-r>=printf('%b', <C-r>")<CR><Esc>:silent! call repeat#set("\<Plug>(DecToBin)", v:count)<CR>
-    nnoremap <Plug>(BinToDec) ciw<C-r>=0b<C-r>"<CR><Esc>:silent! call repeat#set("\<Plug>(BinToDec)", v:count)<CR>
-    vnoremap <Plug>(DecToBin) c<C-r>=printf('%b', <C-r>")<CR><Esc>:silent! call repeat#set("\<Plug>(DecToBin)", v:count)<CR>
-    vnoremap <Plug>(BinToDec) c<C-r>=0b<C-r>"<CR><Esc>:silent! call repeat#set("\<Plug>(BinToDec)", v:count)<CR>
-    nnoremap <Plug>(DecToHex) ciw<C-r>=printf('%x', <C-r>")<CR><Esc>:silent! call repeat#set("\<Plug>(DecToHex)", v:count)<CR>
-    nnoremap <Plug>(HexToDec) ciw<C-r>=0x<C-r>"<CR><Esc>:silent! call repeat#set("\<Plug>(HexToDec)", v:count)<CR>
-    vnoremap <Plug>(DecToHex) c<C-r>=printf('%x', <C-r>")<CR><Esc>:silent! call repeat#set("\<Plug>(DecToHex)", v:count)<CR>
-    vnoremap <Plug>(HexToDec) c<C-r>=0x<C-r>"<CR><Esc>:silent! call repeat#set("\<Plug>(HexToDec)", v:count)<CR>
-    nmap gbdb <Plug>(DecToBin)
-    nmap gbbd <Plug>(BinToDec)
-    vmap gbdb <Plug>(DecToBin)
-    vmap gbbd <Plug>(BinToDec)
-    nmap gbdh <Plug>(DecToHex)
-    nmap gbhd <Plug>(HexToDec)
-    vmap gbdh <Plug>(DecToHex)
-    vmap gbhd <Plug>(HexToDec)
-
 " Quick notes
     " Global scratch buffer
     nnoremap <Leader><Leader>es :edit ~/scratch<CR>
     " Vimwiki quick notes file
     nnoremap <Leader>wq :e ~/wiki/quick/index.wiki<CR>
-
-" Misc
-    " Change working directory to directory of current file
-    nnoremap <Leader><Leader>cd :cd %:h<CR>
-    " Show calendar and date/time
-    nnoremap \ec :!clear && cal -y && date -R<CR>
 "}}}
 
 " Abbreviations {{{
@@ -687,10 +652,6 @@
         Plug 'kana/vim-textobj-user'
         Plug 'kana/vim-textobj-function'
 
-        " Language server
-        " Plug 'prabirshrestha/async.vim'
-        " Plug 'prabirshrestha/vim-lsp'
-
         " Language-specific
         Plug 'neovimhaskell/haskell-vim', { 'for': 'haskell' }
         Plug 'JamshedVesuna/vim-markdown-preview', { 'for': 'markdown' }
@@ -759,7 +720,9 @@
 
 " Goyo
     function! s:goyo_enter() abort
+
         set noshowcmd
+        set nolist
         set foldcolumn=0
         set wrap
         set scrolloff=999
