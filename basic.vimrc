@@ -182,7 +182,6 @@
           \ \| execute 'let @' . r2 . '=@' . r1 \| echo "Copied @" . r1 . " to @" . r2<CR>
 
 " Navigation
-    nnoremap <Leader>b :ls<CR>:
     nnoremap ]b :bnext<CR>
     nnoremap [b :bprevious<CR>
     nnoremap ]B :blast<CR>

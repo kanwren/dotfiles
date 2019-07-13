@@ -474,9 +474,7 @@
     nnoremap <silent> <Leader>r :let r1 = substitute(nr2char(getchar()), "'", "\"", "") \| let r2 = substitute(nr2char(getchar()), "'", "\"", "")
           \ \| execute 'let @' . r2 . '=@' . r1 \| echo "Copied @" . r1 . " to @" . r2<CR>
 
-" Navigation
-    nnoremap <Leader>b :ls<CR>:
-    " Matching navigation commands, like in unimpaired
+" Navigation Matching navigation commands, like in unimpaired
     nnoremap ]b :bnext<CR>
     nnoremap [b :bprevious<CR>
     nnoremap ]B :blast<CR>
@@ -703,7 +701,7 @@
 
 " Plugin settings {{{
 " Netrw
-let g:netrw_banner=0
+    let g:netrw_banner=0
 
 " Vimwiki
     highlight VimwikiLink ctermbg=black ctermfg=2
@@ -759,7 +757,7 @@ let g:netrw_banner=0
                 \ },
                 \ }
 
-" Goyo settings
+" Goyo
     function! s:goyo_enter() abort
         set noshowcmd
         set foldcolumn=0
