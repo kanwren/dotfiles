@@ -52,13 +52,19 @@ if has('autocmd')
     augroup general_group
         autocmd!
         autocmd FileType help wincmd L
-        autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+        autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | execute "normal! g'\"" | endif
         autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
         autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
         autocmd InsertLeave * match ExtraWhitespace /\s\+$/
     augroup END
     augroup highlight_group
         autocmd!
+        autocmd ColorScheme * highlight ExtraWhitespace ctermbg=12
+                          \ | highlight StatusLine ctermfg=0 ctermbg=15
+                          \ | highlight ColorColumn ctermbg=8
+                          \ | highlight FoldColumn ctermbg=NONE
+                          \ | highlight Folded ctermbg=NONE
+                          \ | highlight CursorLineNr ctermbg=4 ctermfg=15
     augroup END
 end
 
