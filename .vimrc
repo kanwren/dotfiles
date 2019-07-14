@@ -130,7 +130,7 @@
             " Return to last edit position when opening files
             autocmd BufReadPost *
                         \   if line("'\"") > 1 && line("'\"") <= line("$")
-                        \ |     exe "normal! g'\""
+                        \ |     execute "normal! g'\""
                         \ | endif
             " Highlight trailing whitespace (except when typing at end of line)
             autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
@@ -182,7 +182,7 @@
 
 " Session management
     function! GetSessions(arglead, cmdline, cursorpos) abort
-        let paths = split(globpath(&runtimepath, 'sessions/*.vim'), "\n")
+        let paths = split(globpath('~/.vim', 'sessions/*.vim'), "\n")
         let names = map(paths, 'fnamemodify(v:val, ":t:r")')
         if empty(a:arglead)
             return names
@@ -192,9 +192,9 @@
     endfunction
     " Save
     command! -bang -nargs=? -complete=customlist,GetSessions Save :call MkSession("<bang>", <f-args>)
-    function! MkSession(b, ...) abort
+    function! MkSession(bang, ...) abort
         if a:0 > 0
-            execute "mksession" . a:b . " ~/.vim/sessions/" . a:1 . ".vim"
+            execute "mksession" . a:bang . " ~/.vim/sessions/" . a:1 . ".vim"
             echo "Saved session to ~/.vim/sessions/" . a:1 . ".vim"
         else
             execute "mksession! ~/.vim/sessions/temp.vim"
@@ -254,7 +254,8 @@
         if a:0 > 0
             let command .= ' --rev ' . a:1
         end
-        let command .= ' --quiet 2>/dev/null | grep -E "' . join(fields, '|') . '" | sed -E "s/\s*\"(.+)\": \"(.+)\",/\1 = \"\2\";/g"'
+        let command .= ' --quiet 2>/dev/null | grep -E "' . join(fields, '|')
+        let command .= '" | sed -E "s/\s*\"(.+)\": \"(.+)\",/\1 = \"\2\";/g"'
         if $USER ==# 'root'
             " If root, try to run command as login user instead
             let logname = substitute(system('logname'), '\n', '', 'ge')
@@ -262,40 +263,6 @@
         else
             execute('read! ' . command)
         endif
-    endfunction
-
-    " Query the user to read in a template located in ~/.vim/template
-    function! ReadTemplate() abort
-        let category = input('category: ', '')
-        if empty(category)
-            return
-        endif
-        let template = input('template: ', '')
-        " Default to tpl.txt
-        if empty(template)
-            let template = 'tpl'
-        endif
-        let path = '~/.vim/template/' . category . '/' . template . '.txt'
-        if empty(glob(path))
-            redraw
-            echo "template '" . template . "'does not exist"
-            return
-        end
-        let contents = readfile(glob(path))
-        let filtered = []
-        for line in contents
-            let vars = []
-            call substitute(line, '%\(.\{-}\)%', '\=add(vars, submatch(1))', 'g')
-            for var in vars
-                let val = input(var . ': ')
-                if empty(val)
-                    let val = '<' . var . '>'
-                endif
-                let line = substitute(line, '%' . var . '%', val, 'e')
-            endfor
-            call add(filtered, line)
-        endfor
-        call append(line('.'), filtered)
     endfunction
 
     command! -bar Hexmode call ToggleHex()
@@ -383,8 +350,7 @@
 "   it easier to hit things like <Space>P
 " * Single leader is for abbreviating common operations and important plugin
 "   commands
-" * Double leader is for execution of meta-editing operations, like reading in
-"   templates or inline execution
+" * Double leader is for execution of meta-editing operations, like inline execution
 " * \ is for special operations, like invoking external programs or managing
 "   sessions
 
@@ -426,8 +392,6 @@
     " Convenient semicolon insertion
     nnoremap <silent> <Leader>; :let wv=winsaveview()<CR>:s/[^;]*\zs\ze\s*$/;/e \| nohlsearch<CR>:call winrestview(wv)<CR>
     vnoremap <silent> <Leader>; :let wv=winsaveview()<CR>:s/\v(\s*$)(;)@<!/;/g \| nohlsearch<CR>:call winrestview(wv)<CR>
-    " Read in a template
-    nnoremap <Leader><Leader>t :call ReadTemplate()<CR>
     " easy-align live interactive mode
     nmap ga <Plug>(LiveEasyAlign)
     vmap ga <Plug>(LiveEasyAlign)
@@ -573,7 +537,7 @@
     " Global scratch buffer
     nnoremap <Leader><Leader>es :edit ~/scratch<CR>
     " Vimwiki quick notes file
-    nnoremap <Leader>wq :e ~/wiki/quick/index.wiki<CR>
+    nnoremap <Leader>wq :edit ~/wiki/quick/index.wiki<CR>
 "}}}
 
 " Abbreviations {{{
@@ -601,7 +565,7 @@
 " Plugins {{{
     command! PlugSetup call PlugSetup()
     function! PlugSetup() abort
-        let plug_loc = '~/.vim/autoload/plug.vim'
+        let plug_loc = globpath(&runtimepath, 'autoload/plug.vim')
         let plug_source = 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
         if empty(glob(plug_loc))
             echom 'vim-plug not found. Installing...'
@@ -620,7 +584,7 @@
         endif
     endfunction
 
-    silent! if plug#begin('~/.vim/bundle')
+    silent! if !empty(globpath(&runtimepath, 'autoload/plug.vim')) && plug#begin(globpath(&runtimepath, 'bundle'))
         " Functionality
         Plug 'vimwiki/vimwiki'                   " Personal wiki for Vim
         Plug 'sheerun/vim-polyglot'              " Collection of language packs to rule them all
@@ -638,7 +602,7 @@
         Plug 'godlygeek/tabular'                 " Tabularization and alignment
         Plug 'tommcdo/vim-exchange'              " Operators for exchanging text
         Plug 'vim-scripts/matchit.zip'
-        Plug 'jiangmiao/auto-pairs', { 'for': ['java', 'c', 'cpp'] }
+        Plug 'jiangmiao/auto-pairs', { 'for': [ 'java', 'c', 'cpp' ] }
 
         " Fuzzy finding
         Plug 'junegunn/fzf'
@@ -748,7 +712,7 @@
 " }}}
 
 " Colorscheme can come anywhere after highlighting autocommands
-    if &term =~ ".*-256color"
+    if &term =~ ".*-256color" && !empty(globpath(&runtimepath, 'colors/nord.vim'))
         colorscheme nord
         let g:lightline['colorscheme'] = 'nord'
     else
@@ -757,8 +721,8 @@
     endif
 
 " Local vimrc
-    if !empty(glob('~/local.vimrc'))
-        source ~/local.vimrc
+    if !empty(globpath($HOME, 'local.vimrc'))
+        execute 'source ' . globpath($HOME, 'local.vimrc')
     end
 
 " Meow
