@@ -366,8 +366,8 @@
     " Makes temporary macros faster
     nnoremap Q @q
     " Repeat macros/commands across visual selections
-    xnoremap Q :norm @q<CR>
-    xnoremap . :norm .<CR>
+    xnoremap Q :g/^/norm @q<CR>
+    xnoremap . :g/^/norm .<CR>
     " Make Y behave like C and D
     noremap Y y$
     " Swap ` and '
