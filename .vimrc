@@ -488,14 +488,14 @@
     nnoremap <Plug>(HexToDec) ciw<C-r>=0x<C-r>"<CR><Esc>:silent! call repeat#set("\<Plug>(HexToDec)", v:count)<CR>
     vnoremap <Plug>(DecToHex) c<C-r>=printf('%x', <C-r>")<CR><Esc>:silent! call repeat#set("\<Plug>(DecToHex)", v:count)<CR>
     vnoremap <Plug>(HexToDec) c<C-r>=0x<C-r>"<CR><Esc>:silent! call repeat#set("\<Plug>(HexToDec)", v:count)<CR>
-    nmap gbdb <Plug>(DecToBin)
-    nmap gbbd <Plug>(BinToDec)
-    vmap gbdb <Plug>(DecToBin)
-    vmap gbbd <Plug>(BinToDec)
-    nmap gbdh <Plug>(DecToHex)
-    nmap gbhd <Plug>(HexToDec)
-    vmap gbdh <Plug>(DecToHex)
-    vmap gbhd <Plug>(HexToDec)
+    nmap <silent> gbdb <Plug>(DecToBin)
+    nmap <silent> gbbd <Plug>(BinToDec)
+    vmap <silent> gbdb <Plug>(DecToBin)
+    vmap <silent> gbbd <Plug>(BinToDec)
+    nmap <silent> gbdh <Plug>(DecToHex)
+    nmap <silent> gbhd <Plug>(HexToDec)
+    vmap <silent> gbdh <Plug>(DecToHex)
+    vmap <silent> gbhd <Plug>(HexToDec)
 
 " Inline execution
     " Run selection in python and replace with output for programmatic text generation
@@ -529,9 +529,6 @@
     nnoremap <Leader>gw  :Gwrite<CR>
     nnoremap <Leader>gc  :Gcommit<CR>
     nnoremap <Leader>gd  :Gvdiff<CR>
-
-" Goyo mappings
-    nnoremap <Leader>gy :Goyo<CR>
 
 " Quick notes
     " Global scratch buffer
