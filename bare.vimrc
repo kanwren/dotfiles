@@ -60,8 +60,10 @@ if has('autocmd')
     augroup highlight_group
         autocmd!
         autocmd ColorScheme * highlight ExtraWhitespace ctermbg=12
-                          \ | highlight StatusLine ctermfg=0 ctermbg=15
                           \ | highlight ColorColumn ctermbg=8
+                          \ | highlight StatusLine ctermfg=0 ctermbg=15
+                          \ | highlight StatusLineNC ctermfg=0 ctermbg=7
+                          \ | highlight VertSplit ctermfg=0
                           \ | highlight FoldColumn ctermbg=NONE
                           \ | highlight Folded ctermbg=NONE
                           \ | highlight CursorLineNr ctermbg=4 ctermfg=15
