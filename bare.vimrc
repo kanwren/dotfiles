@@ -80,13 +80,19 @@ command! -bar -range=% Reverse <line1>,<line2>g/^/m<line1>-1 | nohlsearch
 noremap <silent> <expr> j (v:count == 0 ? 'gj' : 'j')
 noremap <silent> <expr> k (v:count == 0 ? 'gk' : 'k')
 nnoremap Q @q
-xnoremap <silent> Q :g/^/normal! @q<CR>:call histdel("/", -1) \| nohlsearch<CR>
-xnoremap <silent> . :g/^/normal! .<CR>:call histdel("/", -1) \| nohlsearch<CR>
+if exists(':keeppatterns')
+    xnoremap <silent> Q :keeppatterns g/^/normal! @q<CR>
+    xnoremap <silent> . :keeppatterns g/^/normal! .<CR>
+else
+    xnoremap <silent> Q :g/^/normal! @q<CR>:call histdel("/", -1) \| nohlsearch<CR>
+    xnoremap <silent> . :g/^/normal! .<CR>:call histdel("/", -1) \| nohlsearch<CR>
+endif
 noremap Y y$
 noremap ' `
 noremap ` '
 nnoremap & :&&<CR>
 xnoremap gx <Esc>`.``gvP``P
+nnoremap <silent> <expr> gs ':s/' . input('split/') . '/\r/g \| nohlsearch<CR>'
 nnoremap <silent> * :let wv=winsaveview()<CR>*:call winrestview(wv)<CR>
 nnoremap <silent> "" :registers<CR>
 nnoremap <silent> <C-l> :nohlsearch<CR><C-l>
@@ -96,7 +102,6 @@ map <Space> <nop>
 map <S-Space> <Space>
 let mapleader=" "
 nnoremap <Leader><Tab> :let wv=winsaveview()<CR>:%s/\s\+$//e \| call histdel("/", -1) \| nohlsearch \| retab<CR>:call winrestview(wv)<CR>
-nnoremap <silent> <expr> <Leader>s ':s/' . input('split/') . '/\r/g \| nohlsearch<CR>'
 vnoremap <silent> <Leader>vs :sort /\ze\%V/<CR>gvyugvpgv:s/\s\+$//e \| nohlsearch<CR>``
 nnoremap <Leader>t :new<CR>:setlocal buftype=nofile bufhidden=wipe nobuflisted noswapfile<CR>
 vnoremap <Leader>e <Esc>:execute 'normal gv' . (abs(getpos("'>")[2] + getpos("'>")[3] - getpos("'<")[2] - getpos("'<")[3]) + 1) . 'I '<CR>

@@ -366,14 +366,19 @@
     " Makes temporary macros faster
     nnoremap Q @q
     " Repeat macros/commands across visual selections
-    xnoremap <silent> Q :keeppatterns g/^/normal! @q<CR>
-    xnoremap <silent> . :keeppatterns g/^/normal! .<CR>
+    if exists(':keeppatterns')
+        xnoremap <silent> Q :keeppatterns g/^/normal! @q<CR>
+        xnoremap <silent> . :keeppatterns g/^/normal! .<CR>
+    else
+        xnoremap <silent> Q :g/^/normal! @q<CR>:call histdel("/", -1) \| nohlsearch<CR>
+        xnoremap <silent> . :g/^/normal! .<CR>:call histdel("/", -1) \| nohlsearch<CR>
+    endif
     " Make Y behave like C and D
     noremap Y y$
     " Swap ` and '
     noremap ' `
     noremap ` '
-    " Make & keep flags
+    " Make & keep the last flags used
     nnoremap & :&&<CR>
     " Make temporary unlisted scratch buffer
     nnoremap <Leader>t :new<CR>:setlocal buftype=nofile bufhidden=wipe nobuflisted noswapfile<CR>
@@ -386,7 +391,7 @@
     " Exchange operation-delete, highlight target, exchange (made obsolete by exchange.vim)
     "xnoremap gx <Esc>`.``gvP``P
     " Split current line by provided regex (\zs or \ze to preserve separators)
-    nnoremap <silent> <expr> <Leader>s ':s/' . input('split/') . '/\r/g \| nohlsearch<CR>'
+    nnoremap <silent> <expr> gs ':s/' . input('split/') . '/\r/g \| nohlsearch<CR>'
     " Sort visual selection
     vnoremap <silent> <Leader>vs :sort /\ze\%V/<CR>gvyugvpgv:s/\s\+$//e \| nohlsearch<CR>``
     " Convenient semicolon insertion
