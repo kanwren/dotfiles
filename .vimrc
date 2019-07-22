@@ -366,8 +366,8 @@
     " Makes temporary macros faster
     nnoremap Q @q
     " Repeat macros/commands across visual selections
-    xnoremap Q :g/^/norm @q<CR>
-    xnoremap . :g/^/norm .<CR>
+    xnoremap <silent> Q :keeppatterns g/^/normal! @q<CR>
+    xnoremap <silent> . :keeppatterns g/^/normal! .<CR>
     " Make Y behave like C and D
     noremap Y y$
     " Swap ` and '
@@ -400,7 +400,7 @@
     vnoremap <Leader>a :Tab/
 
 " Sessions
-    " Providing a count saves to temp-<count>.vim, otherwise it just save to temp.vim
+    " Providing a count uses temp-<count>.vim, otherwise it just uses temp.vim
     nnoremap <expr> \s ':<C-u>Save! ' . (v:count > 0 ? 'temp-' . v:count : 'temp') . '<CR>'
     nnoremap <expr> \r ':<C-u>Restore ' . (v:count > 0 ? 'temp-' . v:count : 'temp') . '<CR>'
 
@@ -416,12 +416,6 @@
     vnoremap <silent> <Leader>n :<C-u>call append(line("'>"), repeat([''], v:count1)) \| call append(line("'<") - 1, repeat([''], v:count1))<CR>
     " Expand line by padding visual block selection with spaces
     vnoremap <Leader>e <Esc>:execute 'normal gv' . (abs(getpos("'>")[2] + getpos("'>")[3] - getpos("'<")[2] - getpos("'<")[3]) + 1) . 'I '<CR>
-
-" Convenience
-    noremap <Leader>d "_d
-    noremap <Leader>D "_D
-    noremap <Leader>p "0p
-    noremap <Leader>P "0P
 
 " Registers
     " Display registers

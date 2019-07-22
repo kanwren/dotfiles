@@ -80,8 +80,8 @@ command! -bar -range=% Reverse <line1>,<line2>g/^/m<line1>-1 | nohlsearch
 noremap <silent> <expr> j (v:count == 0 ? 'gj' : 'j')
 noremap <silent> <expr> k (v:count == 0 ? 'gk' : 'k')
 nnoremap Q @q
-xnoremap Q :g/^/norm @q<CR>
-xnoremap . :g/^/norm .<CR>
+xnoremap <silent> Q :g/^/normal! @q<CR>:call histdel("/", -1) \| nohlsearch<CR>
+xnoremap <silent> . :g/^/normal! .<CR>:call histdel("/", -1) \| nohlsearch<CR>
 noremap Y y$
 noremap ' `
 noremap ` '
