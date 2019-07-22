@@ -646,10 +646,6 @@
     let g:vimwiki_dir_link = 'index'
 
 " Lightline
-    function! LightlineKeymapName() abort
-        return &keymap
-    endfunction
-
     function! LightlineBufferline() abort
         call bufferline#refresh_status()
         return [g:bufferline_status_info.before, g:bufferline_status_info.current, g:bufferline_status_info.after]
@@ -658,7 +654,7 @@
     let g:lightline = {
                 \ 'active': {
                 \   'left': [ [ 'mode', 'paste' ],
-                \             [ 'readonly', 'buffilename', 'modified', 'fugitive', 'keymapname', 'charvalue' ] ]
+                \             [ 'readonly', 'buffilename', 'modified', 'fugitive', 'charvalue' ] ]
                 \ },
                 \ 'enable': {
                 \   'statusline': 1,
@@ -669,15 +665,12 @@
                 \   'lineinfo': "%l/%L | %c%V",
                 \ },
                 \ 'component_function': {
-                \   'keymapname': 'LightlineKeymapName',
                 \   'fugitive': 'FugitiveHead',
                 \ },
                 \ }
 
 " Goyo
     function! s:goyo_enter() abort
-
-        set noshowcmd
         set nolist
         set foldcolumn=0
         set wrap
