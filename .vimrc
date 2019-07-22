@@ -600,7 +600,7 @@
         Plug 'godlygeek/tabular'                 " Tabularization and alignment
         Plug 'tommcdo/vim-exchange'              " Operators for exchanging text
         Plug 'vim-scripts/matchit.zip'
-        Plug 'jiangmiao/auto-pairs', { 'for': [ 'java', 'c', 'cpp' ] }
+        Plug 'jiangmiao/auto-pairs', { 'for': [ 'java', 'c', 'cpp', 'javascript' ] }
 
         " Fuzzy finding
         Plug 'junegunn/fzf'
