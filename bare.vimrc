@@ -11,7 +11,7 @@ filetype plugin indent on
 " Uncomment if backups are okay
 " set swapfile directory^=~/.vim/tmp//
 " set backup writebackup
-" if has("patch-8.1.025")
+" if has("patch-8.1.0251")
 "     set backupdir^=~/.vim/backup//
 " else
 "     set backupdir^=~/.vim/backup

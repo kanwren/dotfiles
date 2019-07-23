@@ -14,7 +14,7 @@
     set swapfile directory^=~/.vim/swap//
     set backup writebackup backupcopy=auto
     " This patch fixes a bug to make Vim respect // for backupdir
-    if has("patch-8.1.025")
+    if has("patch-8.1.0251")
         set backupdir^=~/.vim/backup//
     else
         set backupdir^=~/.vim/backup
