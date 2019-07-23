@@ -11,7 +11,7 @@
     filetype plugin indent on
 
 " Backups
-    set swapfile directory^=~/.vim/swap//
+    set swapfile directory^=~/.vim/tmp//
     set backup writebackup backupcopy=auto
     " This patch fixes a bug to make Vim respect // for backupdir
     if has("patch-8.1.0251")
