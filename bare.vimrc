@@ -9,11 +9,20 @@ if !syntax_on | syntax on | end
 filetype plugin indent on
 
 " Uncomment if backups are okay
-" set backup writebackup backupdir=~/.vim/backup
-" set swapfile directory^=~/.vim/tmp
-" if has('persistent_undo')
-"     set undofile undodir=~/.vim/undo
+" set swapfile directory^=~/.vim/tmp//
+" set backup writebackup
+" if has("patch-8.1.025")
+"     set backupdir^=~/.vim/backup//
+" else
+"     set backupdir^=~/.vim/backup
 " endif
+" if has('persistent_undo')
+"     set undofile undodir^=~/.vim/undo//
+" endif
+
+if has("patch-8.1.0360")
+    set diffopt+=internal,algorithm:patience
+endif
 
 let $LANG='en'
 set nospell spelllang=en_us
@@ -81,8 +90,8 @@ noremap <silent> <expr> j (v:count == 0 ? 'gj' : 'j')
 noremap <silent> <expr> k (v:count == 0 ? 'gk' : 'k')
 nnoremap Q @q
 if exists(':keeppatterns')
-    xnoremap <silent> Q :keeppatterns g/^/normal! @q<CR>
-    xnoremap <silent> . :keeppatterns g/^/normal! .<CR>
+    xnoremap <silent> Q :<C-b>keeppatterns<C-e> g/^/normal! @q<CR>
+    xnoremap <silent> . :<C-b>keeppatterns<C-e> g/^/normal! .<CR>
 else
     xnoremap <silent> Q :g/^/normal! @q<CR>:call histdel("/", -1) \| nohlsearch<CR>
     xnoremap <silent> . :g/^/normal! .<CR>:call histdel("/", -1) \| nohlsearch<CR>

@@ -11,14 +11,21 @@
     filetype plugin indent on
 
 " Backups
-    set backup
-    set writebackup
-    set backupdir=~/.vim/backup
-    set swapfile
-    set directory^=~/.vim/tmp
+    set swapfile directory^=~/.vim/swap//
+    set backup writebackup backupcopy=auto
+    " This patch fixes a bug to make Vim respect // for backupdir
+    if has("patch-8.1.025")
+        set backupdir^=~/.vim/backup//
+    else
+        set backupdir^=~/.vim/backup
+    endif
     if has('persistent_undo')
-        set undofile
-        set undodir=~/.vim/undo
+        set undofile undodir^=~/.vim/undo//
+    endif
+
+" Diff algorithm
+    if has("patch-8.1.0360")
+        set diffopt+=internal,algorithm:patience
     endif
 
 " Spelling and thesaurus
@@ -367,8 +374,8 @@
     nnoremap Q @q
     " Repeat macros/commands across visual selections
     if exists(':keeppatterns')
-        xnoremap <silent> Q :keeppatterns g/^/normal! @q<CR>
-        xnoremap <silent> . :keeppatterns g/^/normal! .<CR>
+        xnoremap <silent> Q :<C-b>keeppatterns<C-e> g/^/normal! @q<CR>
+        xnoremap <silent> . :<C-b>keeppatterns<C-e> g/^/normal! .<CR>
     else
         xnoremap <silent> Q :g/^/normal! @q<CR>:call histdel("/", -1) \| nohlsearch<CR>
         xnoremap <silent> . :g/^/normal! .<CR>:call histdel("/", -1) \| nohlsearch<CR>
