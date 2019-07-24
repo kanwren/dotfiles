@@ -632,6 +632,9 @@
 " Netrw
     let g:netrw_banner=0
 
+" Rooter
+    let g:rooter_silent_chdir = 1
+
 " Vimwiki
     highlight VimwikiLink ctermbg=black ctermfg=2
     highlight VimwikiHeader1 ctermfg=magenta
