@@ -3,9 +3,9 @@ set textwidth=80
 setlocal formatoptions+=t
 
 " Compile
-noremap <buffer> <Leader>c :w \| !cd %:h && pdflatex %:t<CR><CR>
+nnoremap <buffer> <F2> :w \| !cd %:h && pdflatex %:t<CR><CR>
 " View PDF
-noremap <buffer> <C-p> :! zathura %<.pdf &<CR><CR>
+nnoremap <buffer> <F3> :! zathura %<.pdf &<CR><CR>
 
 " These could also be abbreviations, but the space consumption doesn't quite
 " work and the delay isn't that annoying
