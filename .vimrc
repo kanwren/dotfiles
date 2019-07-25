@@ -58,7 +58,7 @@
     set visualbell t_vb=
 
 " Navigation
-    set mouse=
+    set mouse=n
     set scrolloff=0
     set tags=tags;/
 
@@ -373,13 +373,8 @@
     " Makes temporary macros faster
     nnoremap Q @q
     " Repeat macros/commands across visual selections
-    if exists(':keeppatterns')
-        xnoremap <silent> Q :<C-b>keeppatterns<C-e> g/^/normal! @q<CR>
-        xnoremap <silent> . :<C-b>keeppatterns<C-e> g/^/normal! .<CR>
-    else
-        xnoremap <silent> Q :g/^/normal! @q<CR>:call histdel("/", -1) \| nohlsearch<CR>
-        xnoremap <silent> . :g/^/normal! .<CR>:call histdel("/", -1) \| nohlsearch<CR>
-    endif
+    xnoremap <silent> Q :normal @q<CR>
+    xnoremap <silent> . :normal .<CR>
     " Make Y behave like C and D
     noremap Y y$
     " Swap ` and '

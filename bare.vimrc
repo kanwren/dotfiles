@@ -30,6 +30,7 @@ set history=1000 undolevels=1000
 
 set hidden autoread noconfirm
 set noerrorbells visualbell t_vb=
+set mouse=n
 set lazyredraw
 set number relativenumber
 set splitbelow splitright
@@ -89,13 +90,8 @@ command! -bar -range=% Reverse <line1>,<line2>g/^/m<line1>-1 | nohlsearch
 noremap <silent> <expr> j (v:count == 0 ? 'gj' : 'j')
 noremap <silent> <expr> k (v:count == 0 ? 'gk' : 'k')
 nnoremap Q @q
-if exists(':keeppatterns')
-    xnoremap <silent> Q :<C-b>keeppatterns<C-e> g/^/normal! @q<CR>
-    xnoremap <silent> . :<C-b>keeppatterns<C-e> g/^/normal! .<CR>
-else
-    xnoremap <silent> Q :g/^/normal! @q<CR>:call histdel("/", -1) \| nohlsearch<CR>
-    xnoremap <silent> . :g/^/normal! .<CR>:call histdel("/", -1) \| nohlsearch<CR>
-endif
+xnoremap <silent> Q :normal @q<CR>
+xnoremap <silent> . :normal .<CR>
 noremap Y y$
 noremap ' `
 noremap ` '
