@@ -576,6 +576,11 @@
             else
                 echom 'Error: could not download vim-plug'
             endif
+            let bundle_loc = fnamemodify(s:plugin_loc, ':h:h') . '/bundle'
+            if empty(glob(bundle_loc))
+                echom 'Creating bundle directory at ' . bundle_loc
+                call mkdir(bundle_loc, 'p')
+            endif
         else
             execute('PlugUpgrade')
             execute('PlugClean')
@@ -583,7 +588,9 @@
         endif
     endfunction
 
-    silent! if !empty(globpath(&runtimepath, 'autoload/plug.vim')) && plug#begin(globpath(&runtimepath, 'bundle'))
+    silent! if !empty(globpath(&runtimepath, 'autoload/plug.vim'))
+                \ && !empty(globpath(&runtimepath, 'bundle'))
+                \ && plug#begin(globpath(&runtimepath, 'bundle'))
         " Functionality
         Plug 'vimwiki/vimwiki'                   " Personal wiki for Vim
         Plug 'sheerun/vim-polyglot'              " Collection of language packs to rule them all
