@@ -399,12 +399,12 @@
     " Convenient semicolon insertion
     nnoremap <silent> <Leader>; :let wv=winsaveview()<CR>:s/[^;]*\zs\ze\s*$/;/e \| nohlsearch<CR>:call winrestview(wv)<CR>
     vnoremap <silent> <Leader>; :let wv=winsaveview()<CR>:s/\v(\s*$)(;)@<!/;/g \| nohlsearch<CR>:call winrestview(wv)<CR>
-    " easy-align live interactive mode
-    nmap ga <Plug>(LiveEasyAlign)
-    vmap ga <Plug>(LiveEasyAlign)
-    " Prompt for regex to tabularize on
-    nnoremap <Leader>a :Tab/
-    vnoremap <Leader>a :Tab/
+    " easy-align interactive mode
+    nmap ga <Plug>(EasyAlign)
+    vmap ga <Plug>(EasyAlign)
+    " Prompt for regex to align on
+    nnoremap <Leader>a :EasyAlign //<Left>
+    vnoremap <Leader>a :EasyAlign //<Left>
 
 " Sessions
     " Providing a count uses temp-<count>.vim, otherwise it just uses temp.vim
@@ -579,7 +579,6 @@
         Plug 'tpope/vim-commentary'              " Easy commenting
         Plug 'tpope/vim-speeddating'             " Fix negative problem when incrementing dates
         Plug 'junegunn/vim-easy-align'           " Interactive alignment rules
-        Plug 'godlygeek/tabular'                 " Tabularization and alignment
         Plug 'tommcdo/vim-exchange'              " Operators for exchanging text
         Plug 'vim-scripts/matchit.zip'
         Plug 'jiangmiao/auto-pairs', { 'for': [ 'java', 'c', 'cpp', 'javascript' ] }
