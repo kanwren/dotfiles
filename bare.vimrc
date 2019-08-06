@@ -62,7 +62,7 @@ if has('autocmd')
     augroup general_group
         autocmd!
         autocmd FileType help wincmd L
-        autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | execute "normal! g'\"" | endif
+        autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | execute "normal! g`\"" | endif
         autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
         autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
         autocmd InsertLeave * match ExtraWhitespace /\s\+$/
@@ -93,8 +93,6 @@ nnoremap Q @q
 xnoremap <silent> Q :normal @q<CR>
 xnoremap <silent> . :normal .<CR>
 noremap Y y$
-noremap ' `
-noremap ` '
 nnoremap & :&&<CR>
 xnoremap gx <Esc>`.``gvP``P
 nnoremap <silent> <expr> gs ':s/' . input('split/') . '/\r/g \| nohlsearch<CR>'

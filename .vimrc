@@ -71,7 +71,6 @@
     set nocursorline nocursorcolumn
     " status line (when lightline isn't available)
     set laststatus=2
-    "set statusline=[%n]\ %F%<\ %m%y%h%w%r\ \ %(0x%B\ %b%)%=%p%%\ \ %(%l/%L%)%(\ \|\ %c%V%)%(\ %)
     set showmode
     " command bar
     set cmdheight=1
@@ -137,7 +136,7 @@
             " Return to last edit position when opening files
             autocmd BufReadPost *
                         \   if line("'\"") > 1 && line("'\"") <= line("$")
-                        \ |     execute "normal! g'\""
+                        \ |     execute "normal! g`\""
                         \ | endif
             " Highlight trailing whitespace (except when typing at end of line)
             autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
@@ -233,23 +232,6 @@
             call setline(n, repeat('-', float2nr(floor(pad))) . l . repeat('-', float2nr(ceil(pad))))
             let n += 1
         endwhile
-    endfunction
-
-    " Use the regexes in g:change_case to substitute text. Not strictly limited
-    " to case. Used with operatorfunc in mappings.
-    function! ChangeCase(vt, ...) abort
-        let l:winview = winsaveview()
-        if a:0
-            silent exec 'normal! gvy'
-        elseif a:vt ==? 'line'
-            silent exec "normal! '[V']y"
-        else
-            silent exec 'normal! `[v`]y'
-        endif
-        let @@ = substitute(@@, g:change_case[0], g:change_case[1], 'ge')
-        silent exec 'normal! gv"0P'
-        nohlsearch
-        call winrestview(l:winview)
     endfunction
 
     " nix-prefetch-git shortcut
@@ -377,9 +359,6 @@
     xnoremap <silent> . :normal .<CR>
     " Make Y behave like C and D
     noremap Y y$
-    " Swap ` and '
-    noremap ' `
-    noremap ` '
     " Make & keep the last flags used
     nnoremap & :&&<CR>
     " Make temporary unlisted scratch buffer
@@ -390,8 +369,6 @@
     noremap <silent> <C-l> :nohlsearch<CR><C-l>
 
 " Editing
-    " Exchange operation-delete, highlight target, exchange (made obsolete by exchange.vim)
-    "xnoremap gx <Esc>`.``gvP``P
     " Split current line by provided regex (\zs or \ze to preserve separators)
     nnoremap <silent> <expr> gs ':s/' . input('split/') . '/\r/g \| nohlsearch<CR>'
     " Sort visual selection
@@ -415,12 +392,7 @@
     " Delete trailing whitespace and retab
     nnoremap <silent> <Leader><Tab> :let wv=winsaveview()<CR>:%s/\s\+$//e \| call histdel("/", -1) \| nohlsearch \| retab<CR>:call winrestview(wv)<CR>
     " Add blank line below/above line/selection, keep cursor in same position (can take count)
-    nnoremap <silent> <Leader>j :<C-u>call append(line("."), repeat([''], v:count1))<CR>
-    nnoremap <silent> <Leader>k :<C-u>call append(line(".") - 1, repeat([''], v:count1))<CR>
-    vnoremap <silent> <Leader>j :<C-u>call append(line("'>"), repeat([''], v:count1))<CR>gv
-    vnoremap <silent> <Leader>k :<C-u>call append(line("'<") - 1, repeat([''], v:count1))<CR>gv
     nnoremap <silent> <Leader>n :<C-u>call append(line("."), repeat([''], v:count1)) \| call append(line(".") - 1, repeat([''], v:count1))<CR>
-    vnoremap <silent> <Leader>n :<C-u>call append(line("'>"), repeat([''], v:count1)) \| call append(line("'<") - 1, repeat([''], v:count1))<CR>
     " Expand line by padding visual block selection with spaces
     vnoremap <Leader>e <Esc>:execute 'normal gv' . (abs(getpos("'>")[2] + getpos("'>")[3] - getpos("'<")[2] - getpos("'<")[3]) + 1) . 'I '<CR>
 
@@ -461,23 +433,6 @@
     " Change indent level on the fly
     nnoremap <Leader>i :let i=input('ts=sts=sw=') \| if i \| execute 'setlocal tabstop=' . i . ' softtabstop=' . i . ' shiftwidth=' . i \| endif
                 \ \| redraw \| echo 'ts=' . &tabstop . ', sts=' . &softtabstop . ', sw='  . &shiftwidth . ', et='  . &expandtab<CR>
-
-" Changing case (gc)
-    " Title Case
-    let g:change_case_title=['\v\w+', '\u\L&']
-    nnoremap <silent> gct  :let g:change_case=g:change_case_title<CR>:set operatorfunc=ChangeCase<CR>g@
-    nnoremap <silent> gctt :let g:change_case=g:change_case_title<CR>g_v^:call ChangeCase(visualmode(), 1)<CR>
-    xnoremap <silent> gct <Esc>:let g:change_case=g:change_case_title<CR>:call ChangeCase(visualmode(), 1)<CR>
-    " Alternating caps (lowercase first)
-    let g:change_case_alt_low = ['\v(\w)(.{-})(\w)', '\L\1\2\U\3']
-    nnoremap <silent> gca :let g:change_case=g:change_case_alt_low<CR>:set operatorfunc=ChangeCase<CR>g@
-    nnoremap <silent> gcaa :let g:change_case=g:change_case_alt_low<CR>g_v^:call ChangeCase(visualmode(), 1)<CR>
-    xnoremap <silent> gca <Esc>:let g:change_case=g:change_case_alt_low<CR>:call ChangeCase(visualmode(), 1)<CR>
-    " Alternating caps (uppercase first)
-    let g:change_case_alt_up = ['\v(\w)(.{-})(\w)', '\U\1\2\L\3']
-    nnoremap <silent> gcA :let g:change_case=g:change_case_alt_up<CR>:set operatorfunc=ChangeCase<CR>g@
-    nnoremap <silent> gcAA :let g:change_case=g:change_case_alt_up<CR>g_v^:call ChangeCase(visualmode(), 1)<CR>
-    xnoremap <silent> gcA <Esc>:let g:change_case=g:change_case_alt_up<CR>:call ChangeCase(visualmode(), 1)<CR>
 
 " Base conversion utilities (gb)
     vnoremap <Leader>he :call StrToHexCodes()<CR>
@@ -535,8 +490,6 @@
 " Quick notes
     " Global scratch buffer
     nnoremap <Leader><Leader>es :edit ~/scratch<CR>
-    " Vimwiki quick notes file
-    nnoremap <Leader>wq :edit ~/wiki/quick/index.wiki<CR>
 "}}}
 
 " Abbreviations {{{
@@ -580,7 +533,7 @@
         Plug 'tpope/vim-speeddating'             " Fix negative problem when incrementing dates
         Plug 'junegunn/vim-easy-align'           " Interactive alignment rules
         Plug 'tommcdo/vim-exchange'              " Operators for exchanging text
-        Plug 'vim-scripts/matchit.zip'
+        Plug 'vim-scripts/matchit.zip'           " Expand % functionality
         Plug 'jiangmiao/auto-pairs', { 'for': [ 'java', 'c', 'cpp', 'javascript' ] }
 
         " Fuzzy finding
@@ -593,7 +546,7 @@
 
         " Text objects
         Plug 'kana/vim-textobj-user'
-        Plug 'kana/vim-textobj-function'
+        Plug 'kana/vim-textobj-function'         " Java/python/vim functions
 
         " Language-specific
         Plug 'neovimhaskell/haskell-vim', { 'for': 'haskell' }
@@ -606,6 +559,11 @@
 " Plugin settings {{{
 " Netrw
     let g:netrw_banner=0
+    " Open previews to the bottom-right
+    let g:netrw_preview=0
+    let g:netrw_alto=0
+    " Defaultl to right splitting
+    let g:netrw_altv=1
 
 " Rooter
     let g:rooter_silent_chdir = 1
