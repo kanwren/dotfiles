@@ -393,6 +393,7 @@
     nnoremap <silent> <Leader><Tab> :let wv=winsaveview()<CR>:%s/\s\+$//e \| call histdel("/", -1) \| nohlsearch \| retab<CR>:call winrestview(wv)<CR>
     " Add blank line below/above line/selection, keep cursor in same position (can take count)
     nnoremap <silent> <Leader>n :<C-u>call append(line("."), repeat([''], v:count1)) \| call append(line(".") - 1, repeat([''], v:count1))<CR>
+    vnoremap <silent> <Leader>n :<C-u>call append(line("'<") - 1, repeat([''], v:count1)) \| call append(line("'>"), repeat([''], v:count1))<CR>
     " Expand line by padding visual block selection with spaces
     vnoremap <Leader>e <Esc>:execute 'normal gv' . (abs(getpos("'>")[2] + getpos("'>")[3] - getpos("'<")[2] - getpos("'<")[3]) + 1) . 'I '<CR>
 
