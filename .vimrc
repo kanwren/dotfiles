@@ -371,16 +371,17 @@
 " Editing
     " Split current line by provided regex (\zs or \ze to preserve separators)
     nnoremap <silent> <expr> gs ':s/' . input('split/') . '/\r/g \| nohlsearch<CR>'
+    " Start a visual search and replace
+    vnoremap gs :s/\%V
     " Sort visual selection
     vnoremap <silent> <Leader>vs :sort /\ze\%V/<CR>gvyugvpgv:s/\s\+$//e \| nohlsearch<CR>``
     " Convenient semicolon insertion
     nnoremap <silent> <Leader>; :let wv=winsaveview()<CR>:s/[^;]*\zs\ze\s*$/;/e \| nohlsearch<CR>:call winrestview(wv)<CR>
     vnoremap <silent> <Leader>; :let wv=winsaveview()<CR>:s/\v(\s*$)(;)@<!/;/g \| nohlsearch<CR>:call winrestview(wv)<CR>
     " easy-align interactive mode
-    nmap ga <Plug>(EasyAlign)
-    vmap ga <Plug>(EasyAlign)
+    "nmap ga <Plug>(EasyAlign)
+    "vmap ga <Plug>(EasyAlign)
     " Prompt for regex to align on
-    nnoremap <Leader>a :EasyAlign //<Left>
     vnoremap <Leader>a :EasyAlign //<Left>
 
 " Sessions

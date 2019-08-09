@@ -1,6 +1,6 @@
 setlocal tabstop=2 softtabstop=2 shiftwidth=2
 setlocal textwidth=80
-setlocal colorcolumn=121
+setlocal colorcolumn=81,121
 
 " Wrap with language extension pragma, with proper capitalization
 let g:surround_108 = "{-# lAnGuAgE \r #-}"

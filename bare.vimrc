@@ -71,8 +71,8 @@ if has('autocmd')
         autocmd!
         autocmd ColorScheme * highlight ExtraWhitespace ctermbg=12
                           \ | highlight ColorColumn ctermbg=8
-                          \ | highlight StatusLine ctermfg=0 ctermbg=15
-                          \ | highlight StatusLineNC ctermfg=0 ctermbg=7
+                          \ | highlight StatusLine ctermfg=15 ctermbg=0
+                          \ | highlight StatusLineNC ctermfg=7 ctermbg=0
                           \ | highlight VertSplit ctermfg=0
                           \ | highlight FoldColumn ctermbg=NONE
                           \ | highlight Folded ctermbg=NONE
@@ -96,6 +96,7 @@ noremap Y y$
 nnoremap & :&&<CR>
 xnoremap gx <Esc>`.``gvP``P
 nnoremap <silent> <expr> gs ':s/' . input('split/') . '/\r/g \| nohlsearch<CR>'
+vnoremap gs :s/\%V
 nnoremap <silent> * :let wv=winsaveview()<CR>*:call winrestview(wv)<CR>
 nnoremap <silent> "" :registers<CR>
 nnoremap <silent> <C-l> :nohlsearch<CR><C-l>
@@ -108,11 +109,15 @@ nnoremap <Leader><Tab> :let wv=winsaveview()<CR>:%s/\s\+$//e \| call histdel("/"
 vnoremap <silent> <Leader>vs :sort /\ze\%V/<CR>gvyugvpgv:s/\s\+$//e \| nohlsearch<CR>``
 nnoremap <Leader>t :new<CR>:setlocal buftype=nofile bufhidden=wipe nobuflisted noswapfile<CR>
 vnoremap <Leader>e <Esc>:execute 'normal gv' . (abs(getpos("'>")[2] + getpos("'>")[3] - getpos("'<")[2] - getpos("'<")[3]) + 1) . 'I '<CR>
-nnoremap <Leader><Leader>es :edit ~/scratch<CR>
 nnoremap <Leader>i :let i=input('ts=sts=sw=') \| if i \| execute 'setlocal tabstop=' . i . ' softtabstop=' . i . ' shiftwidth=' . i \| endif
             \ \| redraw \| echo 'ts=' . &tabstop . ', sts=' . &softtabstop . ', sw='  . &shiftwidth . ', et='  . &expandtab<CR>
 nnoremap <silent> <Leader>r :let r1 = substitute(nr2char(getchar()), "'", "\"", "") \| let r2 = substitute(nr2char(getchar()), "'", "\"", "")
             \ \| execute 'let @' . r2 . '=@' . r1 \| echo "Copied @" . r1 . " to @" . r2<CR>
+nnoremap <Leader><Leader>es :edit ~/scratch<CR>
+
+" Temporary file navigation setup
+set path^=**
+nnoremap <Leader>f :find **/
 
 " Reasonable colorscheme
 colorscheme elflord
