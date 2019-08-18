@@ -144,7 +144,8 @@
             autocmd InsertLeave * match ExtraWhitespace /\s\+$/
             " Define new filetypes for ftplugin
             autocmd BufNewFile,BufRead *.nix setf nix
-            autocmd BufNewFile,BufRead *.sc setf scala
+            autocmd BufNewFile,BufRead *.sc  setf scala
+            autocmd BufNewFile,BufRead *.imo setf arduino
         augroup END
         " Highlighting
         augroup highlight_group
@@ -552,6 +553,7 @@
 
         " Language-specific
         Plug 'neovimhaskell/haskell-vim', { 'for': 'haskell' }
+        Plug 'stevearc/vim-arduino', { 'for': 'arduino' }
         Plug 'JamshedVesuna/vim-markdown-preview', { 'for': 'markdown' }
 
         call plug#end()
