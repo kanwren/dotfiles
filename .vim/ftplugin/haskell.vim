@@ -20,3 +20,4 @@ nnoremap <Leader>HS :s/\zs<Space>\ze[=-]><Space>/\r<Space><Space>/g<CR>
 " Generate hasktags
 nnoremap <Leader>HT :!hasktags --ctags .<CR><CR>
 
+nnoremap <expr> <Leader>HL 'ggO{-# language ' . input('ext: ') . ' #-}<Esc>``'
