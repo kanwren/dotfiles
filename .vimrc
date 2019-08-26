@@ -379,11 +379,11 @@
     " Convenient semicolon insertion
     nnoremap <silent> <Leader>; :let wv=winsaveview()<CR>:s/[^;]*\zs\ze\s*$/;/e \| nohlsearch<CR>:call winrestview(wv)<CR>
     vnoremap <silent> <Leader>; :let wv=winsaveview()<CR>:s/\v(\s*$)(;)@<!/;/g \| nohlsearch<CR>:call winrestview(wv)<CR>
-    " easy-align interactive mode
-    "nmap ga <Plug>(EasyAlign)
-    "vmap ga <Plug>(EasyAlign)
     " Prompt for regex to align on
     vnoremap <Leader>a :EasyAlign //<Left>
+    " Insert blank lines
+    nnoremap <silent> <C-j> :<C-u>call append(line("."), repeat([''], v:count1))<CR>
+    nnoremap <silent> <C-k> :<C-u>call append(line(".") - 1, repeat([''], v:count1))<CR>
 
 " Sessions
     " Providing a count uses temp-<count>.vim, otherwise it just uses temp.vim

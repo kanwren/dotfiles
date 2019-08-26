@@ -3,7 +3,7 @@ setlocal textwidth=80
 setlocal colorcolumn=81,121
 
 " Wrap with language extension pragma, with proper capitalization
-let g:surround_108 = "{-# lAnGuAgE \r #-}"
+let g:surround_108 = "{-# language \r #-}"
 
 " Change long (function application) to long $ function application
 nnoremap <buffer> <Leader>$ :normal dsbi$<Space><CR>
