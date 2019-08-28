@@ -2,7 +2,7 @@
 " Basic
     set encoding=utf-8
     scriptencoding utf-8
-    set ffs=unix,dos,mac
+    set ffs=unix
     " Prevent highlighting from changing when resourcing vimrc
     if !syntax_on
         syntax on
@@ -145,6 +145,7 @@
             " Define new filetypes for ftplugin
             autocmd BufNewFile,BufRead *.nix setf nix
             autocmd BufNewFile,BufRead *.sc  setf scala
+            autocmd BufNewFile,BufRead *.cls setf tex
             autocmd BufNewFile,BufRead *.imo setf arduino
         augroup END
         " Highlighting
@@ -380,7 +381,8 @@
     nnoremap <silent> <Leader>; :let wv=winsaveview()<CR>:s/[^;]*\zs\ze\s*$/;/e \| nohlsearch<CR>:call winrestview(wv)<CR>
     vnoremap <silent> <Leader>; :let wv=winsaveview()<CR>:s/\v(\s*$)(;)@<!/;/g \| nohlsearch<CR>:call winrestview(wv)<CR>
     " Prompt for regex to align on
-    vnoremap <Leader>a :EasyAlign //<Left>
+    vnoremap <Leader>a :LiveEasyAlign<CR>
+    vnoremap <Leader><Leader>a :EasyAlign //<Left>
     " Insert blank lines
     nnoremap <silent> <C-j> :<C-u>call append(line("."), repeat([''], v:count1))<CR>
     nnoremap <silent> <C-k> :<C-u>call append(line(".") - 1, repeat([''], v:count1))<CR>

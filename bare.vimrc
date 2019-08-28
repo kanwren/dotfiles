@@ -4,7 +4,7 @@
 
 set encoding=utf-8
 scriptencoding utf-8
-set ffs=unix,dos,mac
+set ffs=unix
 if !syntax_on | syntax on | end
 filetype plugin indent on
 
