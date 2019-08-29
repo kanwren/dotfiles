@@ -91,7 +91,7 @@
 
 " Indentation
     set autoindent
-    set tabstop=4                        " treat tabs as 4 spaces wide
+    "set tabstop=4                        " treat tabs as 4 spaces wide
     set expandtab softtabstop=4          " expand tabs to 4 spaces
     set shiftwidth=4                     " use 4 spaces when using > or <
     set smarttab
@@ -372,7 +372,7 @@
 
 " Editing
     " Split current line by provided regex (\zs or \ze to preserve separators)
-    nnoremap <silent> <expr> gs ':s/' . input('split/') . '/\r/g \| nohlsearch<CR>'
+    nnoremap gs :s//\r/g<Left><Left><Left><Left><Left>
     " Start a visual search and replace
     vnoremap gs :s/\%V
     " Sort visual selection
@@ -380,9 +380,10 @@
     " Convenient semicolon insertion
     nnoremap <silent> <Leader>; :let wv=winsaveview()<CR>:s/[^;]*\zs\ze\s*$/;/e \| nohlsearch<CR>:call winrestview(wv)<CR>
     vnoremap <silent> <Leader>; :let wv=winsaveview()<CR>:s/\v(\s*$)(;)@<!/;/g \| nohlsearch<CR>:call winrestview(wv)<CR>
+    " Interactive alignment
+    vnoremap gz :LiveEasyAlign<CR>
     " Prompt for regex to align on
-    vnoremap <Leader>a :LiveEasyAlign<CR>
-    vnoremap <Leader><Leader>a :EasyAlign //<Left>
+    vnoremap <Leader>a :EasyAlign //<Left>
     " Insert blank lines
     nnoremap <silent> <C-j> :<C-u>call append(line("."), repeat([''], v:count1))<CR>
     nnoremap <silent> <C-k> :<C-u>call append(line(".") - 1, repeat([''], v:count1))<CR>
@@ -436,7 +437,7 @@
     " Filetype ftplugin editing
     nnoremap <Leader><Leader>ef :edit ~/.vim/ftplugin/<C-r>=&filetype<CR>.vim<CR>
     " Change indent level on the fly
-    nnoremap <Leader>i :let i=input('ts=sts=sw=') \| if i \| execute 'setlocal tabstop=' . i . ' softtabstop=' . i . ' shiftwidth=' . i \| endif
+    nnoremap <Leader>i :let i=input('sts=sw=') \| if i \| execute 'setlocal softtabstop=' . i . ' shiftwidth=' . i \| endif
                 \ \| redraw \| echo 'ts=' . &tabstop . ', sts=' . &softtabstop . ', sw='  . &shiftwidth . ', et='  . &expandtab<CR>
 
 " Base conversion utilities (gb)
