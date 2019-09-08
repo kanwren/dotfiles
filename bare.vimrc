@@ -5,8 +5,8 @@
 set encoding=utf-8
 scriptencoding utf-8
 set ffs=unix
-if !syntax_on | syntax on | end
 filetype plugin indent on
+if !syntax_on | syntax on | end
 
 " Uncomment if backups are okay
 " set swapfile directory^=~/.vim/tmp//
@@ -76,7 +76,8 @@ if has('autocmd')
                           \ | highlight VertSplit ctermfg=0
                           \ | highlight FoldColumn ctermbg=NONE
                           \ | highlight Folded ctermbg=NONE
-                          \ | highlight CursorLineNr ctermbg=4 ctermfg=15
+                          \ | highlight LineNr ctermbg=0 ctermfg=4
+                          \ | highlight CursorLineNr ctermbg=0 ctermfg=15
     augroup END
 end
 
@@ -126,3 +127,4 @@ colorscheme elflord
 if !empty(glob('~/local.vimrc'))
     source ~/local.vimrc
 end
+

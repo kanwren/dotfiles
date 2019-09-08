@@ -3,12 +3,12 @@
     set encoding=utf-8
     scriptencoding utf-8
     set ffs=unix
+    " Enable filetype detection
+    filetype plugin indent on
     " Prevent highlighting from changing when resourcing vimrc
     if !syntax_on
         syntax on
     end
-    " Enable filetype detection
-    filetype plugin indent on
 
 " Backups
     set swapfile directory^=~/.vim/tmp//
@@ -156,7 +156,8 @@
             " Left column
             autocmd ColorScheme * highlight FoldColumn ctermbg=NONE
                               \ | highlight Folded ctermbg=NONE
-                              \ | highlight CursorLineNr ctermbg=4 ctermfg=15
+                              \ | highlight LineNr ctermbg=NONE ctermfg=4
+                              \ | highlight CursorLineNr ctermbg=0 ctermfg=7
             " Highlight text width boundary boundary
             autocmd ColorScheme * highlight ColorColumn ctermbg=8
             " Highlight TODO in intentionally annoying colors
@@ -480,6 +481,8 @@
     nnoremap <Leader>fl :Lines<CR>
     " All lines in current buffer
     nnoremap <Leader>fb :BLines<CR>
+    " Results of a ripgrep search
+    nnoremap <Leader>fr :Rg<Space>
     " Results of an ag search
     nnoremap <Leader>fa :Ag<Space>
     " Tags in project
@@ -540,7 +543,7 @@
         Plug 'junegunn/vim-easy-align'           " Interactive alignment rules
         Plug 'tommcdo/vim-exchange'              " Operators for exchanging text
         Plug 'vim-scripts/matchit.zip'           " Expand % functionality
-        Plug 'jiangmiao/auto-pairs', { 'for': [ 'java', 'c', 'cpp', 'javascript' ] }
+        Plug 'jiangmiao/auto-pairs', { 'for': [ 'rust', 'java', 'c', 'cpp', 'javascript' ] }
 
         " Fuzzy finding
         Plug 'junegunn/fzf'
@@ -554,13 +557,23 @@
         Plug 'kana/vim-textobj-user'
         Plug 'kana/vim-textobj-function'         " Java/python/vim functions
 
-        " Language-specific
+        " Haskell
         Plug 'neovimhaskell/haskell-vim', { 'for': 'haskell' }
+        " Rust
+        Plug 'rust-lang/rust.vim', { 'for': 'rust' }
+        Plug 'racer-rust/vim-racer'
+        " Other language-specific plugins
         Plug 'stevearc/vim-arduino', { 'for': 'arduino' }
         Plug 'JamshedVesuna/vim-markdown-preview', { 'for': 'markdown' }
 
+        " LSP
+        " Use release branch
+        "Plug 'neoclide/coc.nvim', {'branch': 'release'}
+
         call plug#end()
     endif
+
+    command! Plugs PlugUpgrade | PlugClean | PlugUpdate
 " }}}
 
 " Plugin settings {{{
@@ -599,6 +612,7 @@
     let g:vimwiki_listsyms = ' .○●✓'
     let g:vimwiki_listsym_rejected = '✗'
     let g:vimwiki_dir_link = 'index'
+    "let g:vimwiki_table_auto_fmt = 0
 
 " Lightline
     function! LightlineBufferline() abort
@@ -664,10 +678,5 @@
     if !empty(globpath($HOME, 'local.vimrc'))
         execute 'source ' . globpath($HOME, 'local.vimrc')
     end
-
-" Meow
-    augroup meow
-        autocmd! VimEnter * echo '>^.^<'
-    augroup END
 
 " vim:foldmethod=marker
