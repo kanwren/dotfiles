@@ -156,6 +156,8 @@ alias xc='xclip -sel clip'
 # Copy last command
 alias copylast="fc -ln -1 | awk '{\$1=\$1}1' | xclip -sel clip"
 
+alias cleantex='rm *.aux *.log'
+
 alias .1='cd ..'
 alias .2='cd ../..'
 alias .3='cd ../../..'
