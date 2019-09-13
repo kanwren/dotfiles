@@ -58,7 +58,7 @@
     set visualbell t_vb=
 
 " Navigation
-    set mouse=n
+    set mouse=a
     set scrolloff=0
     set tags=tags;/
 
@@ -91,7 +91,7 @@
 
 " Indentation
     set autoindent
-    "set tabstop=4                        " treat tabs as 4 spaces wide
+    set tabstop=4                        " treat tabs as 4 spaces wide
     set expandtab softtabstop=4          " expand tabs to 4 spaces
     set shiftwidth=4                     " use 4 spaces when using > or <
     set smarttab
@@ -438,7 +438,7 @@
     " Filetype ftplugin editing
     nnoremap <Leader><Leader>ef :edit ~/.vim/ftplugin/<C-r>=&filetype<CR>.vim<CR>
     " Change indent level on the fly
-    nnoremap <Leader>i :let i=input('sts=sw=') \| if i \| execute 'setlocal softtabstop=' . i . ' shiftwidth=' . i \| endif
+    nnoremap <Leader>i :let i=input('ts=sts=sw=') \| if i \| execute 'setlocal tabstop=' . i . ' softtabstop=' . i . ' shiftwidth=' . i \| endif
                 \ \| redraw \| echo 'ts=' . &tabstop . ', sts=' . &softtabstop . ', sw='  . &shiftwidth . ', et='  . &expandtab<CR>
 
 " Base conversion utilities (gb)

@@ -30,7 +30,7 @@ set history=1000 undolevels=1000
 
 set hidden autoread noconfirm
 set noerrorbells visualbell t_vb=
-set mouse=n
+set mouse=a
 set lazyredraw
 set number relativenumber
 set splitbelow splitright
@@ -46,7 +46,7 @@ set whichwrap+=h,l,[,]
 set nrformats=bin,hex
 set cpoptions+=y
 set autoindent
-set expandtab softtabstop=4 smarttab shiftwidth=4 noshiftround
+set expandtab tabstop=4 softtabstop=4 smarttab shiftwidth=4 noshiftround
 set cinoptions+=:0L0g0j1J1
 set nowrap textwidth=80 formatoptions=croqjln
 set magic
@@ -110,7 +110,7 @@ nnoremap <Leader><Tab> :let wv=winsaveview()<CR>:%s/\s\+$//e \| call histdel("/"
 vnoremap <silent> <Leader>vs :sort /\ze\%V/<CR>gvyugvpgv:s/\s\+$//e \| nohlsearch<CR>``
 nnoremap <Leader>t :new<CR>:setlocal buftype=nofile bufhidden=wipe nobuflisted noswapfile<CR>
 vnoremap <Leader>e <Esc>:execute 'normal gv' . (abs(getpos("'>")[2] + getpos("'>")[3] - getpos("'<")[2] - getpos("'<")[3]) + 1) . 'I '<CR>
-nnoremap <Leader>i :let i=input('sts=sw=') \| if i \| execute 'setlocal softtabstop=' . i . ' shiftwidth=' . i \| endif
+nnoremap <Leader>i :let i=input('ts=sts=sw=') \| if i \| execute 'setlocal tabstop=' . i . ' softtabstop=' . i . ' shiftwidth=' . i \| endif
             \ \| redraw \| echo 'ts=' . &tabstop . ', sts=' . &softtabstop . ', sw='  . &shiftwidth . ', et='  . &expandtab<CR>
 nnoremap <silent> <Leader>r :let r1 = substitute(nr2char(getchar()), "'", "\"", "") \| let r2 = substitute(nr2char(getchar()), "'", "\"", "")
             \ \| execute 'let @' . r2 . '=@' . r1 \| echo "Copied @" . r1 . " to @" . r2<CR>
