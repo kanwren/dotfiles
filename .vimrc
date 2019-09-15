@@ -471,6 +471,7 @@
     nnoremap <Leader>lv :Vex<CR>
     " Open directory of current working directory in vertical split
     nnoremap <Leader>ll :Lex<CR>
+    nnoremap <Leader>le :Ex<CR>
 
 " fzf mappings (<Leader>f)
     " All files
@@ -563,6 +564,7 @@
         Plug 'rust-lang/rust.vim', { 'for': 'rust' }
         Plug 'racer-rust/vim-racer'
         " Other language-specific plugins
+        Plug 'leafgarland/typescript-vim', { 'for': 'typescript' }
         Plug 'stevearc/vim-arduino', { 'for': 'arduino' }
         Plug 'JamshedVesuna/vim-markdown-preview', { 'for': 'markdown' }
 
@@ -579,11 +581,13 @@
 " Plugin settings {{{
 " Netrw
     let g:netrw_banner=0
+    " Default to thin view
+    let g:netrw_liststyle=1
     " Open previews to the bottom-right
-    let g:netrw_preview=0
-    let g:netrw_alto=0
-    " Defaultl to right splitting
-    let g:netrw_altv=1
+    "let g:netrw_preview=0
+    "let g:netrw_alto=0
+    " Default to right splitting
+    "let g:netrw_altv=1
 
 " Rooter
     let g:rooter_silent_chdir = 1
