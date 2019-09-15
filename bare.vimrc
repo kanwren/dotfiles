@@ -69,15 +69,16 @@ if has('autocmd')
     augroup END
     augroup highlight_group
         autocmd!
-        autocmd ColorScheme * highlight ExtraWhitespace ctermbg=12
-                          \ | highlight ColorColumn ctermbg=8
-                          \ | highlight StatusLine ctermfg=15 ctermbg=0
-                          \ | highlight StatusLineNC ctermfg=7 ctermbg=0
-                          \ | highlight VertSplit ctermfg=0
-                          \ | highlight FoldColumn ctermbg=NONE
-                          \ | highlight Folded ctermbg=NONE
-                          \ | highlight LineNr ctermbg=0 ctermfg=4
-                          \ | highlight CursorLineNr ctermbg=0 ctermfg=15
+        autocmd ColorScheme *
+                    \   highlight ExtraWhitespace ctermbg=12
+                    \ | highlight ColorColumn ctermbg=8
+                    \ | highlight StatusLine ctermfg=15 ctermbg=0
+                    \ | highlight StatusLineNC ctermfg=7 ctermbg=0
+                    \ | highlight VertSplit ctermfg=0
+                    \ | highlight FoldColumn ctermbg=NONE
+                    \ | highlight Folded ctermbg=NONE
+                    \ | highlight LineNr ctermbg=0 ctermfg=4
+                    \ | highlight CursorLineNr ctermbg=0 ctermfg=15
     augroup END
 end
 
@@ -119,6 +120,19 @@ nnoremap <Leader><Leader>es :edit ~/scratch<CR>
 " Temporary file navigation setup
 set path^=**
 nnoremap <Leader>f :find **/
+
+" Quick vim-plug setup
+function! PlugSetup() abort
+    if empty(glob('~/.vim/autoload/plug.vim'))
+        call system('curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim')
+    endif
+endfunction
+
+" Block for plugins
+silent! if !empty(glob('~/.vim/autoload/plug.vim')) && !empty(glob('~/.vim/bundle')) && plug#begin(glob('~/.vim/bundle'))
+    " Plug 'tpope/vim-surround'
+    call plug#end()
+endif
 
 " Reasonable colorscheme
 colorscheme elflord

@@ -154,10 +154,11 @@
             " Highlight trailing whitespace
             autocmd ColorScheme * highlight ExtraWhitespace ctermbg=12
             " Left column
-            autocmd ColorScheme * highlight FoldColumn ctermbg=NONE
-                              \ | highlight Folded ctermbg=NONE
-                              \ | highlight LineNr ctermbg=NONE ctermfg=4
-                              \ | highlight CursorLineNr ctermbg=0 ctermfg=7
+            autocmd ColorScheme *
+                        \   highlight FoldColumn ctermbg=NONE
+                        \ | highlight Folded ctermbg=NONE
+                        \ | highlight LineNr ctermbg=NONE ctermfg=4
+                        \ | highlight CursorLineNr ctermbg=0 ctermfg=7
             " Highlight text width boundary boundary
             autocmd ColorScheme * highlight ColorColumn ctermbg=8
             " Highlight TODO in intentionally annoying colors
@@ -408,7 +409,7 @@
     nnoremap <silent> "" :registers<CR>
     " Copy contents of register to another (provides ' as an alias for ")
     nnoremap <silent> <Leader>r :let r1 = substitute(nr2char(getchar()), "'", "\"", "") \| let r2 = substitute(nr2char(getchar()), "'", "\"", "")
-          \ \| execute 'let @' . r2 . '=@' . r1 \| echo "Copied @" . r1 . " to @" . r2<CR>
+                \ \| execute 'let @' . r2 . '=@' . r1 \| echo "Copied @" . r1 . " to @" . r2<CR>
 
 " Matching navigation commands, like in unimpaired
     nnoremap ]b :bnext<CR>
@@ -525,9 +526,15 @@
 " }}}
 
 " Plugins {{{
-    silent! if !empty(globpath(&runtimepath, 'autoload/plug.vim'))
-                \ && !empty(globpath(&runtimepath, 'bundle'))
-                \ && plug#begin(globpath(&runtimepath, 'bundle'))
+    function! PlugSetup() abort
+        if empty(glob('~/.vim/autoload/plug.vim'))
+            call system('curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim')
+        endif
+    endfunction
+
+    silent! if !empty(glob('~/.vim/autoload/plug.vim'))
+                \ && !empty(glob('~/.vim/bundle'))
+                \ && plug#begin(glob('~/.vim/bundle'))
         " Functionality
         Plug 'vimwiki/vimwiki'                   " Personal wiki for Vim
         Plug 'sheerun/vim-polyglot'              " Collection of language packs to rule them all
@@ -569,13 +576,10 @@
         Plug 'JamshedVesuna/vim-markdown-preview', { 'for': 'markdown' }
 
         " LSP
-        " Use release branch
         "Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
         call plug#end()
     endif
-
-    command! Plugs PlugUpgrade | PlugClean | PlugUpdate
 " }}}
 
 " Plugin settings {{{
