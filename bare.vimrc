@@ -35,7 +35,7 @@ set lazyredraw
 set number relativenumber
 set splitbelow splitright
 set cmdheight=1 showcmd
-set laststatus=2 showmode statusline=[%n]\ %F%<\ %m%y%h%w%r\ \ %(0x%B\ %b%)%=%p%%\ \ %(%l/%L%)%(\ \|\ %c%V%)%(\ %)
+set laststatus=2 showmode statusline=[%n]\ %f%<\ %m%y%h%w%r\ \ %(0x%B\ %b%)%=%p%%\ \ %(%l/%L%)%(\ \|\ %c%V%)%(\ %)
 set wildmenu wildmode=longest:list,full
 set list listchars=tab:>-,eol:¬,extends:>,precedes:<
 
@@ -118,7 +118,6 @@ nnoremap <silent> <Leader>r :let r1 = substitute(nr2char(getchar()), "'", "\"", 
 nnoremap <Leader><Leader>es :edit ~/scratch<CR>
 
 " Temporary file navigation setup
-set path^=**
 nnoremap <Leader>f :find **/
 
 " Quick vim-plug setup
