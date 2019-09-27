@@ -69,8 +69,9 @@
     set number relativenumber            " use Vim properly
     set list listchars=tab:>-,eol:¬,extends:>,precedes:<
     set nocursorline nocursorcolumn
-    " status line (when lightline isn't available)
+    " statusline
     set laststatus=2
+    set statusline=[%n]\ %f%<\ %m%y%h%w%r\ \ %(0x%B\ %b%)%=%p%%\ \ %(%l/%L%)%(\ \|\ %c%V%)%(\ %)
     set showmode
     " command bar
     set cmdheight=1
@@ -557,8 +558,7 @@
         Plug 'junegunn/fzf'
         Plug 'junegunn/fzf.vim'
 
-        " Interface and colorschemes
-        Plug 'itchyny/lightline.vim'
+        " Interface/colorschemes
         Plug 'arcticicestudio/nord-vim'
 
         " Text objects
@@ -569,14 +569,9 @@
         Plug 'neovimhaskell/haskell-vim', { 'for': 'haskell' }
         " Rust
         Plug 'rust-lang/rust.vim', { 'for': 'rust' }
-        Plug 'racer-rust/vim-racer'
         " Other language-specific plugins
         Plug 'leafgarland/typescript-vim', { 'for': 'typescript' }
-        Plug 'stevearc/vim-arduino', { 'for': 'arduino' }
         Plug 'JamshedVesuna/vim-markdown-preview', { 'for': 'markdown' }
-
-        " LSP
-        "Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
         call plug#end()
     endif
@@ -622,30 +617,6 @@
     let g:vimwiki_dir_link = 'index'
     "let g:vimwiki_table_auto_fmt = 0
 
-" Lightline
-    function! LightlineBufferline() abort
-        call bufferline#refresh_status()
-        return [g:bufferline_status_info.before, g:bufferline_status_info.current, g:bufferline_status_info.after]
-    endfunction
-
-    let g:lightline = {
-                \ 'active': {
-                \   'left': [ [ 'mode', 'paste' ],
-                \             [ 'readonly', 'buffilename', 'modified', 'fugitive', 'charvalue' ] ]
-                \ },
-                \ 'enable': {
-                \   'statusline': 1,
-                \ },
-                \ 'component': {
-                \   'buffilename': '[%n] %f',
-                \   'charvalue': '0x%B %b',
-                \   'lineinfo': "%l/%L | %c%V",
-                \ },
-                \ 'component_function': {
-                \   'fugitive': 'FugitiveHead',
-                \ },
-                \ }
-
 " Goyo
     function! s:goyo_enter() abort
         set nolist
@@ -676,10 +647,8 @@
 " Colorscheme can come anywhere after highlighting autocommands
     if &term =~ ".*-256color" && !empty(globpath(&runtimepath, 'colors/nord.vim'))
         colorscheme nord
-        let g:lightline['colorscheme'] = 'nord'
     else
         colorscheme elflord
-        let g:lightline['colorscheme'] = 'powerline'
     endif
 
 " Local vimrc

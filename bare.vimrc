@@ -138,6 +138,6 @@ colorscheme elflord
 
 " Local vimrc
 if !empty(glob('~/local.vimrc'))
-    source ~/local.vimrc
+    execute 'source ' . glob('~/local.vimrc')
 end
 
