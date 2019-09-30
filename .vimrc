@@ -143,11 +143,14 @@
             autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
             autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
             autocmd InsertLeave * match ExtraWhitespace /\s\+$/
+        augroup END
+        augroup detect_group
             " Define new filetypes for ftplugin
             autocmd BufNewFile,BufRead *.nix setf nix
             autocmd BufNewFile,BufRead *.sc  setf scala
             autocmd BufNewFile,BufRead *.cls setf tex
             autocmd BufNewFile,BufRead *.imo setf arduino
+            autocmd BufNewFile,BufRead *.asm setf lc3
         augroup END
         " Highlighting
         augroup highlight_group
@@ -572,6 +575,7 @@
         " Other language-specific plugins
         Plug 'leafgarland/typescript-vim', { 'for': 'typescript' }
         Plug 'JamshedVesuna/vim-markdown-preview', { 'for': 'markdown' }
+        Plug 'nprindle/lc3.vim', { 'for': 'lc3' }
 
         call plug#end()
     endif
@@ -598,8 +602,9 @@
     highlight VimwikiHeader3 ctermfg=green
     let wiki = {}
     let wiki.path = '~/wiki/'
-    let wiki.path_html = '~/wiki-gl/'
+    let wiki.path_html = '~/wiki/html/'
     let wiki.template_path = wiki.path . 'templates/'
+    let wiki.css_name = '../style.css'
     let wiki.template_ext = '.tpl'
     let wiki.nested_syntaxes = {
                 \ 'haskell':     'haskell',
