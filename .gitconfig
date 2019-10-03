@@ -2,10 +2,12 @@
 	path = ~/local.gitconfig
 [gist]
 	private = true
-[merge]
-	tool = vimdiff
+[credential]
+	helper = manager
 [core]
 	editor = vim
+	autocrlf = false
+	excludesfile = ~/.gitignore
 [diff]
 	tool = vimdiff
 [difftool]
@@ -19,3 +21,5 @@
 [mergetool]
 	prompt = false
 	keepBackup = false
+[push]
+	default = simple
