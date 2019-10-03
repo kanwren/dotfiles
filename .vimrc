@@ -651,9 +651,9 @@
 
 " Colorscheme can come anywhere after highlighting autocommands
     if &term =~ ".*-256color" && !empty(globpath(&runtimepath, 'colors/nord.vim'))
-        colorscheme nord
+        silent! colorscheme nord
     else
-        colorscheme elflord
+        silent! colorscheme elflord
     endif
 
 " Local vimrc

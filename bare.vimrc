@@ -134,7 +134,7 @@ silent! if !empty(glob('~/.vim/autoload/plug.vim')) && !empty(glob('~/.vim/bundl
 endif
 
 " Reasonable colorscheme
-colorscheme elflord
+silent! colorscheme elflord
 
 " Local vimrc
 if !empty(glob('~/local.vimrc'))
