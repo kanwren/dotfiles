@@ -555,7 +555,7 @@
         Plug 'junegunn/vim-easy-align'           " Interactive alignment rules
         Plug 'tommcdo/vim-exchange'              " Operators for exchanging text
         Plug 'vim-scripts/matchit.zip'           " Expand % functionality
-        Plug 'jiangmiao/auto-pairs', { 'for': [ 'rust', 'java', 'c', 'cpp', 'javascript' ] }
+        Plug 'jiangmiao/auto-pairs', { 'for': [ 'rust', 'java', 'c', 'cpp', 'javascript', 'typescript' ] }
 
         " Fuzzy finding
         Plug 'junegunn/fzf'
@@ -615,6 +615,7 @@
                 \ 'javascript':  'javascript',
                 \ 'python':      'python',
                 \ 'scala':       'scala',
+                \ 'lc3':         'lc3',
                 \ }
     let g:vimwiki_list = [wiki]
     let g:vimwiki_listsyms = ' .○●✓'
