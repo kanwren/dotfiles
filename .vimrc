@@ -146,11 +146,7 @@
         augroup END
         augroup detect_group
             " Define new filetypes for ftplugin
-            autocmd BufNewFile,BufRead *.nix setf nix
-            autocmd BufNewFile,BufRead *.sc  setf scala
             autocmd BufNewFile,BufRead *.cls setf tex
-            autocmd BufNewFile,BufRead *.imo setf arduino
-            autocmd BufNewFile,BufRead *.asm setf lc3
         augroup END
         " Highlighting
         augroup highlight_group
@@ -568,14 +564,13 @@
         Plug 'kana/vim-textobj-user'
         Plug 'kana/vim-textobj-function'         " Java/python/vim functions
 
-        " Haskell
+        " Language-specific plugins
         Plug 'neovimhaskell/haskell-vim', { 'for': 'haskell' }
-        " Rust
         Plug 'rust-lang/rust.vim', { 'for': 'rust' }
-        " Other language-specific plugins
         Plug 'leafgarland/typescript-vim', { 'for': 'typescript' }
-        Plug 'JamshedVesuna/vim-markdown-preview', { 'for': 'markdown' }
         Plug 'nprindle/lc3.vim', { 'for': 'lc3' }
+        " Plug 'lervag/vimtex', { 'for': 'tex' }
+        Plug 'JamshedVesuna/vim-markdown-preview', { 'for': 'markdown' }
 
         call plug#end()
     endif
@@ -648,6 +643,9 @@
 " markdown-preview
     let vim_markdown_preview_pandoc = 1
     let vim_markdown_preview_use_xdg_open = 1
+
+" lc3.vim
+    let g:lc3_detect_asm = 1
 " }}}
 
 " Colorscheme can come anywhere after highlighting autocommands
