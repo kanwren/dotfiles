@@ -107,23 +107,41 @@ nnoremap <silent> <C-l> :nohlsearch<CR><C-l>
 map <Space> <nop>
 map <S-Space> <Space>
 let mapleader=" "
+
 nnoremap <Leader><Tab> :let wv=winsaveview()<CR>:%s/\s\+$//e \| call histdel("/", -1) \| nohlsearch \| retab<CR>:call winrestview(wv)<CR>
 vnoremap <silent> <Leader>vs :sort /\ze\%V/<CR>gvyugvpgv:s/\s\+$//e \| nohlsearch<CR>``
 nnoremap <Leader>t :new<CR>:setlocal buftype=nofile bufhidden=wipe nobuflisted noswapfile<CR>
 vnoremap <Leader>e <Esc>:execute 'normal gv' . (abs(getpos("'>")[2] + getpos("'>")[3] - getpos("'<")[2] - getpos("'<")[3]) + 1) . 'I '<CR>
-nnoremap <Leader>i :let i=input('ts=sts=sw=') \| if i \| execute 'setlocal tabstop=' . i . ' softtabstop=' . i . ' shiftwidth=' . i \| endif
-            \ \| redraw \| echo 'ts=' . &tabstop . ', sts=' . &softtabstop . ', sw='  . &shiftwidth . ', et='  . &expandtab<CR>
 nnoremap <silent> <Leader>r :let r1 = substitute(nr2char(getchar()), "'", "\"", "") \| let r2 = substitute(nr2char(getchar()), "'", "\"", "")
             \ \| execute 'let @' . r2 . '=@' . r1 \| echo "Copied @" . r1 . " to @" . r2<CR>
 nnoremap <Leader><Leader>es :edit ~/scratch<CR>
+
+function s:ChangeIndent() abort
+    let i=input('ts=sts=sw=')
+    if i
+        execute 'setlocal tabstop=' . i . ' softtabstop=' . i . ' shiftwidth=' . i
+    endif
+    redraw
+    echo 'ts=' . &tabstop . ', sts=' . &softtabstop . ', sw='  . &shiftwidth . ', et='  . &expandtab
+endfunction
+nnoremap <Leader>i :call <SID>ChangeIndent()<CR>
 
 " Temporary file navigation setup
 nnoremap <Leader>f :find **/
 
 " Quick vim-plug setup
-function! PlugSetup() abort
+function! InstallVimPlug() abort
     if empty(glob('~/.vim/autoload/plug.vim'))
-        call system('curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim')
+        let url = 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+        if executable('curl')
+            call system('curl -fLo ~/.vim/autoload/plug.vim --create-dirs ' . url)
+        elseif executable('wget')
+            call system('mkdir -p ~/.vim/autoload && wget -O ~/.vim/autoload/plug.vim ' . url)
+        else
+            echoerr 'curl or wget are required to install vim-plug'
+        endif
+    else
+        echo 'vim-plug is already installed'
     endif
 endfunction
 

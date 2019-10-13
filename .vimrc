@@ -35,7 +35,6 @@
 
 " Colors and terminal settings
     if &term =~ ".*-256color"
-        set t_Co=256
         let &t_ti.="\e[1 q"
         let &t_SI.="\e[5 q"
         let &t_EI.="\e[1 q"
@@ -176,19 +175,20 @@
     " Reverse lines
     command! -bar -range=% Reverse <line1>,<line2>g/^/m<line1>-1 | nohlsearch
     " Show calendar and date/time
-    command! Cal :!clear && cal -y && date -R
+    command! Cal :!clear && cal -y; date -R
     " Fetch mthesaurus.txt from gutenberg with curl
     command! GetThesaurus :!curl --create-dirs http://www.gutenberg.org/files/3202/files/mthesaur.txt -o ~/.vim/thesaurus/mthesaur.txt
-    " Enable easy mode (for teaching recitation with a non-Vim user)
-    command! EM execute "set insertmode | source $VIMRUNTIME/evim.vim"
 
-" JSON utilities
-    " Format with python's JSON tool
-    command! -range JT <line1>,<line2>!python3 -mjson.tool
-    " Convert JSON to YAML
-    command! -range JY <line1>,<line2>!python3 -c 'import sys, yaml, json; yaml.safe_dump(json.load(sys.stdin), sys.stdout, default_flow_style=False)'
-    " Convert YAML to JSON
-    command! -range YJ <line1>,<line2>!python3 -c 'import sys, yaml, json; json.dump(yaml.safe_load(sys.stdin), sys.stdout)'
+" JSON utilities (format, convert to and from YAML)
+    if executable('python3')
+        command! -range JT <line1>,<line2>!python3 -m json.tool
+        command! -range J2Y <line1>,<line2>!python3 -c 'import sys, yaml, json; yaml.safe_dump(json.load(sys.stdin), sys.stdout, default_flow_style=False)'
+        command! -range Y2J <line1>,<line2>!python3 -c 'import sys, yaml, json; json.dump(yaml.safe_load(sys.stdin), sys.stdout)'
+    elseif executable('python')
+        command! -range JT <line1>,<line2>!python -m json.tool
+        command! -range J2Y <line1>,<line2>!python -c 'import sys, yaml, json; yaml.safe_dump(json.load(sys.stdin), sys.stdout, default_flow_style=False)'
+        command! -range Y2J <line1>,<line2>!python -c 'import sys, yaml, json; json.dump(yaml.safe_load(sys.stdin), sys.stdout)'
+    endif
 
 " Session management
     function! GetSessions(arglead, cmdline, cursorpos) abort
@@ -375,7 +375,7 @@
 " Editing
     " Split current line by provided regex (\zs or \ze to preserve separators)
     nnoremap gs :s//\r/g<Left><Left><Left><Left><Left>
-    " Start a visual search and replace
+    " Start a visual substitute
     vnoremap gs :s/\%V
     " Sort visual selection
     vnoremap <silent> <Leader>vs :sort /\ze\%V/<CR>gvyugvpgv:s/\s\+$//e \| nohlsearch<CR>``
@@ -412,25 +412,13 @@
                 \ \| execute 'let @' . r2 . '=@' . r1 \| echo "Copied @" . r1 . " to @" . r2<CR>
 
 " Matching navigation commands, like in unimpaired
-    nnoremap ]b :bnext<CR>
-    nnoremap [b :bprevious<CR>
-    nnoremap ]B :blast<CR>
-    nnoremap [B :bfirst<CR>
-
-    nnoremap ]t :tnext<CR>
-    nnoremap [t :tprevious<CR>
-    nnoremap ]T :tlast<CR>
-    nnoremap [T :tfirst<CR>
-
-    nnoremap ]q :cnext<CR>
-    nnoremap [q :cprevious<CR>
-    nnoremap ]Q :clast<CR>
-    nnoremap [Q :cfirst<CR>
-
-    nnoremap ]l :lnext<CR>
-    nnoremap [l :lprevious<CR>
-    nnoremap ]L :llast<CR>
-    nnoremap [L :lfirst<CR>
+    for [l, c] in [["b", "b"], ["t", "t"], ["q", "c"], ["l", "l"]]
+        let u = toupper(l)
+        execute "nnoremap ]" . l . " :" . c . "next<CR>"
+        execute "nnoremap [" . l . " :" . c . "previous<CR>"
+        execute "nnoremap ]" . u . " :" . c . "last<CR>"
+        execute "nnoremap [" . u . " :" . c . "first<CR>"
+    endfor
 
 " Quick settings changes
     " .vimrc editing/sourcing
@@ -439,8 +427,15 @@
     " Filetype ftplugin editing
     nnoremap <Leader><Leader>ef :edit ~/.vim/ftplugin/<C-r>=&filetype<CR>.vim<CR>
     " Change indent level on the fly
-    nnoremap <Leader>i :let i=input('ts=sts=sw=') \| if i \| execute 'setlocal tabstop=' . i . ' softtabstop=' . i . ' shiftwidth=' . i \| endif
-                \ \| redraw \| echo 'ts=' . &tabstop . ', sts=' . &softtabstop . ', sw='  . &shiftwidth . ', et='  . &expandtab<CR>
+    function s:ChangeIndent() abort
+        let i=input('ts=sts=sw=')
+        if i
+            execute 'setlocal tabstop=' . i . ' softtabstop=' . i . ' shiftwidth=' . i
+        endif
+        redraw
+        echo 'ts=' . &tabstop . ', sts=' . &softtabstop . ', sw='  . &shiftwidth . ', et='  . &expandtab
+    endfunction
+    nnoremap <Leader>i :call <SID>ChangeIndent()<CR>
 
 " Base conversion utilities (gb)
     vnoremap <Leader>he :call StrToHexCodes()<CR>
@@ -526,9 +521,18 @@
 " }}}
 
 " Plugins {{{
-    function! PlugSetup() abort
+    function! InstallVimPlug() abort
         if empty(glob('~/.vim/autoload/plug.vim'))
-            call system('curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim')
+            let url = 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+            if executable('curl')
+                call system('curl -fLo ~/.vim/autoload/plug.vim --create-dirs ' . url)
+            elseif executable('wget')
+                call system('mkdir -p ~/.vim/autoload && wget -O ~/.vim/autoload/plug.vim ' . url)
+            else
+                echoerr 'curl or wget are required to install vim-plug'
+            endif
+        else
+            echo 'vim-plug is already installed'
         endif
     endfunction
 
