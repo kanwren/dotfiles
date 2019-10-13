@@ -656,8 +656,8 @@
     endif
 
 " Local vimrc
-    if !empty(globpath($HOME, 'local.vimrc'))
-        execute 'source ' . globpath($HOME, 'local.vimrc')
+    if !empty(glob('~/local.vimrc'))
+        execute 'source ' . glob('~/local.vimrc')
     end
 
 " vim:foldmethod=marker
