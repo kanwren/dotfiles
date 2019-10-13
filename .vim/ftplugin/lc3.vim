@@ -16,4 +16,8 @@ function! DockerCpAsms() abort
     echo 'Done'
 endfunction
 
-nnoremap <silent> <F2> :call DockerCpAsms()<CR>
+nnoremap <buffer> <silent> <F2> :call DockerCpAsms()<CR>
+
+function! CapitalizeInsts() abort
+    %s/\v<(add|ld|st|jsrr|jsr|and|ldr|str|rti|not|ldi|sti|jmp|ret|lea|trap|br|brn|brz|brp|brnz|brnp|brzp|brnzp|getc|out|puts|in|putsp|halt|ldb|ldw|lshf|rshfl|rshfa|stb|stw|xor)>/\U&/g
+endfunction

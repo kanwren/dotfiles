@@ -1,3 +1,5 @@
+setlocal makeprg=cd\ %:h\ &&\ pdflatex\ %:t
+
 set textwidth=80
 " Automatically wrap at textwidth
 setlocal formatoptions+=t
