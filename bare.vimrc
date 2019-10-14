@@ -146,8 +146,7 @@ function! InstallVimPlug() abort
 endfunction
 
 " Plugins
-
-"runtime macros/matchit.vim
+runtime macros/matchit.vim
 silent! if !empty(glob('~/.vim/autoload/plug.vim')) && !empty(glob('~/.vim/bundle')) && plug#begin(glob('~/.vim/bundle'))
     " Plug 'tpope/vim-surround'
     call plug#end()
