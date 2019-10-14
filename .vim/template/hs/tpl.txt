@@ -1,6 +1,0 @@
-module %module name%
-  (
-  ) where
-
-main :: IO ()
-main = pure ()
