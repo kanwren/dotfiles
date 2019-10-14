@@ -521,6 +521,9 @@
 " }}}
 
 " Plugins {{{
+    " It's in the runtime *shrug*
+    runtime macros/matchit.vim
+
     function! InstallVimPlug() abort
         if empty(glob('~/.vim/autoload/plug.vim'))
             let url = 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
@@ -554,7 +557,6 @@
         Plug 'tpope/vim-speeddating'             " Fix negative problem when incrementing dates
         Plug 'junegunn/vim-easy-align'           " Interactive alignment rules
         Plug 'tommcdo/vim-exchange'              " Operators for exchanging text
-        Plug 'vim-scripts/matchit.zip'           " Expand % functionality
         Plug 'jiangmiao/auto-pairs', { 'for': [ 'rust', 'java', 'c', 'cpp', 'javascript', 'typescript' ] }
 
         " Fuzzy finding
