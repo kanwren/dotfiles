@@ -17,6 +17,8 @@
 	mt = mergetool
 	cane = commit --amend --no-edit
 	graph = log --left-right --graph --oneline
+	ls = log --oneline
+	s = status
 [merge]
 	tool = vimdiff
 	conflictstyle = diff3
