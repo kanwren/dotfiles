@@ -13,12 +13,13 @@
 [difftool]
 	prompt = false
 [alias]
-	dt = difftool
-	mt = mergetool
-	cane = commit --amend --no-edit
 	graph = log --left-right --graph --oneline
+	cane = commit --amend --no-edit
 	ls = log --oneline
 	s = status
+	co = checkout
+	dt = difftool
+	mt = mergetool
 [merge]
 	tool = vimdiff
 	conflictstyle = diff3
