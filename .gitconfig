@@ -16,6 +16,8 @@
 	graph = log --left-right --graph --oneline
 	cane = commit --amend --no-edit
 	ls = log --oneline
+	up = pull --rebase
+	rh = reset --hard
 	s = status
 	co = checkout
 	dt = difftool
