@@ -14,9 +14,9 @@
 	prompt = false
 [alias]
 	graph = log --left-right --graph --oneline
+	root = "!f() { if [ \"$1\" == \"-r\" ] || [ \"$1\" == \"--relative\" ]; then git rev-parse --show-prefix; else git rev-parse --show-toplevel; fi }; f"
 	cane = commit --amend --no-edit
 	ls = log --oneline
-	up = pull --rebase
 	rh = reset --hard
 	s = status
 	co = checkout
