@@ -17,11 +17,12 @@
 	root = "!f() { if [ \"$1\" == \"-r\" ] || [ \"$1\" == \"--relative\" ]; then git rev-parse --show-prefix; else git rev-parse --show-toplevel; fi }; f"
 	cane = commit --amend --no-edit
 	ls = log --oneline
+	changed = show --name-status --oneline
 	rh = reset --hard
 	s = status
 	co = checkout
-	dt = difftool
-	mt = mergetool
+	praise = blame
+	pansect = bisect
 [merge]
 	tool = vimdiff
 	conflictstyle = diff3
