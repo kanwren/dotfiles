@@ -138,6 +138,8 @@ bak() {
   fi
 }
 
+alias svim='sudo -E vim'
+
 # Search with fzf and edit with vim
 alias se='path=$(fzf); [ ! -z "$path" ] && vim "$path"'
 
@@ -187,3 +189,5 @@ cd() {
     builtin cd ~ && ls -F --group-directories-first
   fi
 }
+
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
