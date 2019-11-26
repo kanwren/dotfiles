@@ -19,6 +19,7 @@
 	ls = log --oneline
 	changed = show --name-status --oneline
 	rh = reset --hard
+	diffc = diff --cached
 	s = status
 	co = checkout
 	praise = blame
