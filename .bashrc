@@ -120,8 +120,6 @@ export EDITOR="$VISUAL"
 set -o vi
 # Make C-l clear the screen in insert mode
 bind -m vi-insert "\C-l":clear-screen
-# Automatically cd upon typing directory name
-shopt -s autocd
 
 # alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 
@@ -148,6 +146,7 @@ alias puzzle='xdg-open "https://lichess.org/training" >/dev/null'
 # Establish superiority
 alias emacs='vim'
 
+# Handy ls shortcuts
 alias l='ls -CF'
 alias la='ls -A'
 alias ll='ls -alF'
@@ -181,13 +180,16 @@ command_not_found_handle() {
 # Everything below is for interactive sessions only
 [ -z "$PS1" ] && return
 
+# Automatically cd upon typing directory name
+# shopt -s autocd
+
 # Make cd always ls
-cd() {
-  if [ -n "$1" ]; then
-    builtin cd "$@" && ls -F --group-directories-first
-  else
-    builtin cd ~ && ls -F --group-directories-first
-  fi
-}
+# cd() {
+#   if [ -n "$1" ]; then
+#     builtin cd "$@" && ls -F --group-directories-first
+#   else
+#     builtin cd ~ && ls -F --group-directories-first
+#   fi
+# }
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
