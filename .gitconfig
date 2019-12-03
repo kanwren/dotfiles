@@ -13,7 +13,7 @@
 [difftool]
 	prompt = false
 [alias]
-	root = "!f() { if [ \"$1\" == \"-r\" ] || [ \"$1\" == \"--relative\" ]; then git rev-parse --show-prefix; else git rev-parse --show-toplevel; fi }; f"
+	root = "!f() { if [ \"$1\" = \"-r\" ] || [ \"$1\" = \"--relative\" ]; then git rev-parse --show-prefix; elif [ -n \"$1\" ]; then >&2 echo \"Invalid argument: $1\" && exit 1; else git rev-parse --show-toplevel; fi }; f"
 	cane = commit --amend --no-edit
 	changed = show --name-status --oneline
 	cmp = log --left-right --graph --oneline
