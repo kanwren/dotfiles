@@ -21,6 +21,7 @@
 	ls = log --oneline
 	rh = reset --hard
 	diffc = diff --cached
+	exec = update-index --chmod=+x
 	s = status
 	co = checkout
 	praise = blame
