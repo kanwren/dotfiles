@@ -13,6 +13,7 @@
 [difftool]
 	prompt = false
 [alias]
+	# Abbreviations for filling in options
 	cane = commit --amend --no-edit
 	changed = show --name-status --oneline
 	cmp = log --left-right --graph --oneline
@@ -22,8 +23,10 @@
 	root = rev-parse --show-toplevel
 	diffc = diff --cached
 	exec = update-index --chmod=+x
+	# Abbreviations for common commands
 	s = status
 	co = checkout
+	# Jokes
 	praise = blame
 	pansect = bisect
 [merge]
