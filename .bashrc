@@ -10,6 +10,9 @@ case $- in
     *) return;;
 esac
 
+# Disable path hashing
+set +h
+
 # Don't put duplicate lines or lines starting with space in the history.
 HISTCONTROL=ignoreboth
 HISTSIZE=1000
