@@ -1,3 +1,0 @@
-#!/bin/bash
-query="$(echo $1 | sed -e 's/ /%20/g')"
-xdg-open "https://google.com/search?q=$query" &>/dev/null

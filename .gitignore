@@ -1,7 +1,0 @@
-# Ignore Windows executables
-*.exe
-
-# Prevent recursion
-.cfg
-
-todo*

@@ -1,5 +1,0 @@
-#!/bin/bash
-case $1 in
-  rand|random) xdg-open "https://c.xkcd.com/random/comic/" &>/dev/null ;;
-  *) xdg-open "https://xkcd.com/$1/" &>/dev/null ;;
-esac
